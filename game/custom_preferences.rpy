@@ -152,6 +152,7 @@ screen preferences():
     default pref_tab = "audio"
     default pref_remapper = pad_remap.ControllerRemap()
     default pref_yadj = ui.adjustment()
+    default pref_access_yadj = ui.adjustment()
 
     add "gui/game_menu.png"
 
@@ -299,25 +300,156 @@ screen preferences():
                     # (Transitions toggle omitted here to match the reference layout.)
 
             elif pref_tab == "access":
-                vbox:
-                    spacing 22
-                    text L("pref_label_skip_mode") style "pref_label"
+                $ left_x = 60
+                $ on_x = 650
+                $ off_x = 980
+                $ min_x = 650
+                $ slider_x = 730
+                $ max_x = 1280
 
-                    bar value FieldValue(preferences, "skip_unseen", range=1) style "pref_bar"
-                    hbox:
-                        xfill True
-                        text L("pref_label_seen") style "pref_label"
-                        text L("pref_label_all") style "pref_label" xalign 1.0
+                side "c r":
+                    viewport:
+                        id "pref_access_vp"
+                        xysize (1480, 640)
+                        mousewheel True
+                        draggable True
+                        yadjustment pref_access_yadj
+                        has vbox
+                        spacing 36
 
-                    null height 10
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "FONT OVERRIDE" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            fixed:
+                                xpos on_x
+                                ypos 0
+                                use pref_small_button("DEFAULT", Preference("font transform", None), selected=(getattr(preferences, "font_transform", None) is None))
+                            fixed:
+                                xpos off_x
+                                ypos 0
+                                use pref_small_button("DEJAVU SANS", Preference("font transform", "dejavusans"), selected=(getattr(preferences, "font_transform", None) == "dejavusans"))
 
-                    text L("pref_label_skip_after_choices") style "pref_label"
-                    use pref_small_button("pref_button_on", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_on")
-                    use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_off")
+                        fixed:
+                            xsize 1480
+                            ysize 80
+                            fixed:
+                                xpos on_x
+                                ypos 0
+                                use pref_small_button("OPENDYSLEXIC", Preference("font transform", "opendyslexic"), selected=(getattr(preferences, "font_transform", None) == "opendyslexic"))
 
-                    text L("pref_label_skip_transitions") style "pref_label"
-                    use pref_small_button("pref_button_on", SetField(preferences, "transitions", True), selected=preferences.transitions, tooltip_key="pref_tip_transitions_on")
-                    use pref_small_button("pref_button_off", SetField(preferences, "transitions", False), selected=not preferences.transitions, tooltip_key="pref_tip_transitions_off")
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "TEXT SIZE SCALING" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            text "MIN" style "pref_label":
+                                xpos min_x
+                                ypos 10
+                            bar value Preference("font size") style "pref_bar":
+                                xpos slider_x
+                                ypos 0
+                            text "MAX" style "pref_label":
+                                xpos max_x
+                                ypos 10
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "LINE SPACE SCALING" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            text "MIN" style "pref_label":
+                                xpos min_x
+                                ypos 10
+                            bar value Preference("font line spacing") style "pref_bar":
+                                xpos slider_x
+                                ypos 0
+                            text "MAX" style "pref_label":
+                                xpos max_x
+                                ypos 10
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "HIGH CONTRAST TEXT" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            fixed:
+                                xpos on_x
+                                ypos 0
+                                use pref_small_button("ON", Preference("high contrast text", "enable"), selected=getattr(preferences, "high_contrast_text", False))
+                            fixed:
+                                xpos off_x
+                                ypos 0
+                                use pref_small_button("OFF", Preference("high contrast text", "disable"), selected=not getattr(preferences, "high_contrast_text", False))
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "SELF-VOICING" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            fixed:
+                                xpos on_x
+                                ypos 0
+                                use pref_small_button("TEXT-TO-SPEECH", Preference("self voicing", "enable"), selected=getattr(preferences, "self_voicing", False))
+                            fixed:
+                                xpos off_x
+                                ypos 0
+                                use pref_small_button("CLIPBOARD", Preference("clipboard voicing", "enable"), selected=getattr(preferences, "clipboard_voicing", False))
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "DEBUG" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            fixed:
+                                xpos on_x
+                                ypos 0
+                                use pref_small_button("ON", Preference("debug voicing", "enable"), selected=getattr(preferences, "debug_voicing", False))
+                            fixed:
+                                xpos off_x
+                                ypos 0
+                                use pref_small_button("OFF", Preference("debug voicing", "disable"), selected=not getattr(preferences, "debug_voicing", False))
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "VOICE VOLUME" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            text "MIN" style "pref_label":
+                                xpos min_x
+                                ypos 10
+                            bar value Preference("voice volume") style "pref_bar":
+                                xpos slider_x
+                                ypos 0
+                            text "MAX" style "pref_label":
+                                xpos max_x
+                                ypos 10
+
+                        fixed:
+                            xsize 1480
+                            ysize 90
+                            text "SELF-VOICING VOLUME DROP" style "pref_label":
+                                xpos left_x
+                                ypos 10
+                            text "MIN" style "pref_label":
+                                xpos min_x
+                                ypos 10
+                            bar value Preference("self voicing volume drop") style "pref_bar":
+                                xpos slider_x
+                                ypos 0
+                            text "MAX" style "pref_label":
+                                xpos max_x
+                                ypos 10
+
+                    vbar value YScrollValue("pref_access_vp") keyboard_focus False
 
             elif pref_tab == "controls":
                 vbox:
