@@ -146,48 +146,17 @@ screen pref_add_binding_button(action, tooltip_key=None):
         hovered Function(set_pref_tooltip, tooltip)
 
 screen preferences():
-
     tag menu
-
-    default pref_tab = "audio"
-    default pref_remapper = pad_remap.ControllerRemap()
-    default pref_yadj = ui.adjustment()
 
     add "gui/game_menu.png"
 
-    # Title/logo
-    add Transform("gui/logo.png", zoom=0.40):
+    frame:
+        background Solid("#2b2440")
         xalign 0.5
-        yalign 0.0
-        yoffset -40
-
-    # Top tabs
-    hbox:
-        xpos 240
-        ypos 120
-        spacing 16
-        use pref_tab_button("pref_tab_display", "display", pref_tab, "pref_tip_tab_display")
-        use pref_tab_button("pref_tab_audio", "audio", pref_tab, "pref_tip_tab_audio")
-        use pref_tab_button("pref_tab_controls", "controls", pref_tab, "pref_tip_tab_controls")
-        use pref_tab_button("pref_tab_access", "access", pref_tab, "pref_tip_tab_access")
-
-    # Content panel
-    fixed:
-        xpos 240
-        ypos 210
-        xsize 1560
-        ysize 700
-
-        add Solid("#6b3aa8") xsize 1560 ysize 700
-        add Solid("#1b1b26cc") xpos 6 ypos 6 xsize 1548 ysize 688
-
-        frame:
-            background None
-            xpos 6
-            ypos 6
-            xsize 1548
-            ysize 688
-            padding (30, 24)
+        yalign 0.5
+        xsize 900
+        ysize 320
+        padding (30, 24)
 
             if pref_tab == "audio":
                 vbox:
