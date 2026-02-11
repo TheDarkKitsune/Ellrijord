@@ -39,12 +39,16 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=False, selected=False, yoffset=-9):
+screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=False, selected=False, yoffset=-9, hovered_action=None, unhovered_action=None, tooltip=None, tooltip_y=10):
     $ btn_w = int(BTN_SRC_W * zoom)
     $ btn_h = int(BTN_SRC_H * zoom)
     $ idle_disp = im.MatrixColor("gui/btn_idle.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_idle.png"
     $ hover_disp = im.MatrixColor("gui/btn_hover.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_hover.png"
     $ idle_render = hover_disp if selected else idle_disp
+    default show_tip = False
+
+    $ hover_actions = [SetScreenVariable("show_tip", True)] + ([hovered_action] if hovered_action is not None else [])
+    $ unhover_actions = [SetScreenVariable("show_tip", False)] + ([unhovered_action] if unhovered_action is not None else [])
 
     imagebutton:
         xsize btn_w
@@ -52,6 +56,8 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
         action action
         selected selected
         focus_mask True
+        hovered hover_actions
+        unhovered unhover_actions
 
         idle Fixed(
             At(idle_render, btn_idle_fx(zoom, yoffset)),
@@ -65,3 +71,10 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
             xsize=btn_w,
             ysize=btn_h
         )
+
+    if tooltip and show_tip:
+        frame:
+            style "ui_tooltip_frame"
+            xalign 0.5
+            ypos (btn_h + tooltip_y)
+            text tooltip style "ui_tooltip_text"

@@ -125,5 +125,6 @@
                 }
             }
         ]
-    }
+    },
+    "renpyWarp.sdkPath": "e:\\renpy-8.5.2-sdk"
 }

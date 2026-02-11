@@ -65,6 +65,7 @@ init -2 python:
                 pass
         renpy.restart_interaction()
 
+
 transform pref_thumb_fx:
     zoom 0.4
     yoffset 26
@@ -84,23 +85,71 @@ style pref_bar is slider:
     thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
     hover_thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
 
-screen pref_tab_button(label, value, current_tab=None):
+screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None):
+    $ label = L(label_key)
+    $ tooltip = L(tooltip_key) if tooltip_key else label
     use ui_png_button(
         label,
         SetScreenVariable("pref_tab", value),
         zoom=PREF_TAB_ZOOM,
         text_style="ui_btn_text_tab",
-        selected=current_tab == value
+        selected=current_tab == value,
+        tooltip=tooltip
     )
 
-screen pref_small_button(label, action, selected=False):
+screen pref_small_button(label_key, action, selected=False, tooltip_key=None):
+    $ label = L(label_key)
+    $ tooltip = L(tooltip_key) if tooltip_key else label
     use ui_png_button(
         label,
         action,
         zoom=PREF_SM_ZOOM,
         text_style="ui_btn_text_small",
-        selected=selected
+        selected=selected,
+        tooltip=tooltip
     )
+
+screen pref_icon_button(img, action, tooltip_key=None):
+    default show_tip = False
+    $ tooltip = L(tooltip_key) if tooltip_key else None
+    fixed:
+        xsize 68
+        ysize 68
+        imagebutton:
+            xysize (68, 68)
+            background "#2a2836"
+            idle Transform(img, xysize=(68, 68))
+            hover_foreground "#f003"
+            action action
+            hovered SetScreenVariable("show_tip", True)
+            unhovered SetScreenVariable("show_tip", False)
+        if show_tip and tooltip:
+            frame:
+                style "ui_tooltip_frame"
+                xalign 0.5
+                ypos 78
+                text tooltip style "ui_tooltip_text"
+
+screen pref_add_binding_button(action, tooltip_key=None):
+    default show_tip = False
+    $ tooltip = L(tooltip_key) if tooltip_key else None
+    fixed:
+        xsize 68
+        ysize 68
+        textbutton L("pref_button_add_binding"):
+            yalign 0.5 xysize (68, 68)
+            text_align (0.5, 0.5)
+            background "#2a2836"
+            hover_background "#ff8335"
+            action action
+            hovered SetScreenVariable("show_tip", True)
+            unhovered SetScreenVariable("show_tip", False)
+        if show_tip and tooltip:
+            frame:
+                style "ui_tooltip_frame"
+                xalign 0.5
+                ypos 78
+                text tooltip style "ui_tooltip_text"
 
 screen preferences():
 
@@ -123,10 +172,10 @@ screen preferences():
         xpos 240
         ypos 120
         spacing 16
-        use pref_tab_button("DISPLAY", "display", pref_tab)
-        use pref_tab_button("AUDIO", "audio", pref_tab)
-        use pref_tab_button("CONTROLS", "controls", pref_tab)
-        use pref_tab_button("ACCESS", "access", pref_tab)
+        use pref_tab_button("pref_tab_display", "display", pref_tab, "pref_tip_tab_display")
+        use pref_tab_button("pref_tab_audio", "audio", pref_tab, "pref_tip_tab_audio")
+        use pref_tab_button("pref_tab_controls", "controls", pref_tab, "pref_tip_tab_controls")
+        use pref_tab_button("pref_tab_access", "access", pref_tab, "pref_tip_tab_access")
 
     # Content panel
     fixed:
@@ -152,26 +201,26 @@ screen preferences():
 
                     hbox:
                         spacing 18
-                        text "MUTE ALL" style "pref_label"
-                        use pref_small_button("MUTED", Function(set_all_mute, True), selected=is_all_muted())
-                        use pref_small_button("NOT MUTED", Function(set_all_mute, False), selected=not is_all_muted())
+                        text L("pref_label_mute_all") style "pref_label"
+                        use pref_small_button("pref_button_muted", Function(set_all_mute, True), selected=is_all_muted(), tooltip_key="pref_tip_muted")
+                        use pref_small_button("pref_button_not_muted", Function(set_all_mute, False), selected=not is_all_muted(), tooltip_key="pref_tip_not_muted")
 
                     if config.has_music:
                         vbox:
                             spacing 8
-                            text "MUSIC VOLUME" style "pref_label"
+                            text L("pref_label_music_volume") style "pref_label"
                             bar value Preference("music volume") style "pref_bar"
 
                     if config.has_sound:
                         vbox:
                             spacing 8
-                            text "SFX VOLUME" style "pref_label"
+                            text L("pref_label_sfx_volume") style "pref_label"
                             bar value Preference("sound volume") style "pref_bar"
 
                     if config.has_voice:
                         vbox:
                             spacing 8
-                            text "VOICE VOLUME" style "pref_label"
+                            text L("pref_label_voice_volume") style "pref_label"
                             bar value Preference("voice volume") style "pref_bar"
 
             elif pref_tab == "display":
@@ -187,69 +236,69 @@ screen preferences():
                     $ max_x = 1280
 
                     $ row_y = 30
-                    text "DISPLAY" style "pref_label":
+                    text L("pref_label_display") style "pref_label":
                         xpos left_x
                         ypos row_y
                     fixed:
                         xpos on_x
                         ypos (row_y - 8)
-                        use pref_small_button("WINDOW", Preference("display", "window"), selected=not preferences.fullscreen)
+                        use pref_small_button("pref_button_window", Preference("display", "window"), selected=not preferences.fullscreen, tooltip_key="pref_tip_window")
                     fixed:
                         xpos off_x
                         ypos (row_y - 8)
-                        use pref_small_button("FULLSCREEN", Preference("display", "fullscreen"), selected=preferences.fullscreen)
+                        use pref_small_button("pref_button_fullscreen", Preference("display", "fullscreen"), selected=preferences.fullscreen, tooltip_key="pref_tip_fullscreen")
 
                     $ row_y = 150
-                    text "SKIP UNSEEN TEXT" style "pref_label":
+                    text L("pref_label_skip_unseen") style "pref_label":
                         xpos left_x
                         ypos row_y
                     fixed:
                         xpos on_x
                         ypos (row_y - 8)
-                        use pref_small_button("ON", SetField(preferences, "skip_unseen", True), selected=preferences.skip_unseen)
+                        use pref_small_button("pref_button_on", SetField(preferences, "skip_unseen", True), selected=preferences.skip_unseen, tooltip_key="pref_tip_skip_unseen_on")
                     fixed:
                         xpos off_x
                         ypos (row_y - 8)
-                        use pref_small_button("OFF", SetField(preferences, "skip_unseen", False), selected=not preferences.skip_unseen)
+                        use pref_small_button("pref_button_off", SetField(preferences, "skip_unseen", False), selected=not preferences.skip_unseen, tooltip_key="pref_tip_skip_unseen_off")
 
                     $ row_y = 270
-                    text "SKIP AFTER CHOICES" style "pref_label":
+                    text L("pref_label_skip_after_choices") style "pref_label":
                         xpos left_x
                         ypos row_y
                     fixed:
                         xpos on_x
                         ypos (row_y - 8)
-                        use pref_small_button("ON", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices)
+                        use pref_small_button("pref_button_on", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_on")
                     fixed:
                         xpos off_x
                         ypos (row_y - 8)
-                        use pref_small_button("OFF", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices)
+                        use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_off")
 
                     $ row_y = 410
-                    text "TEXT SPEED" style "pref_label":
+                    text L("pref_label_text_speed") style "pref_label":
                         xpos left_x
                         ypos row_y
-                    text "MIN" style "pref_label":
+                    text L("pref_label_min") style "pref_label":
                         xpos min_x
                         ypos row_y
                     bar value Preference("text speed") style "pref_bar":
                         xpos slider_x
                         ypos (row_y - 8)
-                    text "MAX" style "pref_label":
+                    text L("pref_label_max") style "pref_label":
                         xpos max_x
                         ypos row_y
 
                     $ row_y = 540
-                    text "AUTO-FORWARD DELAY" style "pref_label":
+                    text L("pref_label_auto_forward") style "pref_label":
                         xpos left_x
                         ypos row_y
-                    text "MIN" style "pref_label":
+                    text L("pref_label_min") style "pref_label":
                         xpos min_x
                         ypos row_y
                     bar value Preference("auto-forward time") style "pref_bar":
                         xpos slider_x
                         ypos (row_y - 8)
-                    text "MAX" style "pref_label":
+                    text L("pref_label_max") style "pref_label":
                         xpos max_x
                         ypos row_y
 
@@ -258,23 +307,23 @@ screen preferences():
             elif pref_tab == "access":
                 vbox:
                     spacing 22
-                    text "SKIP MODE" style "pref_label"
+                    text L("pref_label_skip_mode") style "pref_label"
 
                     bar value FieldValue(preferences, "skip_unseen", range=1) style "pref_bar"
                     hbox:
                         xfill True
-                        text "SEEN" style "pref_label"
-                        text "ALL" style "pref_label" xalign 1.0
+                        text L("pref_label_seen") style "pref_label"
+                        text L("pref_label_all") style "pref_label" xalign 1.0
 
                     null height 10
 
-                    text "SKIP AFTER CHOICES" style "pref_label"
-                    use pref_small_button("ON", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices)
-                    use pref_small_button("OFF", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices)
+                    text L("pref_label_skip_after_choices") style "pref_label"
+                    use pref_small_button("pref_button_on", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_on")
+                    use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_off")
 
-                    text "SKIP TRANSITIONS" style "pref_label"
-                    use pref_small_button("ON", SetField(preferences, "transitions", True), selected=preferences.transitions)
-                    use pref_small_button("OFF", SetField(preferences, "transitions", False), selected=not preferences.transitions)
+                    text L("pref_label_skip_transitions") style "pref_label"
+                    use pref_small_button("pref_button_on", SetField(preferences, "transitions", True), selected=preferences.transitions, tooltip_key="pref_tip_transitions_on")
+                    use pref_small_button("pref_button_off", SetField(preferences, "transitions", False), selected=not preferences.transitions, tooltip_key="pref_tip_transitions_off")
 
             elif pref_tab == "controls":
                 vbox:
@@ -282,8 +331,8 @@ screen preferences():
 
                     hbox:
                         spacing 18
-                        use pref_small_button("CALIBRATE GAMEPAD BUTTONS", GamepadCalibrate())
-                        use pref_small_button("CHANGE ICON SET", CycleControllerLayout())
+                        use pref_small_button("pref_button_calibrate_gamepad", GamepadCalibrate(), tooltip_key="pref_tip_calibrate_gamepad")
+                        use pref_small_button("pref_button_change_icon_set", CycleControllerLayout(), tooltip_key="pref_tip_change_icon_set")
 
                     side "c r":
                         controller_viewport:
@@ -307,26 +356,23 @@ screen preferences():
                                     grid 3 1:
                                         spacing 12
                                         for i, img in enumerate(pad_images):
-                                            imagebutton:
-                                                xysize (68, 68)
-                                                background "#2a2836"
-                                                idle Transform(img[0], xysize=(68, 68))
-                                                hover_foreground "#f003"
-                                                action [Function(pref_remapper.remove_button, img[1], act),
+                                            use pref_icon_button(
+                                                img[0],
+                                                [Function(pref_remapper.remove_button, img[1], act),
                                                     If((act not in pad_remap.REQUIRED_EVENTS
                                                             or len(pad_images) > 1), None,
-                                                    Function(renpy.call_in_new_context,
-                                                        "listen_for_remap", title, act, pref_yadj,
-                                                        pref_remapper))]
+                                                        Function(renpy.call_in_new_context,
+                                                            "listen_for_remap", title, act, pref_yadj,
+                                                            pref_remapper))],
+                                                tooltip_key="pref_tip_remove_binding"
+                                            )
                                         for i in range(3 - len(pad_images)):
-                                            textbutton _("+"):
-                                                yalign 0.5 xysize (68, 68)
-                                                text_align (0.5, 0.5)
-                                                background "#2a2836"
-                                                hover_background "#ff8335"
-                                                action Function(renpy.call_in_new_context,
+                                            use pref_add_binding_button(
+                                                Function(renpy.call_in_new_context,
                                                     "listen_for_remap", title, act, pref_yadj,
-                                                    pref_remapper)
+                                                    pref_remapper),
+                                                tooltip_key="pref_tip_add_binding"
+                                            )
                         vbar value YScrollValue("pref_controls_viewport") keyboard_focus False
 
     hbox:
@@ -334,9 +380,9 @@ screen preferences():
         yalign 0.93
         spacing 22
 
-        use pref_small_button("MAIN MENU", MainMenu())
+        use pref_small_button("pref_button_main_menu", MainMenu(), tooltip_key="pref_tip_main_menu")
         if main_menu:
-            use pref_small_button("BACK", ShowMenu("main_menu"))
+            use pref_small_button("pref_button_back", ShowMenu("main_menu"), tooltip_key="pref_tip_back")
         else:
-            use pref_small_button("BACK", Return())
-        use pref_small_button("DEFAULT", Function(reset_preferences))
+            use pref_small_button("pref_button_back", Return(), tooltip_key="pref_tip_back")
+        use pref_small_button("pref_button_default", Function(reset_preferences), tooltip_key="pref_tip_default")
