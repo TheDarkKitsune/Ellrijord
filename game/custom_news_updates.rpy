@@ -79,17 +79,10 @@ screen news_menu_button():
     fixed:
         xalign 0.06
         yalign 0.95
-        xsize 120
-        ysize 90
+        xsize 240
+        ysize 80
 
-        imagebutton:
-            xalign 0.5
-            yalign 0.5
-            idle Transform("gui/thoughtbubble.png", zoom=NEWS_CLOUD_ZOOM)
-            hover Transform("gui/thoughtbubble.png", zoom=NEWS_CLOUD_ZOOM, matrixcolor=im.matrix.brightness(0.08))
-            action ShowMenu("news_updates")
-
-        text "NEWS" style "news_cloud_text"
+        use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small")
 
 
 screen news_updates():
