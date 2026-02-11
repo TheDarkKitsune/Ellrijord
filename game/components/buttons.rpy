@@ -17,10 +17,13 @@ transform btn_hover_fx(z=1.0, y=-9):
     linear 0.08 yoffset (y + 6)
     linear 0.08 yoffset y
 
-transform text_hover_fx:
-    yoffset 0
-    linear 0.08 yoffset 6
-    linear 0.08 yoffset 0
+transform text_idle_fx(y=-9, adjust=6):
+    yoffset (y + adjust)
+
+transform text_hover_fx(y=-9, adjust=6):
+    yoffset (y + adjust)
+    linear 0.08 yoffset (y + adjust + 6)
+    linear 0.08 yoffset (y + adjust)
 
 
 style ui_btn_text is text:
@@ -42,6 +45,7 @@ style ui_btn_text_small is ui_btn_text:
 screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=False, selected=False, yoffset=-9, hovered_action=None, unhovered_action=None, tooltip=None):
     $ btn_w = int(BTN_SRC_W * zoom)
     $ btn_h = int(BTN_SRC_H * zoom)
+    $ text_adjust = int(round(10 * (zoom / 0.8)))
     $ idle_disp = im.MatrixColor("gui/btn_idle.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_idle.png"
     $ hover_disp = im.MatrixColor("gui/btn_hover.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_hover.png"
     $ idle_render = hover_disp if selected else idle_disp
@@ -61,13 +65,19 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
 
         idle Fixed(
             At(idle_render, btn_idle_fx(zoom, yoffset)),
-            Text(label, style=text_style),
+            At(
+                Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5),
+                text_idle_fx(yoffset, text_adjust)
+            ),
             xsize=btn_w,
             ysize=btn_h
         )
         hover Fixed(
             At(hover_disp, btn_hover_fx(zoom, yoffset)),
-            At(Text(label, style=text_style), text_hover_fx),
+            At(
+                Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5),
+                text_hover_fx(yoffset, text_adjust)
+            ),
             xsize=btn_w,
             ysize=btn_h
         )
