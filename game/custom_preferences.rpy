@@ -65,6 +65,17 @@ init -2 python:
                 pass
         renpy.restart_interaction()
 
+    def set_pref_tooltip(text):
+        store.pref_tooltip = text
+        mx, my = renpy.get_mouse_pos()
+        rect = get_rect_at_pos(mx, my)
+        if rect is None:
+            rect = (mx, my, 0, 0)
+        store.pref_tooltip_rect = rect
+
+    def clear_pref_tooltip():
+        store.pref_tooltip = None
+        store.pref_tooltip_rect = None
 
 transform pref_thumb_fx:
     zoom 0.4
@@ -85,6 +96,9 @@ style pref_bar is slider:
     thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
     hover_thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
 
+default pref_tooltip = None
+default pref_tooltip_rect = None
+
 screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None):
     $ label = L(label_key)
     $ tooltip = L(tooltip_key) if tooltip_key else label
@@ -94,7 +108,8 @@ screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None):
         zoom=PREF_TAB_ZOOM,
         text_style="ui_btn_text_tab",
         selected=current_tab == value,
-        tooltip=tooltip
+        hovered_action=Function(set_pref_tooltip, tooltip),
+        unhovered_action=Function(clear_pref_tooltip)
     )
 
 screen pref_small_button(label_key, action, selected=False, tooltip_key=None):
@@ -106,50 +121,29 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None):
         zoom=PREF_SM_ZOOM,
         text_style="ui_btn_text_small",
         selected=selected,
-        tooltip=tooltip
+        hovered_action=Function(set_pref_tooltip, tooltip),
+        unhovered_action=Function(clear_pref_tooltip)
     )
 
 screen pref_icon_button(img, action, tooltip_key=None):
-    default show_tip = False
     $ tooltip = L(tooltip_key) if tooltip_key else None
-    fixed:
-        xsize 68
-        ysize 68
-        imagebutton:
-            xysize (68, 68)
-            background "#2a2836"
-            idle Transform(img, xysize=(68, 68))
-            hover_foreground "#f003"
-            action action
-            hovered SetScreenVariable("show_tip", True)
-            unhovered SetScreenVariable("show_tip", False)
-        if show_tip and tooltip:
-            frame:
-                style "ui_tooltip_frame"
-                xalign 0.5
-                ypos 78
-                text tooltip style "ui_tooltip_text"
+    imagebutton:
+        xysize (68, 68)
+        background "#2a2836"
+        idle Transform(img, xysize=(68, 68))
+        hover_foreground "#f003"
+        action action
+        hovered Function(set_pref_tooltip, tooltip)
 
 screen pref_add_binding_button(action, tooltip_key=None):
-    default show_tip = False
     $ tooltip = L(tooltip_key) if tooltip_key else None
-    fixed:
-        xsize 68
-        ysize 68
-        textbutton L("pref_button_add_binding"):
-            yalign 0.5 xysize (68, 68)
-            text_align (0.5, 0.5)
-            background "#2a2836"
-            hover_background "#ff8335"
-            action action
-            hovered SetScreenVariable("show_tip", True)
-            unhovered SetScreenVariable("show_tip", False)
-        if show_tip and tooltip:
-            frame:
-                style "ui_tooltip_frame"
-                xalign 0.5
-                ypos 78
-                text tooltip style "ui_tooltip_text"
+    textbutton L("pref_button_add_binding"):
+        yalign 0.5 xysize (68, 68)
+        text_align (0.5, 0.5)
+        background "#2a2836"
+        hover_background "#ff8335"
+        action action
+        hovered Function(set_pref_tooltip, tooltip)
 
 screen preferences():
 
@@ -386,3 +380,5 @@ screen preferences():
         else:
             use pref_small_button("pref_button_back", Return(), tooltip_key="pref_tip_back")
         use pref_small_button("pref_button_default", Function(reset_preferences), tooltip_key="pref_tip_default")
+
+    use ui_tooltip_from_rect(store.pref_tooltip, store.pref_tooltip_rect)
