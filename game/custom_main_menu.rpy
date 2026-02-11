@@ -102,19 +102,11 @@ screen main_menu():
             use ui_png_button("SETTINGS", ShowMenu("preferences"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
             use ui_png_button("EXIT", Quit(confirm=True), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
 
-        fixed:
-            xalign 0.98
-            yalign 0.98
-            use ui_png_button(
-                "BG",
-                ToggleScreenVariable("mm_alt"),
-                zoom=TOGGLE_ZOOM,
-                text_style="ui_btn_text_small",
-                use_alt=mm_alt,
-                yoffset=0
-            )
-
         # Cloud news button (defined in custom_news_updates.rpy)
-        use news_menu_button
+        use news_menu_button(
+            bg_action=ToggleScreenVariable("mm_alt"),
+            bg_label=("LightMode" if mm_alt else "DarkMode"),
+            bg_use_alt=False
+        )
 
             

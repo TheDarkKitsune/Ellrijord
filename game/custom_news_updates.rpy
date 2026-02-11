@@ -72,7 +72,7 @@ style news_cloud_text is text:
     yalign 0.5
 
 
-screen news_menu_button():
+screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False):
     # Small cloud icon on main menu to open News/Updates.
     zorder 20
 
@@ -82,7 +82,11 @@ screen news_menu_button():
         xsize 240
         ysize 80
 
-        use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small")
+        hbox:
+            spacing 8
+            use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small")
+            if bg_action is not None:
+                use ui_png_button(bg_label, bg_action, zoom=0.35, text_style="ui_btn_text_small", use_alt=bg_use_alt)
 
 
 screen news_updates():
