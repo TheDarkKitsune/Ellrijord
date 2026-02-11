@@ -24,3 +24,7 @@
 /dialogue.tab
 /dialogue.txt
 /strings.json
+
+# Editor settings.
+/.vscode
+/.vscode/settings.json

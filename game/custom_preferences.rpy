@@ -8,12 +8,8 @@
 
 init -2 python:
     PREF_TAB_ZOOM = 0.6
-    PREF_TAB_W = int(534 * PREF_TAB_ZOOM)
-    PREF_TAB_H = int(140 * PREF_TAB_ZOOM)
 
     PREF_SM_ZOOM = 0.45
-    PREF_SM_W = int(534 * PREF_SM_ZOOM)
-    PREF_SM_H = int(140 * PREF_SM_ZOOM)
 
     def _fix_mute_pref_type():
         prefdata = getattr(persistent, "_preferences", None)
@@ -69,18 +65,6 @@ init -2 python:
                 pass
         renpy.restart_interaction()
 
-transform pref_tab_idle:
-    zoom PREF_TAB_ZOOM
-
-transform pref_tab_hover:
-    zoom PREF_TAB_ZOOM
-
-transform pref_sm_idle:
-    zoom PREF_SM_ZOOM
-
-transform pref_sm_hover:
-    zoom PREF_SM_ZOOM
-
 transform pref_thumb_fx:
     zoom 0.4
     yoffset 26
@@ -92,40 +76,6 @@ style pref_label is text:
     outlines [(3, "#6b3aa8", 0, 0)]
     xalign 0.0
 
-style pref_tab_button is button:
-    xsize PREF_TAB_W
-    ysize PREF_TAB_H
-    background At("gui/btn_idle.png", pref_tab_idle)
-    hover_background At("gui/btn_hover.png", pref_tab_hover)
-    selected_background At("gui/btn_hover.png", pref_tab_hover)
-    xalign 0.5
-    yalign 0.5
-
-style pref_tab_button_text is text:
-    font "fonts/trotes/Trotes.ttf"
-    size 26
-    color "#ffffff"
-    outlines [(4, "#6b3aa8", 0, 0)]
-    xalign 0.5
-    yalign 0.5
-
-style pref_small_button is button:
-    xsize PREF_SM_W
-    ysize PREF_SM_H
-    background At("gui/btn_idle.png", pref_sm_idle)
-    hover_background At("gui/btn_hover.png", pref_sm_hover)
-    selected_background At("gui/btn_hover.png", pref_sm_hover)
-    xalign 0.5
-    yalign 0.5
-
-style pref_small_button_text is text:
-    font "fonts/trotes/Trotes.ttf"
-    size 22
-    color "#ffffff"
-    outlines [(3, "#6b3aa8", 0, 0)]
-    xalign 0.5
-    yalign 0.5
-
 style pref_bar is slider:
     xsize 560
     ysize 80
@@ -135,16 +85,22 @@ style pref_bar is slider:
     hover_thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
 
 screen pref_tab_button(label, value, current_tab=None):
-    textbutton label:
-        style "pref_tab_button"
-        action SetScreenVariable("pref_tab", value)
-        selected current_tab == value
+    use ui_png_button(
+        label,
+        SetScreenVariable("pref_tab", value),
+        zoom=PREF_TAB_ZOOM,
+        text_style="ui_btn_text_tab",
+        selected=current_tab == value
+    )
 
 screen pref_small_button(label, action, selected=False):
-    textbutton label:
-        style "pref_small_button"
-        action action
-        selected selected
+    use ui_png_button(
+        label,
+        action,
+        zoom=PREF_SM_ZOOM,
+        text_style="ui_btn_text_small",
+        selected=selected
+    )
 
 screen preferences():
 

@@ -8,17 +8,7 @@
 init -2 python:
     BTN_ZOOM = 0.8
 
-    BTN_SRC_W = 534
-    BTN_SRC_H = 140
-
-    BTN_W = int(BTN_SRC_W * BTN_ZOOM)
-    BTN_H = int(BTN_SRC_H * BTN_ZOOM)
-
-    BTN_DARKEN = -0.25
-
     TOGGLE_ZOOM = 0.35
-    TOGGLE_W = int(BTN_SRC_W * TOGGLE_ZOOM)
-    TOGGLE_H = int(BTN_SRC_H * TOGGLE_ZOOM)
 
     # Compatibility alias in case cached bytecode references MatrixColor.
     MatrixColor = im.MatrixColor
@@ -29,45 +19,6 @@ transform logo_bob:
     linear 1.6 yoffset -70
     linear 1.6 yoffset -60
     repeat
-
-transform btn_idle_fx:
-    zoom BTN_ZOOM
-    yoffset -9
-
-transform btn_hover_fx:
-    zoom BTN_ZOOM
-    yoffset -9
-    linear 0.08 yoffset -3
-    linear 0.08 yoffset -9
-
-style mm_btn_text is text:
-    font "fonts/trotes/Trotes.ttf"
-    size 34
-    color "#ffffff"
-    outlines [(3, "#6b3aa8", 0, 0)]
-    kerning 2
-    xalign 0.5
-    yalign 0.5
-
-transform text_hover_fx:
-    yoffset 0
-    linear 0.08 yoffset 6
-    linear 0.08 yoffset 0
-
-transform toggle_idle_fx:
-    zoom TOGGLE_ZOOM
-
-transform toggle_hover_fx:
-    zoom TOGGLE_ZOOM
-
-style mm_toggle_text is text:
-    font "fonts/trotes/Trotes.ttf"
-    size 22
-    color "#ffffff"
-    outlines [(3, "#6b3aa8", 0, 0)]
-    xalign 0.5
-    yalign 0.5
-
 
 # ------------------------------------------------------------
 # Falling petals/leaves (put image at: gui/petal.png)
@@ -113,41 +64,6 @@ screen menu_petals():
 
 
 # --- CLIPPED button that cannot overlap others, even if hover PNG is bigger ---
-screen mm_png_button(label, action, use_alt=False):
-    imagebutton:
-        xsize BTN_W
-        ysize BTN_H
-        action action
-        focus_mask True
-
-        if use_alt:
-            idle Fixed(
-                Transform(im.MatrixColor("gui/btn_idle.png", im.matrix.brightness(BTN_DARKEN)), zoom=BTN_ZOOM),
-                Text(label, style="mm_btn_text"),
-                xsize=BTN_W,
-                ysize=BTN_H
-            )
-            hover Fixed(
-                Transform(im.MatrixColor("gui/btn_hover.png", im.matrix.brightness(BTN_DARKEN)), zoom=BTN_ZOOM),
-                At(Text(label, style="mm_btn_text"), text_hover_fx),
-                xsize=BTN_W,
-                ysize=BTN_H
-            )
-        else:
-            idle Fixed(
-                At("gui/btn_idle.png", btn_idle_fx),
-                Text(label, style="mm_btn_text"),
-                xsize=BTN_W,
-                ysize=BTN_H
-            )
-            hover Fixed(
-                At("gui/btn_hover.png", btn_hover_fx),
-                At(Text(label, style="mm_btn_text"), text_hover_fx),
-                xsize=BTN_W,
-                ysize=BTN_H
-            )
-
-
 screen main_menu():
 
     tag menu
@@ -181,30 +97,21 @@ screen main_menu():
             yalign 0.96
             spacing 4
 
-            use mm_png_button("NEW GAME", Start(), use_alt=mm_alt)
-            use mm_png_button("CONTINUE", ShowMenu("load"), use_alt=mm_alt)
-            use mm_png_button("SETTINGS", ShowMenu("preferences"), use_alt=mm_alt)
-            use mm_png_button("EXIT", Quit(confirm=True), use_alt=mm_alt)
+            use ui_png_button("NEW GAME", Start(), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("CONTINUE", ShowMenu("load"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("SETTINGS", ShowMenu("preferences"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("EXIT", Quit(confirm=True), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
 
-        imagebutton:
-            xsize TOGGLE_W
-            ysize TOGGLE_H
+        fixed:
             xalign 0.98
             yalign 0.98
-            action ToggleScreenVariable("mm_alt")
-            focus_mask True
-
-            idle Fixed(
-                At("gui/btn_idle.png", toggle_idle_fx),
-                Text("BG", style="mm_toggle_text"),
-                xsize=TOGGLE_W,
-                ysize=TOGGLE_H
-            )
-            hover Fixed(
-                At("gui/btn_hover.png", toggle_hover_fx),
-                Text("BG", style="mm_toggle_text"),
-                xsize=TOGGLE_W,
-                ysize=TOGGLE_H
+            use ui_png_button(
+                "BG",
+                ToggleScreenVariable("mm_alt"),
+                zoom=TOGGLE_ZOOM,
+                text_style="ui_btn_text_small",
+                use_alt=mm_alt,
+                yoffset=0
             )
 
             
