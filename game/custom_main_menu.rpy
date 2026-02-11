@@ -114,4 +114,7 @@ screen main_menu():
                 yoffset=0
             )
 
+        # Cloud news button (defined in custom_news_updates.rpy)
+        use news_menu_button
+
             
