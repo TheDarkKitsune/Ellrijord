@@ -72,7 +72,7 @@ style news_cloud_text is text:
     yalign 0.5
 
 
-screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False):
+screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False, news_use_alt=False):
     # Small cloud icon on main menu to open News/Updates.
     zorder 20
 
@@ -84,13 +84,14 @@ screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False):
 
         hbox:
             spacing 8
-            use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small")
+            use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small", use_alt=news_use_alt)
             if bg_action is not None:
                 use ui_png_button(bg_label, bg_action, zoom=0.35, text_style="ui_btn_text_small", use_alt=bg_use_alt)
 
 
 screen news_updates():
     tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
     add "gui/news_background.png"
 
@@ -139,7 +140,7 @@ screen news_updates():
         xalign 0.5
         yalign 0.93
         spacing 16
-        use ui_png_button("BACK", ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small")
+        use ui_png_button("BACK", ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen news_tile(item):
@@ -157,6 +158,7 @@ screen news_tile(item):
 screen news_updates_detail(news_id):
     modal True
     zorder 200
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
     $ item = _news_item(news_id)
 
     add Solid("#0008")
@@ -178,4 +180,4 @@ screen news_updates_detail(news_id):
 
             hbox:
                 xalign 1.0
-                use ui_png_button("CLOSE", Hide("news_updates_detail"), zoom=0.55, text_style="ui_btn_text_small")
+                use ui_png_button("CLOSE", Hide("news_updates_detail"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)

@@ -13,6 +13,14 @@ init -2 python:
     # Compatibility alias in case cached bytecode references MatrixColor.
     MatrixColor = im.MatrixColor
 
+    if not hasattr(persistent, "mm_alt"):
+        persistent.mm_alt = False
+
+    def toggle_mm_alt():
+        persistent.mm_alt = not bool(getattr(persistent, "mm_alt", False))
+        renpy.save_persistent()
+        renpy.restart_interaction()
+
 
 transform logo_bob:
     yoffset -60
@@ -68,8 +76,8 @@ screen main_menu():
 
     tag menu
 
-    default mm_alt = False
     default mm_track = None
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
     python:
         desired = "audio/Shattered_Remains.mp3" if mm_alt else "audio/Magical_Hallways.mp3"
@@ -104,9 +112,10 @@ screen main_menu():
 
         # Cloud news button (defined in custom_news_updates.rpy)
         use news_menu_button(
-            bg_action=ToggleScreenVariable("mm_alt"),
+            bg_action=Function(toggle_mm_alt),
             bg_label=("LightMode" if mm_alt else "DarkMode"),
-            bg_use_alt=False
+            bg_use_alt=mm_alt,
+            news_use_alt=mm_alt
         )
 
             

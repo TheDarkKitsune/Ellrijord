@@ -38,7 +38,7 @@ init -2 python:
         return None
 
 
-screen ui_tooltip_from_rect(text, rect, ypad=18):
+screen ui_tooltip_from_rect(text, rect, ypad=10):
     layer "overlay"
     zorder 200
 
@@ -49,12 +49,14 @@ screen ui_tooltip_from_rect(text, rect, ypad=18):
         $ ry = int(ry)
         $ rw = int(rw)
         $ rh = int(rh)
+        $ tw = int(rw * 0.9)
+        $ tx = rx + int((rw - tw) / 2)
         frame:
             background Frame("gui/textbox.png", 15, 15, 15, 15)
-            xpos rx
+            xpos tx
             ypos (ry + rh + ypad)
-            xsize rw
+            xsize tw
             padding (10, 10)
             clipping True
             if text:
-                text text style "ui_tooltip_text" xmaximum (rw - 48) xalign 0.5 yalign 0.5 text_align 0.5
+                text text style "ui_tooltip_text" xmaximum (tw - 48) xalign 0.5 yalign 0.5 text_align 0.5
