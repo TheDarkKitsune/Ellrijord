@@ -201,4 +201,4 @@ screen preferences_tab_access(pref_access_yadj):
                                     ysize slider_row_h
                                     text "MAX" style "pref_setting_label" xalign 0.0 yalign 0.5
 
-            controller_vbar value YScrollValue("pref_access_vp") keyboard_focus False
+            use ui_vscrollbar_for("pref_access_vp")

@@ -3,14 +3,14 @@
 
 init -2 python:
     UI_SLIDER_THUMB_W = 22
-    UI_SLIDER_THUMB_H = 36
+    UI_SLIDER_THUMB_H = 30
     UI_SLIDER_THUMB_YOFFSET = 0
 
 style ui_slider_bar is slider:
     xsize 200
     ysize 36
-    base_bar Frame("gui/slider/horizontal_idle_bar.png", 26,18,26,18, tile=gui.slider_tile)
-    hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    base_bar Frame("gui/slider/horizontal_idle_bar.png", gui.slider_borders, tile=gui.slider_tile)
+    hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
     # Render a bar patch behind the thumb so transparent thumb pixels don't punch holes.
     thumb Fixed(
         Transform("gui/slider/horizontal_idle_thumb.png", xsize=UI_SLIDER_THUMB_W, ysize=UI_SLIDER_THUMB_H),
@@ -22,13 +22,16 @@ style ui_slider_bar is slider:
         xsize=UI_SLIDER_THUMB_W,
         ysize=UI_SLIDER_THUMB_H
     )
-    thumb_offset (0, 0)
+    thumb_offset 18
+    thumb_align 0.5
+    right_gutter 18
+    left_gutter 18
 
 style ui_slider_bar_fill is ui_slider_bar:
-    left_bar Frame("gui/slider/horizontal_fill_bar.png", 26,18,26,18, tile=gui.slider_tile)
-    right_bar Frame("gui/slider/horizontal_idle_bar.png", 26,18,26,18, tile=gui.slider_tile)
-    hover_left_bar Frame("gui/slider/horizontal_fill_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
-    hover_right_bar Frame("gui/slider/horizontal_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    left_bar Frame("gui/slider/horizontal_fill_bar.png", gui.slider_borders, tile=gui.slider_tile)
+    right_bar Frame("gui/slider/horizontal_idle_bar.png", gui.slider_borders, tile=gui.slider_tile)
+    hover_left_bar Frame("gui/slider/horizontal_fill_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
+    hover_right_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
 
 screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None):
     $ _style_name = style_name

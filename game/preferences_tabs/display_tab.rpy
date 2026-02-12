@@ -143,4 +143,4 @@ screen preferences_tab_display():
                                     ysize slider_row_h
                                     text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
 
-            controller_vbar value YScrollValue("pref_display_vp") keyboard_focus False
+            use ui_vscrollbar_for("pref_display_vp")
