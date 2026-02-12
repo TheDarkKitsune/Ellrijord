@@ -8,7 +8,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
 
         fixed:
             xsize 520
-            ysize 600
+            ysize 580
 
             text "REMAPS" style "pref_setting_label":
                 xpos 0
@@ -18,7 +18,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                 xpos 0
                 ypos 50
                 controller_viewport:
-                    xysize (520, 600)
+                    xysize (520, 580)
                     mousewheel True
                     draggable True
                     shortcuts True
@@ -90,6 +90,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
 
                     hbox:
                         spacing 10
+                        ypos 4
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h

@@ -6,9 +6,9 @@ transform ui_slider_thumb_fx:
     yoffset 0
 
 style ui_slider_bar is slider:
-    xsize 560
-    ysize 80
-    base_bar Frame("gui/slider/horizontal_idle_bar.png", gui.slider_borders, tile=gui.slider_tile)
+    xsize 200
+    ysize 36
+    base_bar Frame("gui/slider/horizontal_idle_bar.png", 32,18,32,18, tile=gui.slider_tile)
     hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
     thumb At("gui/slider/horizontal_idle_thumb.png", ui_slider_thumb_fx)
     hover_thumb At("gui/slider/horizontal_idle_thumb.png", ui_slider_thumb_fx)
