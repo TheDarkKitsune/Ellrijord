@@ -259,6 +259,22 @@ screen preferences():
                         ypos (row_y - 8)
                         use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_off")
 
+                    $ row_y = 340
+                    text "LANGUAGE" style "pref_label":
+                        xpos left_x
+                        ypos row_y
+                    text get_ui_lang_label(get_ui_lang()) style "pref_label":
+                        xpos min_x
+                        ypos row_y
+                    fixed:
+                        xpos on_x
+                        ypos (row_y - 8)
+                        use pref_small_button("ENGLISH (US)", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us")
+                    fixed:
+                        xpos off_x
+                        ypos (row_y - 8)
+                        use pref_small_button("ESPAÑOL (ES)", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es")
+
                     $ row_y = 410
                     text L("pref_label_text_speed") style "pref_label":
                         xpos left_x
