@@ -27,7 +27,7 @@ style ui_slider_bar is slider:
 style ui_slider_bar_fill is ui_slider_bar:
     left_bar Frame("gui/slider/horizontal_fill_bar.png", 26,18,26,18, tile=gui.slider_tile)
     right_bar Frame("gui/slider/horizontal_idle_bar.png", 26,18,26,18, tile=gui.slider_tile)
-    hover_left_bar Frame("gui/slider/horizontal_fill_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    hover_left_bar Frame("gui/slider/horizontal_fill_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
     hover_right_bar Frame("gui/slider/horizontal_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
 
 screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None):
