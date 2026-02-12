@@ -1,20 +1,40 @@
 # components/sliders.rpy
 # Shared slider styles/components.
 
-transform ui_slider_thumb_fx:
-    zoom 0.4
-    yoffset 0
+init -2 python:
+    UI_SLIDER_THUMB_W = 22
+    UI_SLIDER_THUMB_H = 36
+    UI_SLIDER_THUMB_YOFFSET = 0
 
 style ui_slider_bar is slider:
     xsize 200
     ysize 36
-    base_bar Frame("gui/slider/horizontal_idle_bar.png", 32,18,32,18, tile=gui.slider_tile)
-    hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb At("gui/slider/horizontal_idle_thumb.png", ui_slider_thumb_fx)
-    hover_thumb At("gui/slider/horizontal_idle_thumb.png", ui_slider_thumb_fx)
-    thumb_offset (21, 21)
+    base_bar Frame("gui/slider/horizontal_idle_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    # Render a bar patch behind the thumb so transparent thumb pixels don't punch holes.
+    thumb Fixed(
+        Transform("gui/slider/horizontal_idle_thumb.png", xsize=UI_SLIDER_THUMB_W, ysize=UI_SLIDER_THUMB_H),
+        xsize=UI_SLIDER_THUMB_W,
+        ysize=UI_SLIDER_THUMB_H
+    )
+    hover_thumb Fixed(
+        Transform("gui/slider/horizontal_hover_thumb.png", xsize=UI_SLIDER_THUMB_W, ysize=UI_SLIDER_THUMB_H),
+        xsize=UI_SLIDER_THUMB_W,
+        ysize=UI_SLIDER_THUMB_H
+    )
+    thumb_offset (0, 0)
 
-screen ui_slider(value, style_name="ui_slider_bar", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None):
+style ui_slider_bar_fill is ui_slider_bar:
+    left_bar Frame("gui/slider/horizontal_fill_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    right_bar Frame("gui/slider/horizontal_idle_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    hover_left_bar Frame("gui/slider/horizontal_fill_bar.png", 26,18,26,18, tile=gui.slider_tile)
+    hover_right_bar Frame("gui/slider/horizontal_hover_bar.png", 26,18,26,18, tile=gui.slider_tile)
+
+screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None):
+    $ _style_name = style_name
+    if _style_name is None:
+        $ _style_name = "ui_slider_bar_fill" if variant == "fill" else "ui_slider_bar"
+
     $ _hover = hovered_action
     $ _unhover = unhovered_action
     $ _can_tip = hasattr(renpy.store, "set_pref_tooltip") and hasattr(renpy.store, "clear_pref_tooltip")
@@ -24,7 +44,7 @@ screen ui_slider(value, style_name="ui_slider_bar", xpos=None, ypos=None, xsize=
         if _unhover is None:
             $ _unhover = Function(renpy.store.clear_pref_tooltip)
 
-    bar value value style style_name:
+    bar value value style _style_name:
         if xpos is not None:
             xpos xpos
         if ypos is not None:
