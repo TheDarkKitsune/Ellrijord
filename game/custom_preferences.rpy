@@ -69,7 +69,11 @@ init -2 python:
     def set_pref_tooltip(text):
         store.pref_tooltip = text
         mx, my = renpy.get_mouse_pos()
-        rect = get_rect_at_pos(mx, my)
+        rect = get_best_rect_at_pos(mx, my)
+        if rect is None:
+            rect = get_focus_rect()
+        if rect is None:
+            rect = get_rect_at_pos(mx, my)
         if rect is None:
             rect = (mx, my, 0, 0)
         store.pref_tooltip_rect = rect
@@ -80,48 +84,59 @@ init -2 python:
 
 style pref_label is text:
     font "fonts/trotes/Trotes.ttf"
-    size 28
+    size 20
     color "#f7e9ff"
     outlines [(3, "#6b3aa8", 0, 0)]
     xalign 0.0
+
+style pref_setting_label is pref_label
+
+style pref_setting_btn_text is ui_btn_text_small:
+    size 20
 
 style pref_bar is ui_slider_bar
 
 default pref_tooltip = None
 default pref_tooltip_rect = None
 
-screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None):
+screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None, use_alt=None):
     $ label = L(label_key)
     $ tooltip = L(tooltip_key) if tooltip_key else label
+    $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
         SetScreenVariable("pref_tab", value),
         zoom=PREF_TAB_ZOOM,
         text_style="ui_btn_text_tab",
+        use_alt=_use_alt,
         selected=current_tab == value,
         hovered_action=Function(set_pref_tooltip, tooltip),
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_small_button(label_key, action, selected=False, tooltip_key=None):
+screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text"):
     $ label = L(label_key)
     $ tooltip = L(tooltip_key) if tooltip_key else label
+    $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
         action,
         zoom=PREF_SM_ZOOM,
-        text_style="ui_btn_text_small",
+        text_style=text_style,
+        use_alt=_use_alt,
         selected=selected,
         hovered_action=Function(set_pref_tooltip, tooltip),
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_tiny_button(label, action, selected=False, tooltip=None):
+screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text"):
+    $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
         action,
         zoom=PREF_TINY_ZOOM,
-        text_style="ui_btn_text_small",
+        text_style=text_style,
+        use_alt=_use_alt,
         selected=selected,
         hovered_action=Function(set_pref_tooltip, tooltip) if tooltip else None,
         unhovered_action=Function(clear_pref_tooltip) if tooltip else None
@@ -206,11 +221,11 @@ screen preferences():
         yalign 0.93
         spacing 22
 
-        use pref_small_button("pref_button_main_menu", MainMenu(), tooltip_key="pref_tip_main_menu")
+        use pref_small_button("pref_button_main_menu", MainMenu(), tooltip_key="pref_tip_main_menu", text_style="ui_btn_text_small")
         if main_menu:
-            use pref_small_button("pref_button_back", ShowMenu("main_menu"), tooltip_key="pref_tip_back")
+            use pref_small_button("pref_button_back", ShowMenu("main_menu"), tooltip_key="pref_tip_back", text_style="ui_btn_text_small")
         else:
-            use pref_small_button("pref_button_back", Return(), tooltip_key="pref_tip_back")
-        use pref_small_button("pref_button_default", Function(reset_preferences), tooltip_key="pref_tip_default")
+            use pref_small_button("pref_button_back", Return(), tooltip_key="pref_tip_back", text_style="ui_btn_text_small")
+        use pref_small_button("pref_button_default", Function(reset_preferences), tooltip_key="pref_tip_default", text_style="ui_btn_text_small")
 
     use ui_tooltip_from_rect(store.pref_tooltip, store.pref_tooltip_rect)

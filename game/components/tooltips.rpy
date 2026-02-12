@@ -37,8 +37,29 @@ init -2 python:
             return None
         return None
 
+    def get_best_rect_at_pos(x, y):
+        """
+        Returns the smallest focus rect under the pointer.
+        This avoids anchoring to large parent containers (like scroll viewports).
+        """
+        best = None
+        best_area = None
+        try:
+            for item in renpy.display.focus.focus_list:
+                if not (x >= item.x and x <= (item.x + item.w) and y >= item.y and y <= (item.y + item.h)):
+                    continue
+                if item.w <= 0 or item.h <= 0:
+                    continue
+                area = item.w * item.h
+                if best is None or area < best_area:
+                    best = (item.x, item.y, item.w, item.h)
+                    best_area = area
+        except Exception:
+            return None
+        return best
 
-screen ui_tooltip_from_rect(text, rect, ypad=10):
+
+screen ui_tooltip_from_rect(text, rect, ypad=10, min_width=200):
     layer "overlay"
     zorder 200
 
@@ -49,7 +70,7 @@ screen ui_tooltip_from_rect(text, rect, ypad=10):
         $ ry = int(ry)
         $ rw = int(rw)
         $ rh = int(rh)
-        $ tw = int(rw * 0.9)
+        $ tw = max(min_width, int(rw * 0.9))
         $ tx = rx + int((rw - tw) / 2)
         frame:
             background Frame("gui/textbox.png", 15, 15, 15, 15)

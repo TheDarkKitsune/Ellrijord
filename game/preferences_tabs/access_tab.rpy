@@ -21,7 +21,7 @@ screen preferences_tab_access(pref_access_yadj):
             fixed:
                 xsize 1480
                 ysize 90
-                text "FONT OVERRIDE" style "pref_label":
+                text "FONT OVERRIDE" style "pref_setting_label":
                     xpos left_x
                     ypos 10
                 fixed:
@@ -44,35 +44,35 @@ screen preferences_tab_access(pref_access_yadj):
             fixed:
                 xsize 1480
                 ysize 90
-                text "TEXT SIZE SCALING" style "pref_label":
+                text "TEXT SIZE SCALING" style "pref_setting_label":
                     xpos left_x
                     ypos 10
-                text "MIN" style "pref_label":
+                text "MIN" style "pref_setting_label":
                     xpos min_x
                     ypos 10
                 use ui_slider(Preference("font size"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_font_size"))
-                text "MAX" style "pref_label":
+                text "MAX" style "pref_setting_label":
                     xpos max_x
                     ypos 10
 
             fixed:
                 xsize 1480
                 ysize 90
-                text "LINE SPACE SCALING" style "pref_label":
+                text "LINE SPACE SCALING" style "pref_setting_label":
                     xpos left_x
                     ypos 10
-                text "MIN" style "pref_label":
+                text "MIN" style "pref_setting_label":
                     xpos min_x
                     ypos 10
                 use ui_slider(Preference("font line spacing"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_line_spacing"))
-                text "MAX" style "pref_label":
+                text "MAX" style "pref_setting_label":
                     xpos max_x
                     ypos 10
 
             fixed:
                 xsize 1480
                 ysize 90
-                text "HIGH CONTRAST TEXT" style "pref_label":
+                text "HIGH CONTRAST TEXT" style "pref_setting_label":
                     xpos left_x
                     ypos 10
                 fixed:
@@ -87,7 +87,7 @@ screen preferences_tab_access(pref_access_yadj):
             fixed:
                 xsize 1480
                 ysize 90
-                text "SELF-VOICING" style "pref_label":
+                text "SELF-VOICING" style "pref_setting_label":
                     xpos left_x
                     ypos 10
                 fixed:
@@ -102,7 +102,7 @@ screen preferences_tab_access(pref_access_yadj):
             fixed:
                 xsize 1480
                 ysize 90
-                text "DEBUG" style "pref_label":
+                text "DEBUG" style "pref_setting_label":
                     xpos left_x
                     ypos 10
                 fixed:
@@ -117,28 +117,28 @@ screen preferences_tab_access(pref_access_yadj):
             fixed:
                 xsize 1480
                 ysize 90
-                text "VOICE VOLUME" style "pref_label":
+                text "VOICE VOLUME" style "pref_setting_label":
                     xpos left_x
                     ypos 10
-                text "MIN" style "pref_label":
+                text "MIN" style "pref_setting_label":
                     xpos min_x
                     ypos 10
                 use ui_slider(Preference("voice volume"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_voice_volume"))
-                text "MAX" style "pref_label":
+                text "MAX" style "pref_setting_label":
                     xpos max_x
                     ypos 10
 
             fixed:
                 xsize 1480
                 ysize 90
-                text "SELF-VOICING VOLUME DROP" style "pref_label":
+                text "SELF-VOICING VOLUME DROP" style "pref_setting_label":
                     xpos left_x
                     ypos 10
-                text "MIN" style "pref_label":
+                text "MIN" style "pref_setting_label":
                     xpos min_x
                     ypos 10
                 use ui_slider(Preference("self voicing volume drop"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_self_voicing_volume"))
-                text "MAX" style "pref_label":
+                text "MAX" style "pref_setting_label":
                     xpos max_x
                     ypos 10
 
