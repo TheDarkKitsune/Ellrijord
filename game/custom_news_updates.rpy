@@ -18,24 +18,28 @@ init -2 python:
             "title": "Main Story",
             "body": "Main Story updates and release notes go here.\nAdd more detail for this entry.",
             "image": "gui/news/main_story.png",
+            "update_image": "gui/news/update_image.png",
         },
         {
             "id": "side_story",
             "title": "Side Story",
             "body": "Side Story announcements and patch notes go here.\nAdd more detail for this entry.",
             "image": "gui/news/side_story.png",
+            "update_image": "gui/news/side_story_update.png",
         },
         {
             "id": "bug_fixes",
             "title": "Bug Fixes",
             "body": "Bug fixes and stability improvements go here.\nAdd more detail for this entry.",
             "image": "gui/news/bug_fixes.png",
+            "update_image": "gui/news/bug_fixes_update.png",
         },
         {
             "id": "future_characters",
             "title": "Future Characters",
             "body": "Future Characters news and release notes go here.\nAdd more detail for this entry.",
             "image": "gui/news/future_characters.png",
+            "update_image": "gui/news/future_characters_update.png",
         },
     ]
 
@@ -96,7 +100,10 @@ screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False, news_us
 screen news_updates():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
-    $ news_bg = "gui/news/news_background.png" if renpy.loadable("gui/news/new_background.png") else "gui/news/news_background.png"
+    default news_selected = NEWS_ITEMS[0]["id"]
+    $ selected_item = _news_item(news_selected)
+    $ update_image = selected_item.get("update_image", selected_item.get("image"))
+    $ news_bg = "gui/news/new_background.png" if renpy.loadable("gui/news/new_background.png") else "gui/news/news_background.png"
 
     add im.Scale(news_bg, config.screen_width, config.screen_height)
 
@@ -120,16 +127,19 @@ screen news_updates():
             ypos 80
             xsize 900
 
-        # Hero image (right)
+        # Update image (right)
         fixed:
             xpos 1020
             ypos 40
             xsize NEWS_HERO_W
             ysize NEWS_HERO_H
-            add Solid("#ffffff20") xsize NEWS_HERO_W ysize NEWS_HERO_H
-            text "HERO IMAGE" style "news_body":
-                xalign 0.5
-                yalign 0.5
+            if update_image and renpy.loadable(update_image):
+                add Transform(update_image, xsize=NEWS_HERO_W, ysize=NEWS_HERO_H, fit="cover")
+            else:
+                add Solid("#ffffff20") xsize NEWS_HERO_W ysize NEWS_HERO_H
+                text "HERO IMAGE" style "news_body":
+                    xalign 0.5
+                    yalign 0.5
 
         # Bottom tiles
         hbox:
@@ -138,7 +148,7 @@ screen news_updates():
             spacing 24
 
             for item in NEWS_ITEMS:
-                use news_tile(item)
+                use news_tile(item, news_selected)
 
     # Back button
     hbox:
@@ -148,13 +158,14 @@ screen news_updates():
         use ui_png_button("BACK", ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
-screen news_tile(item):
+screen news_tile(item, news_selected):
     button:
         xsize NEWS_TILE_W
         ysize NEWS_TILE_H
         background Solid("#3a3152")
         hover_background Solid("#4a3a6a")
-        action Show("news_updates_detail", news_id=item["id"])
+        action [SetScreenVariable("news_selected", item["id"]), Show("news_updates_detail", news_id=item["id"])]
+        selected news_selected == item["id"]
 
         if item.get("image") and renpy.loadable(item["image"]):
             add Transform(item["image"], xsize=(NEWS_TILE_W - 16), ysize=(NEWS_TILE_H - 50), fit="cover", xalign=0.5, yalign=0.15)
