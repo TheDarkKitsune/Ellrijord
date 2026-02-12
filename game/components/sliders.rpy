@@ -44,7 +44,7 @@ screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None
         if _unhover is None:
             $ _unhover = Function(renpy.store.clear_pref_tooltip)
 
-    bar value value style _style_name:
+    controller_bar value value style _style_name:
         if xpos is not None:
             xpos xpos
         if ypos is not None:

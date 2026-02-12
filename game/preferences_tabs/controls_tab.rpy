@@ -60,7 +60,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                             pref_remapper),
                                         tooltip_key="pref_tip_add_binding"
                                     )
-                vbar value YScrollValue("pref_controls_viewport") keyboard_focus False
+                controller_vbar value YScrollValue("pref_controls_viewport") keyboard_focus False
 
         fixed:
             xsize 905
@@ -73,11 +73,12 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
             side "c r":
                 xpos 20
                 ypos 50
-                viewport:
+                controller_viewport:
                     id "pref_controls_misc_viewport"
                     xysize (905, 580)
                     mousewheel True
                     draggable True
+                    shortcuts True
                     yadjustment pref_controls_misc_yadj
                     has vbox
                     spacing 14
@@ -265,4 +266,4 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                     ysize ctrl_slider_row_h
                                     text "HIGH" style "pref_setting_label" xalign 1.0 yalign 0.5
 
-                vbar value YScrollValue("pref_controls_misc_viewport") keyboard_focus False
+                controller_vbar value YScrollValue("pref_controls_misc_viewport") keyboard_focus False

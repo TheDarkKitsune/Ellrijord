@@ -17,11 +17,12 @@ screen preferences_tab_access(pref_access_yadj):
             ypos 10
             xysize (1460, 620)
 
-            viewport:
+            controller_viewport:
                 id "pref_access_vp"
                 xysize (1460, 620)
                 mousewheel True
                 draggable True
+                shortcuts True
                 yadjustment pref_access_yadj
 
                 vbox:
@@ -200,4 +201,4 @@ screen preferences_tab_access(pref_access_yadj):
                                     ysize slider_row_h
                                     text "MAX" style "pref_setting_label" xalign 0.0 yalign 0.5
 
-            vbar value YScrollValue("pref_access_vp") keyboard_focus False
+            controller_vbar value YScrollValue("pref_access_vp") keyboard_focus False

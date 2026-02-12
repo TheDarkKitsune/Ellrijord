@@ -11,6 +11,7 @@ init -2 python:
 
     PREF_SM_ZOOM = 0.45
     PREF_TINY_ZOOM = 0.32
+    PREF_TABS = ["display", "audio", "controls", "access"]
 
     def _fix_mute_pref_type():
         prefdata = getattr(persistent, "_preferences", None)
@@ -82,6 +83,30 @@ init -2 python:
         store.pref_tooltip = None
         store.pref_tooltip_rect = None
 
+    def pref_L(key):
+        if key is None:
+            return ""
+        txt = L(key)
+        if txt != key:
+            return txt
+        # Fallbacks for common UI keys if localization map isn't loaded yet.
+        return {
+            "pref_tab_display": "DISPLAY",
+            "pref_tab_audio": "AUDIO",
+            "pref_tab_controls": "CONTROLS",
+            "pref_tab_access": "ACCESS",
+            "pref_button_main_menu": "MAIN MENU",
+            "pref_button_back": "BACK",
+            "pref_button_default": "DEFAULT",
+        }.get(key, key)
+
+    def next_pref_tab(current, step):
+        try:
+            idx = PREF_TABS.index(current)
+        except Exception:
+            idx = 0
+        return PREF_TABS[(idx + step) % len(PREF_TABS)]
+
 style pref_label is text:
     font "fonts/trotes/Trotes.ttf"
     size 20
@@ -100,8 +125,8 @@ default pref_tooltip = None
 default pref_tooltip_rect = None
 
 screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None, use_alt=None):
-    $ label = L(label_key)
-    $ tooltip = L(tooltip_key) if tooltip_key else label
+    $ label = pref_L(label_key)
+    $ tooltip = pref_L(tooltip_key) if tooltip_key else label
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
@@ -115,8 +140,8 @@ screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None, use
     )
 
 screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text"):
-    $ label = L(label_key)
-    $ tooltip = L(tooltip_key) if tooltip_key else label
+    $ label = pref_L(label_key)
+    $ tooltip = pref_L(tooltip_key) if tooltip_key else label
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
@@ -143,7 +168,7 @@ screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=Non
     )
 
 screen pref_icon_button(img, action, tooltip_key=None):
-    $ tooltip = L(tooltip_key) if tooltip_key else None
+    $ tooltip = pref_L(tooltip_key) if tooltip_key else None
     use ui_rect_icon_button(
         img,
         action,
@@ -155,9 +180,9 @@ screen pref_icon_button(img, action, tooltip_key=None):
     )
 
 screen pref_add_binding_button(action, tooltip_key=None):
-    $ tooltip = L(tooltip_key) if tooltip_key else None
+    $ tooltip = pref_L(tooltip_key) if tooltip_key else None
     use ui_rect_text_button(
-        L("pref_button_add_binding"),
+        pref_L("pref_button_add_binding"),
         action,
         width=68,
         height=68,
@@ -177,7 +202,25 @@ screen preferences():
     default pref_yadj = ui.adjustment()
     default pref_access_yadj = ui.adjustment()
 
+    # Safe tab switching without relying on button ids.
+    key pad_config.get_event("page_left") action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, -1))
+    key pad_config.get_event("page_right") action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, 1))
+    key "K_q" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, -1))
+    key "K_e" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, 1))
+
     add "gui/game_menu.png"
+
+    # Keep a visible virtual cursor at all times in preferences.
+    if "VirtualCursor" in globals():
+        add VirtualCursor(
+            cursor=(Transform("gui/slider/horizontal_hover_thumb.png", zoom=0.45), 5, 8),
+            hide_on_mouse=False,
+            which_stick="both",
+            speed=1100.0,
+            keyboard_speed=900.0,
+            absorb_events=False,
+            cursor_area=(0, 0, config.screen_width, config.screen_height),
+        )
 
     # Title/logo
     add Transform("gui/logo.png", zoom=0.40):

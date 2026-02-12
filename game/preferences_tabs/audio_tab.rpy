@@ -18,11 +18,12 @@ screen preferences_tab_audio():
             ypos 10
             xysize (1460, 620)
 
-            viewport:
+            controller_viewport:
                 id "pref_audio_vp"
                 xysize (1460, 620)
                 mousewheel True
                 draggable True
+                shortcuts True
                 yadjustment pref_audio_yadj
 
                 vbox:
@@ -79,4 +80,4 @@ screen preferences_tab_audio():
                                 ysize row_h
                                 use ui_slider(Preference("voice volume"), style_name="pref_bar", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_voice_volume"))
 
-            vbar value YScrollValue("pref_audio_vp") keyboard_focus False
+            controller_vbar value YScrollValue("pref_audio_vp") keyboard_focus False

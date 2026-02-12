@@ -19,11 +19,12 @@ screen preferences_tab_display():
             ypos 10
             xysize (1460, 620)
 
-            viewport:
+            controller_viewport:
                 id "pref_display_vp"
                 xysize (1460, 620)
                 mousewheel True
                 draggable True
+                shortcuts True
                 yadjustment pref_display_yadj
 
                 hbox:
@@ -142,4 +143,4 @@ screen preferences_tab_display():
                                     ysize slider_row_h
                                     text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
 
-            vbar value YScrollValue("pref_display_vp") keyboard_focus False
+            controller_vbar value YScrollValue("pref_display_vp") keyboard_focus False
