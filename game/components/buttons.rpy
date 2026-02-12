@@ -2,28 +2,23 @@
 # Shared PNG button styles, transforms, and screen helpers.
 
 init -2 python:
-    BTN_SRC_W = 534
-    BTN_SRC_H = 140
-    BTN_DARKEN = -0.25
+    BTN_SRC_W = 168
+    BTN_SRC_H = 26
+    BTN_VISUAL_SCALE = 4
+    BTN_HOVER_BOUNCE = 4
+    BTN_BORDER_X = 10
+    BTN_BORDER_Y = 13
 
 
-transform btn_idle_fx(z=1.0, y=-9):
+transform btn_idle_fx(z=1.0, y=0):
     zoom z
     yoffset y
 
-transform btn_hover_fx(z=1.0, y=-9):
+transform btn_hover_fx(z=1.0, y=0, bounce=BTN_HOVER_BOUNCE):
     zoom z
     yoffset y
-    linear 0.08 yoffset (y + 6)
+    linear 0.08 yoffset (y + bounce)
     linear 0.08 yoffset y
-
-transform text_idle_fx(y=-9, adjust=6):
-    yoffset (y + adjust)
-
-transform text_hover_fx(y=-9, adjust=6):
-    yoffset (y + adjust)
-    linear 0.08 yoffset (y + adjust + 6)
-    linear 0.08 yoffset (y + adjust)
 
 
 style ui_btn_text is text:
@@ -42,17 +37,18 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=-9, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None):
-    $ btn_w = int(BTN_SRC_W * zoom)
-    $ btn_h = int(BTN_SRC_H * zoom)
-    $ text_adjust = int(round(11 * (zoom / 0.8)))
-    # Ren'Py 8.5 matrixcolor is incompatible with legacy im.matrix objects.
-    # Keep alt mode stable by using the same assets unless dedicated dark PNGs are added.
+screen ui_png_button(label, action, zoom=1, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None):
+    $ scale = zoom * BTN_VISUAL_SCALE
+    $ btn_w = int(BTN_SRC_W * scale)
+    $ btn_h = int(BTN_SRC_H * scale)
     $ idle_disp = "gui/btn_idle.png"
     $ hover_disp = "gui/btn_hover.png"
     $ disabled_disp = "gui/btn_disabled.png"
-    $ idle_render = disabled_disp if selected else idle_disp
-    $ hover_render = disabled_disp if selected else hover_disp
+    $ idle_render = disabled_disp if (selected or disabled) else idle_disp
+    $ hover_render = disabled_disp if (selected or disabled) else hover_disp
+    $ idle_img = Transform(Frame(idle_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ hover_img = Transform(Frame(hover_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ disabled_img = Transform(Frame(disabled_disp, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
     $ hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
 
@@ -71,29 +67,20 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
         unhovered unhover_actions
 
         idle Fixed(
-            At(idle_render, btn_idle_fx(zoom, yoffset)),
-            At(
-                Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5),
-                text_idle_fx(yoffset, text_adjust)
-            ),
+            At(idle_img, btn_idle_fx(1.0, yoffset)),
+            At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
         hover Fixed(
-            At(hover_render, btn_hover_fx(zoom, yoffset)),
-            At(
-                Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5),
-                text_hover_fx(yoffset, text_adjust)
-            ),
+            At(hover_img, btn_hover_fx(1.0, yoffset)),
+            At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_hover_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
         insensitive Fixed(
-            At(disabled_disp, btn_idle_fx(zoom, yoffset)),
-            At(
-                Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5),
-                text_idle_fx(yoffset, text_adjust)
-            ),
+            At(disabled_img, btn_idle_fx(1.0, yoffset)),
+            At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
