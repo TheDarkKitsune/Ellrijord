@@ -99,10 +99,12 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
         )
 
 
-screen ui_rect_icon_button(icon, action, size=68, bg="#2a2836", hover_overlay="#f003", tooltip=None, hovered_action=None, unhovered_action=None):
+screen ui_rect_icon_button(icon, action, size=68, bg="#2a2836", hover_overlay="#f003", tooltip=None, hovered_action=None, unhovered_action=None, button_id=None):
     $ _hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ _unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
     imagebutton:
+        if button_id is not None:
+            id button_id
         xysize (size, size)
         action action
         if tooltip:
@@ -125,10 +127,12 @@ screen ui_rect_icon_button(icon, action, size=68, bg="#2a2836", hover_overlay="#
         )
 
 
-screen ui_rect_text_button(label, action, width=68, height=68, bg="#2a2836", hover_bg="#ff8335", text_style="pref_setting_btn_text", tooltip=None, hovered_action=None, unhovered_action=None):
+screen ui_rect_text_button(label, action, width=68, height=68, bg="#2a2836", hover_bg="#ff8335", text_style="pref_setting_btn_text", tooltip=None, hovered_action=None, unhovered_action=None, button_id=None):
     $ _hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ _unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
     imagebutton:
+        if button_id is not None:
+            id button_id
         xysize (width, height)
         action action
         if tooltip:

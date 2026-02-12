@@ -139,7 +139,7 @@ screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None, use
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text"):
+screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None):
     $ label = pref_L(label_key)
     $ tooltip = pref_L(tooltip_key) if tooltip_key else label
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
@@ -149,12 +149,13 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None, us
         zoom=PREF_SM_ZOOM,
         text_style=text_style,
         use_alt=_use_alt,
+        button_id=button_id,
         selected=selected,
         hovered_action=Function(set_pref_tooltip, tooltip),
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text"):
+screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None):
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
@@ -162,16 +163,18 @@ screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=Non
         zoom=PREF_TINY_ZOOM,
         text_style=text_style,
         use_alt=_use_alt,
+        button_id=button_id,
         selected=selected,
         hovered_action=Function(set_pref_tooltip, tooltip) if tooltip else None,
         unhovered_action=Function(clear_pref_tooltip) if tooltip else None
     )
 
-screen pref_icon_button(img, action, tooltip_key=None):
+screen pref_icon_button(img, action, tooltip_key=None, button_id=None):
     $ tooltip = pref_L(tooltip_key) if tooltip_key else None
     use ui_rect_icon_button(
         img,
         action,
+        button_id=button_id,
         size=68,
         bg="#2a2836",
         hover_overlay="#f003",
@@ -179,11 +182,12 @@ screen pref_icon_button(img, action, tooltip_key=None):
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_add_binding_button(action, tooltip_key=None):
+screen pref_add_binding_button(action, tooltip_key=None, button_id=None):
     $ tooltip = pref_L(tooltip_key) if tooltip_key else None
     use ui_rect_text_button(
         pref_L("pref_button_add_binding"),
         action,
+        button_id=button_id,
         width=68,
         height=68,
         bg="#2a2836",
@@ -210,18 +214,6 @@ screen preferences():
 
     add "gui/game_menu.png"
 
-    # Keep a visible virtual cursor at all times in preferences.
-    if "VirtualCursor" in globals():
-        add VirtualCursor(
-            cursor=(Transform("gui/slider/horizontal_hover_thumb.png", zoom=0.45), 5, 8),
-            hide_on_mouse=False,
-            which_stick="both",
-            speed=1100.0,
-            keyboard_speed=900.0,
-            absorb_events=False,
-            cursor_area=(0, 0, config.screen_width, config.screen_height),
-        )
-
     # Title/logo
     add Transform("gui/logo.png", zoom=0.40):
         xalign 0.5
@@ -233,10 +225,10 @@ screen preferences():
         xpos 240
         ypos 120
         spacing 16
-        use pref_tab_button("pref_tab_display", "display", pref_tab, "pref_tip_tab_display")
-        use pref_tab_button("pref_tab_audio", "audio", pref_tab, "pref_tip_tab_audio")
-        use pref_tab_button("pref_tab_controls", "controls", pref_tab, "pref_tip_tab_controls")
-        use pref_tab_button("pref_tab_access", "access", pref_tab, "pref_tip_tab_access")
+        use pref_tab_button("DISPLAY", "display", pref_tab, "pref_tip_tab_display")
+        use pref_tab_button("AUDIO", "audio", pref_tab, "pref_tip_tab_audio")
+        use pref_tab_button("CONTROLS", "controls", pref_tab, "pref_tip_tab_controls")
+        use pref_tab_button("ACCESS", "access", pref_tab, "pref_tip_tab_access")
 
     # Content panel
     fixed:
