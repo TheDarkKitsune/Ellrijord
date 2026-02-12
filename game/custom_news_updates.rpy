@@ -17,21 +17,25 @@ init -2 python:
             "id": "main_story",
             "title": "Main Story",
             "body": "Main Story updates and release notes go here.\nAdd more detail for this entry.",
+            "image": "gui/news/main_story.png",
         },
         {
             "id": "side_story",
             "title": "Side Story",
             "body": "Side Story announcements and patch notes go here.\nAdd more detail for this entry.",
+            "image": "gui/news/side_story.png",
         },
         {
             "id": "bug_fixes",
             "title": "Bug Fixes",
             "body": "Bug fixes and stability improvements go here.\nAdd more detail for this entry.",
+            "image": "gui/news/bug_fixes.png",
         },
         {
             "id": "future_characters",
             "title": "Future Characters",
             "body": "Future Characters news and release notes go here.\nAdd more detail for this entry.",
+            "image": "gui/news/future_characters.png",
         },
     ]
 
@@ -92,8 +96,9 @@ screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False, news_us
 screen news_updates():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+    $ news_bg = "gui/news/news_background.png" if renpy.loadable("gui/news/new_background.png") else "gui/news/news_background.png"
 
-    add "gui/news_background.png"
+    add im.Scale(news_bg, config.screen_width, config.screen_height)
 
     # Main panel
     fixed:
@@ -151,7 +156,10 @@ screen news_tile(item):
         hover_background Solid("#4a3a6a")
         action Show("news_updates_detail", news_id=item["id"])
 
-        add Solid("#ffffff18") xsize (NEWS_TILE_W - 40) ysize (NEWS_TILE_H - 60) xalign 0.5 yalign 0.35
+        if item.get("image") and renpy.loadable(item["image"]):
+            add Transform(item["image"], xsize=(NEWS_TILE_W - 16), ysize=(NEWS_TILE_H - 50), fit="cover", xalign=0.5, yalign=0.15)
+        else:
+            add Solid("#ffffff18") xsize (NEWS_TILE_W - 40) ysize (NEWS_TILE_H - 60) xalign 0.5 yalign 0.35
         text item["title"] style "news_tile_text"
 
 
