@@ -52,7 +52,7 @@ screen preferences_tab_audio():
                             fixed:
                                 xsize right_w
                                 ysize row_h
-                                use ui_slider(Preference("music volume"), style_name="pref_bar", xpos=(right_w - 560), xsize=560, ysize=88, tooltip=L("pref_tip_music_volume"))
+                                use ui_slider(Preference("music volume"), style_name="pref_bar", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_music_volume"))
 
                     if config.has_sound:
                         hbox:
@@ -64,7 +64,7 @@ screen preferences_tab_audio():
                             fixed:
                                 xsize right_w
                                 ysize row_h
-                                use ui_slider(Preference("sound volume"), style_name="pref_bar", xpos=(right_w - 560), xsize=560, ysize=88, tooltip=L("pref_tip_sfx_volume"))
+                                use ui_slider(Preference("sound volume"), style_name="pref_bar", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_sfx_volume"))
 
                     if config.has_voice:
                         hbox:
@@ -76,6 +76,6 @@ screen preferences_tab_audio():
                             fixed:
                                 xsize right_w
                                 ysize row_h
-                                use ui_slider(Preference("voice volume"), style_name="pref_bar", xpos=(right_w - 560), xsize=560, ysize=88, tooltip=L("pref_tip_voice_volume"))
+                                use ui_slider(Preference("voice volume"), style_name="pref_bar", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_voice_volume"))
 
             vbar value YScrollValue("pref_audio_vp") keyboard_focus False

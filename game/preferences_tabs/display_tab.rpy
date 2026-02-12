@@ -15,6 +15,8 @@ screen preferences_tab_display():
         $ slider_block_w = 760
 
         side "c r":
+            xpos 10
+            ypos 10
             xysize (1460, 620)
 
             viewport:
