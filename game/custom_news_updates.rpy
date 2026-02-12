@@ -133,10 +133,18 @@ screen news_updates():
             ypos 40
             xsize NEWS_HERO_W
             ysize NEWS_HERO_H
+            add Solid("#ffffff20") xsize NEWS_HERO_W ysize NEWS_HERO_H
             if update_image and renpy.loadable(update_image):
-                add Transform(update_image, xsize=NEWS_HERO_W, ysize=NEWS_HERO_H, fit="cover")
+                # Single render keeps aspect ratio and prevents collage/double-image.
+                add Transform(
+                    update_image,
+                    fit="contain",
+                    xsize=NEWS_HERO_W,
+                    ysize=NEWS_HERO_H,
+                    xalign=0.5,
+                    yalign=0.5
+                )
             else:
-                add Solid("#ffffff20") xsize NEWS_HERO_W ysize NEWS_HERO_H
                 text "HERO IMAGE" style "news_body":
                     xalign 0.5
                     yalign 0.5

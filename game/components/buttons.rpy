@@ -46,9 +46,11 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
     $ btn_w = int(BTN_SRC_W * zoom)
     $ btn_h = int(BTN_SRC_H * zoom)
     $ text_adjust = int(round(11 * (zoom / 0.8)))
-    $ idle_disp = im.MatrixColor("gui/btn_idle.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_idle.png"
-    $ hover_disp = im.MatrixColor("gui/btn_hover.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_hover.png"
-    $ disabled_disp = im.MatrixColor("gui/btn_disabled.png", im.matrix.brightness(BTN_DARKEN)) if use_alt else "gui/btn_disabled.png"
+    # Ren'Py 8.5 matrixcolor is incompatible with legacy im.matrix objects.
+    # Keep alt mode stable by using the same assets unless dedicated dark PNGs are added.
+    $ idle_disp = "gui/btn_idle.png"
+    $ hover_disp = "gui/btn_hover.png"
+    $ disabled_disp = "gui/btn_disabled.png"
     $ idle_render = disabled_disp if selected else idle_disp
     $ hover_render = disabled_disp if selected else hover_disp
     $ hover_actions = ([hovered_action] if hovered_action is not None else [])
