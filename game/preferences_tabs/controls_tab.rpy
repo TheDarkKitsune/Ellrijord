@@ -63,19 +63,19 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                 vbar value YScrollValue("pref_controls_viewport") keyboard_focus False
 
         fixed:
-            xsize 925
+            xsize 905
             ysize 580
 
             text "CONTROLLER" style "pref_setting_label":
-                xpos 0
+                xpos 20
                 ypos 0
 
             side "c r":
-                xpos 0
+                xpos 20
                 ypos 50
                 viewport:
                     id "pref_controls_misc_viewport"
-                    xysize (925, 580)
+                    xysize (905, 580)
                     mousewheel True
                     draggable True
                     yadjustment pref_controls_misc_yadj
@@ -83,7 +83,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                     spacing 14
 
                     $ ctrl_left_w = 330
-                    $ ctrl_right_w = 460
+                    $ ctrl_right_w = 555
                     $ ctrl_row_h = 72
                     $ ctrl_slider_row_h = 88
                     $ ctrl_slider_block_w = 420
