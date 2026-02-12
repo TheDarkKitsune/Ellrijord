@@ -22,6 +22,9 @@ init -2 python:
         "pref_label_music_volume": "MUSIC VOLUME",
         "pref_label_sfx_volume": "SFX VOLUME",
         "pref_label_voice_volume": "VOICE VOLUME",
+        "pref_tip_music_volume": "Adjust the music channel volume.",
+        "pref_tip_sfx_volume": "Adjust the sound effects volume.",
+        "pref_tip_voice_volume": "Adjust the voice volume.",
 
         # Display.
         "pref_label_display": "DISPLAY",
@@ -39,6 +42,8 @@ init -2 python:
         "pref_label_min": "MIN",
         "pref_label_max": "MAX",
         "pref_label_auto_forward": "AUTO-FORWARD DELAY",
+        "pref_tip_text_speed": "Change how fast text appears.",
+        "pref_tip_auto_forward": "Change the auto-forward delay.",
 
         # Access.
         "pref_label_skip_mode": "SKIP MODE",
@@ -47,6 +52,9 @@ init -2 python:
         "pref_label_skip_transitions": "SKIP TRANSITIONS",
         "pref_tip_transitions_on": "Skip screen transitions.",
         "pref_tip_transitions_off": "Play screen transitions.",
+        "pref_tip_font_size": "Scale the size of menu and dialogue text.",
+        "pref_tip_line_spacing": "Adjust spacing between lines of text.",
+        "pref_tip_self_voicing_volume": "Reduce game volume while self-voicing is active.",
 
         # Controls.
         "pref_button_calibrate_gamepad": "CALIBRATE GAMEPAD BUTTONS",

@@ -77,10 +77,6 @@ init -2 python:
         store.pref_tooltip = None
         store.pref_tooltip_rect = None
 
-transform pref_thumb_fx:
-    zoom 0.4
-    yoffset 26
-
 style pref_label is text:
     font "fonts/trotes/Trotes.ttf"
     size 28
@@ -88,13 +84,7 @@ style pref_label is text:
     outlines [(3, "#6b3aa8", 0, 0)]
     xalign 0.0
 
-style pref_bar is slider:
-    xsize 560
-    ysize 80
-    base_bar Frame("gui/slider/horizontal_idle_bar.png", gui.slider_borders, tile=gui.slider_tile)
-    hover_base_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
-    thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
-    hover_thumb At("gui/slider/horizontal_idle_thumb.png", pref_thumb_fx)
+style pref_bar is ui_slider_bar
 
 default pref_tooltip = None
 default pref_tooltip_rect = None
@@ -204,19 +194,19 @@ screen preferences():
                         vbox:
                             spacing 8
                             text L("pref_label_music_volume") style "pref_label"
-                            bar value Preference("music volume") style "pref_bar"
+                            use ui_slider(Preference("music volume"), style_name="pref_bar", tooltip=L("pref_tip_music_volume"))
 
                     if config.has_sound:
                         vbox:
                             spacing 8
                             text L("pref_label_sfx_volume") style "pref_label"
-                            bar value Preference("sound volume") style "pref_bar"
+                            use ui_slider(Preference("sound volume"), style_name="pref_bar", tooltip=L("pref_tip_sfx_volume"))
 
                     if config.has_voice:
                         vbox:
                             spacing 8
                             text L("pref_label_voice_volume") style "pref_label"
-                            bar value Preference("voice volume") style "pref_bar"
+                            use ui_slider(Preference("voice volume"), style_name="pref_bar", tooltip=L("pref_tip_voice_volume"))
 
             elif pref_tab == "display":
                 fixed:
@@ -276,9 +266,7 @@ screen preferences():
                     text L("pref_label_min") style "pref_label":
                         xpos min_x
                         ypos row_y
-                    bar value Preference("text speed") style "pref_bar":
-                        xpos slider_x
-                        ypos (row_y - 8)
+                    use ui_slider(Preference("text speed"), style_name="pref_bar", xpos=slider_x, ypos=(row_y - 8), tooltip=L("pref_tip_text_speed"))
                     text L("pref_label_max") style "pref_label":
                         xpos max_x
                         ypos row_y
@@ -290,9 +278,7 @@ screen preferences():
                     text L("pref_label_min") style "pref_label":
                         xpos min_x
                         ypos row_y
-                    bar value Preference("auto-forward time") style "pref_bar":
-                        xpos slider_x
-                        ypos (row_y - 8)
+                    use ui_slider(Preference("auto-forward time"), style_name="pref_bar", xpos=slider_x, ypos=(row_y - 8), tooltip=L("pref_tip_auto_forward"))
                     text L("pref_label_max") style "pref_label":
                         xpos max_x
                         ypos row_y
@@ -349,9 +335,7 @@ screen preferences():
                             text "MIN" style "pref_label":
                                 xpos min_x
                                 ypos 10
-                            bar value Preference("font size") style "pref_bar":
-                                xpos slider_x
-                                ypos 0
+                            use ui_slider(Preference("font size"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_font_size"))
                             text "MAX" style "pref_label":
                                 xpos max_x
                                 ypos 10
@@ -365,9 +349,7 @@ screen preferences():
                             text "MIN" style "pref_label":
                                 xpos min_x
                                 ypos 10
-                            bar value Preference("font line spacing") style "pref_bar":
-                                xpos slider_x
-                                ypos 0
+                            use ui_slider(Preference("font line spacing"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_line_spacing"))
                             text "MAX" style "pref_label":
                                 xpos max_x
                                 ypos 10
@@ -426,9 +408,7 @@ screen preferences():
                             text "MIN" style "pref_label":
                                 xpos min_x
                                 ypos 10
-                            bar value Preference("voice volume") style "pref_bar":
-                                xpos slider_x
-                                ypos 0
+                            use ui_slider(Preference("voice volume"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_voice_volume"))
                             text "MAX" style "pref_label":
                                 xpos max_x
                                 ypos 10
@@ -442,9 +422,7 @@ screen preferences():
                             text "MIN" style "pref_label":
                                 xpos min_x
                                 ypos 10
-                            bar value Preference("self voicing volume drop") style "pref_bar":
-                                xpos slider_x
-                                ypos 0
+                            use ui_slider(Preference("self voicing volume drop"), style_name="pref_bar", xpos=slider_x, ypos=0, tooltip=L("pref_tip_self_voicing_volume"))
                             text "MAX" style "pref_label":
                                 xpos max_x
                                 ypos 10
