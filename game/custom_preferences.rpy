@@ -10,6 +10,7 @@ init -2 python:
     PREF_TAB_ZOOM = 0.6
 
     PREF_SM_ZOOM = 0.45
+    PREF_TINY_ZOOM = 0.32
 
     def _fix_mute_pref_type():
         prefdata = getattr(persistent, "_preferences", None)
@@ -123,6 +124,17 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None):
         selected=selected,
         hovered_action=Function(set_pref_tooltip, tooltip),
         unhovered_action=Function(clear_pref_tooltip)
+    )
+
+screen pref_tiny_button(label, action, selected=False, tooltip=None):
+    use ui_png_button(
+        label,
+        action,
+        zoom=PREF_TINY_ZOOM,
+        text_style="ui_btn_text_small",
+        selected=selected,
+        hovered_action=Function(set_pref_tooltip, tooltip) if tooltip else None,
+        unhovered_action=Function(clear_pref_tooltip) if tooltip else None
     )
 
 screen pref_icon_button(img, action, tooltip_key=None):
@@ -462,14 +474,155 @@ screen preferences():
 
                     side "c r":
                         controller_viewport:
-                            xysize (980, 520)
+                            xysize (1440, 520)
                             mousewheel True
                             draggable True
                             shortcuts True
                             id "pref_controls_viewport"
                             yadjustment pref_yadj
                             has vbox
-                            spacing 14
+                            spacing 26
+
+                            fixed:
+                                xsize 1360
+                                ysize 70
+                                text "HOLD TO SKIP" style "pref_label":
+                                    xpos 0
+                                    ypos 8
+                                fixed:
+                                    xpos 560
+                                    ypos 0
+                                    use pref_tiny_button("ON", SetField(persistent, "hold_to_skip", True), selected=persistent.hold_to_skip, tooltip="Hold button to keep skipping")
+                                fixed:
+                                    xpos 770
+                                    ypos 0
+                                    use pref_tiny_button("OFF", SetField(persistent, "hold_to_skip", False), selected=not persistent.hold_to_skip, tooltip="Tap to toggle skipping")
+
+                            fixed:
+                                xsize 1360
+                                ysize 70
+                                text "LEFT STICK X-AXIS" style "pref_label":
+                                    xpos 0
+                                    ypos 8
+                                fixed:
+                                    xpos 560
+                                    ypos 0
+                                    use pref_tiny_button("NORMAL", SetStickInversion("left", "x", False), selected=not persistent.left_stick_invert_x, tooltip="Normal left stick x-axis")
+                                fixed:
+                                    xpos 770
+                                    ypos 0
+                                    use pref_tiny_button("INVERTED", SetStickInversion("left", "x", True), selected=persistent.left_stick_invert_x, tooltip="Invert left stick x-axis")
+
+                            fixed:
+                                xsize 1360
+                                ysize 70
+                                text "LEFT STICK Y-AXIS" style "pref_label":
+                                    xpos 0
+                                    ypos 8
+                                fixed:
+                                    xpos 560
+                                    ypos 0
+                                    use pref_tiny_button("NORMAL", SetStickInversion("left", "y", False), selected=not persistent.left_stick_invert_y, tooltip="Normal left stick y-axis")
+                                fixed:
+                                    xpos 770
+                                    ypos 0
+                                    use pref_tiny_button("INVERTED", SetStickInversion("left", "y", True), selected=persistent.left_stick_invert_y, tooltip="Invert left stick y-axis")
+
+                            fixed:
+                                xsize 1360
+                                ysize 82
+                                text "LEFT STICK DEAD ZONE" style "pref_label":
+                                    xpos 0
+                                    ypos 12
+                                text "MIN" style "pref_label":
+                                    xpos 560
+                                    ypos 12
+                                bar value StickDeadzoneAdjustment("left") style "pref_bar":
+                                    xpos 640
+                                    ypos 0
+                                text "MAX" style "pref_label":
+                                    xpos 1210
+                                    ypos 12
+
+                            fixed:
+                                xsize 1360
+                                ysize 82
+                                text "LEFT STICK SENSITIVITY" style "pref_label":
+                                    xpos 0
+                                    ypos 12
+                                text "LOW" style "pref_label":
+                                    xpos 560
+                                    ypos 12
+                                bar value StickSensitivityAdjustment("left") style "pref_bar":
+                                    xpos 640
+                                    ypos 0
+                                text "HIGH" style "pref_label":
+                                    xpos 1210
+                                    ypos 12
+
+                            fixed:
+                                xsize 1360
+                                ysize 70
+                                text "RIGHT STICK X-AXIS" style "pref_label":
+                                    xpos 0
+                                    ypos 8
+                                fixed:
+                                    xpos 560
+                                    ypos 0
+                                    use pref_tiny_button("NORMAL", SetStickInversion("right", "x", False), selected=not persistent.right_stick_invert_x, tooltip="Normal right stick x-axis")
+                                fixed:
+                                    xpos 770
+                                    ypos 0
+                                    use pref_tiny_button("INVERTED", SetStickInversion("right", "x", True), selected=persistent.right_stick_invert_x, tooltip="Invert right stick x-axis")
+
+                            fixed:
+                                xsize 1360
+                                ysize 70
+                                text "RIGHT STICK Y-AXIS" style "pref_label":
+                                    xpos 0
+                                    ypos 8
+                                fixed:
+                                    xpos 560
+                                    ypos 0
+                                    use pref_tiny_button("NORMAL", SetStickInversion("right", "y", False), selected=not persistent.right_stick_invert_y, tooltip="Normal right stick y-axis")
+                                fixed:
+                                    xpos 770
+                                    ypos 0
+                                    use pref_tiny_button("INVERTED", SetStickInversion("right", "y", True), selected=persistent.right_stick_invert_y, tooltip="Invert right stick y-axis")
+
+                            fixed:
+                                xsize 1360
+                                ysize 82
+                                text "RIGHT STICK DEAD ZONE" style "pref_label":
+                                    xpos 0
+                                    ypos 12
+                                text "MIN" style "pref_label":
+                                    xpos 560
+                                    ypos 12
+                                bar value StickDeadzoneAdjustment("right") style "pref_bar":
+                                    xpos 640
+                                    ypos 0
+                                text "MAX" style "pref_label":
+                                    xpos 1210
+                                    ypos 12
+
+                            fixed:
+                                xsize 1360
+                                ysize 82
+                                text "RIGHT STICK SENSITIVITY" style "pref_label":
+                                    xpos 0
+                                    ypos 12
+                                text "LOW" style "pref_label":
+                                    xpos 560
+                                    ypos 12
+                                bar value StickSensitivityAdjustment("right") style "pref_bar":
+                                    xpos 640
+                                    ypos 0
+                                text "HIGH" style "pref_label":
+                                    xpos 1210
+                                    ypos 12
+
+                            null height 12
 
                             for title, act, p in pad_remap.REMAPPABLE_EVENTS:
                                 hbox:

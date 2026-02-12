@@ -19,19 +19,19 @@ init -2 python:
             "body": "Main Story updates and release notes go here.\nAdd more detail for this entry.",
         },
         {
-            "id": "au_story",
-            "title": "AU Story",
-            "body": "AU Story announcements and patch notes go here.\nAdd more detail for this entry.",
+            "id": "side_story",
+            "title": "Side Story",
+            "body": "Side Story announcements and patch notes go here.\nAdd more detail for this entry.",
         },
         {
-            "id": "op_library",
-            "title": "Operating Library",
-            "body": "Operating Library updates and info go here.\nAdd more detail for this entry.",
+            "id": "bug_fixes",
+            "title": "Bug Fixes",
+            "body": "Bug fixes and stability improvements go here.\nAdd more detail for this entry.",
         },
         {
-            "id": "outfit_shop",
-            "title": "Outfit Shop",
-            "body": "Outfit Shop news and release notes go here.\nAdd more detail for this entry.",
+            "id": "future_characters",
+            "title": "Future Characters",
+            "body": "Future Characters news and release notes go here.\nAdd more detail for this entry.",
         },
     ]
 
@@ -92,7 +92,7 @@ screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False):
 screen news_updates():
     tag menu
 
-    add "gui/game_menu.png"
+    add "gui/news_background.png"
 
     # Main panel
     fixed:
