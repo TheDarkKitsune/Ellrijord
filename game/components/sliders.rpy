@@ -33,7 +33,7 @@ style ui_slider_bar_fill is ui_slider_bar:
     hover_left_bar Frame("gui/slider/horizontal_fill_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
     hover_right_bar Frame("gui/slider/horizontal_hover_bar.png", gui.slider_borders, tile=gui.slider_tile)
 
-screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None):
+screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None, xsize=None, ysize=None, tooltip=None, hovered_action=None, unhovered_action=None, button_id=None):
     $ _style_name = style_name
     if _style_name is None:
         $ _style_name = "ui_slider_bar_fill" if variant == "fill" else "ui_slider_bar"
@@ -48,6 +48,8 @@ screen ui_slider(value, style_name=None, variant="default", xpos=None, ypos=None
             $ _unhover = Function(renpy.store.clear_pref_tooltip)
 
     controller_bar value value style _style_name:
+        if button_id is not None:
+            id button_id
         if xpos is not None:
             xpos xpos
         if ypos is not None:

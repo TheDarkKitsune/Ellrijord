@@ -22,6 +22,8 @@ screen preferences_tab_access(pref_access_yadj):
                 xysize (1460, 620)
                 mousewheel True
                 draggable True
+                arrowkeys "not sticks"
+                focus_scroll True
                 shortcuts True
                 yadjustment pref_access_yadj
 

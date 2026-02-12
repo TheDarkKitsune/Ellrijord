@@ -23,6 +23,8 @@ screen preferences_tab_audio():
                 xysize (1460, 620)
                 mousewheel True
                 draggable True
+                arrowkeys "not sticks"
+                focus_scroll True
                 shortcuts True
                 yadjustment pref_audio_yadj
 
