@@ -95,3 +95,71 @@ screen ui_png_button(label, action, zoom=0.8, text_style="ui_btn_text", use_alt=
             xsize=btn_w,
             ysize=btn_h
         )
+
+
+screen ui_rect_icon_button(icon, action, size=68, bg="#2a2836", hover_overlay="#f003", tooltip=None, hovered_action=None, unhovered_action=None):
+    $ _hover_actions = ([hovered_action] if hovered_action is not None else [])
+    $ _unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
+    imagebutton:
+        xysize (size, size)
+        action action
+        if tooltip:
+            tooltip tooltip
+        hovered _hover_actions
+        unhovered _unhover_actions
+
+        idle Fixed(
+            Solid(bg),
+            Transform(icon, xysize=(size, size)),
+            xsize=size,
+            ysize=size
+        )
+        hover Fixed(
+            Solid(bg),
+            Transform(icon, xysize=(size, size)),
+            Solid(hover_overlay),
+            xsize=size,
+            ysize=size
+        )
+
+
+screen ui_rect_text_button(label, action, width=68, height=68, bg="#2a2836", hover_bg="#ff8335", text_style="pref_setting_btn_text", tooltip=None, hovered_action=None, unhovered_action=None):
+    $ _hover_actions = ([hovered_action] if hovered_action is not None else [])
+    $ _unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
+    imagebutton:
+        xysize (width, height)
+        action action
+        if tooltip:
+            tooltip tooltip
+        hovered _hover_actions
+        unhovered _unhover_actions
+
+        idle Fixed(
+            Solid(bg),
+            Text(label, style=text_style, xsize=width, ysize=height, xalign=0.5, yalign=0.5, text_align=0.5),
+            xsize=width,
+            ysize=height
+        )
+        hover Fixed(
+            Solid(hover_bg),
+            Text(label, style=text_style, xsize=width, ysize=height, xalign=0.5, yalign=0.5, text_align=0.5),
+            xsize=width,
+            ysize=height
+        )
+
+
+screen ui_news_tile_button(label, action, image=None, width=300, height=180, selected=False, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text"):
+    button:
+        xsize width
+        ysize height
+        action action
+        selected selected
+        background Solid(bg)
+        hover_background Solid(hover_bg)
+
+        if image and renpy.loadable(image):
+            add Transform(image, xsize=(width - 16), ysize=(height - 50), fit="cover", xalign=0.5, yalign=0.15)
+        else:
+            add Solid("#ffffff18") xsize (width - 40) ysize (height - 60) xalign 0.5 yalign 0.35
+
+        text label style text_style

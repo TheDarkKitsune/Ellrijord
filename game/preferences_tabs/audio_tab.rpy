@@ -10,6 +10,7 @@ screen preferences_tab_audio():
         $ left_w = 360
         $ right_w = 1060
         $ row_h = 86
+        $ slider_row_h = 96
         $ row_gap = 20
 
         side "c r":

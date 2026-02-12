@@ -72,7 +72,7 @@ define config.save_directory = "Ellrijord-1768855811"
 define config.window_icon = "gui/window_icon.png"
 
 # Ensure pref_tab exists in store for any legacy preferences screen code.
-default pref_tab = "audio"
+default pref_tab = "display"
 
 ## Build configuration #########################################################
 

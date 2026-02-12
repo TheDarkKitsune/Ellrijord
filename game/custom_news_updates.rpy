@@ -167,19 +167,17 @@ screen news_updates():
 
 
 screen news_tile(item, news_selected):
-    button:
-        xsize NEWS_TILE_W
-        ysize NEWS_TILE_H
-        background Solid("#3a3152")
-        hover_background Solid("#4a3a6a")
-        action [SetScreenVariable("news_selected", item["id"]), Show("news_updates_detail", news_id=item["id"])]
-        selected news_selected == item["id"]
-
-        if item.get("image") and renpy.loadable(item["image"]):
-            add Transform(item["image"], xsize=(NEWS_TILE_W - 16), ysize=(NEWS_TILE_H - 50), fit="cover", xalign=0.5, yalign=0.15)
-        else:
-            add Solid("#ffffff18") xsize (NEWS_TILE_W - 40) ysize (NEWS_TILE_H - 60) xalign 0.5 yalign 0.35
-        text item["title"] style "news_tile_text"
+    use ui_news_tile_button(
+        item["title"],
+        [SetScreenVariable("news_selected", item["id"]), Show("news_updates_detail", news_id=item["id"])],
+        image=item.get("image"),
+        width=NEWS_TILE_W,
+        height=NEWS_TILE_H,
+        selected=(news_selected == item["id"]),
+        bg="#3a3152",
+        hover_bg="#4a3a6a",
+        text_style="news_tile_text"
+    )
 
 
 screen news_updates_detail(news_id):

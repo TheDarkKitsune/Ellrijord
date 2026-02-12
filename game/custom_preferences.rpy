@@ -144,29 +144,35 @@ screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=Non
 
 screen pref_icon_button(img, action, tooltip_key=None):
     $ tooltip = L(tooltip_key) if tooltip_key else None
-    imagebutton:
-        xysize (68, 68)
-        background "#2a2836"
-        idle Transform(img, xysize=(68, 68))
-        hover_foreground "#f003"
-        action action
-        hovered Function(set_pref_tooltip, tooltip)
+    use ui_rect_icon_button(
+        img,
+        action,
+        size=68,
+        bg="#2a2836",
+        hover_overlay="#f003",
+        hovered_action=Function(set_pref_tooltip, tooltip),
+        unhovered_action=Function(clear_pref_tooltip)
+    )
 
 screen pref_add_binding_button(action, tooltip_key=None):
     $ tooltip = L(tooltip_key) if tooltip_key else None
-    textbutton L("pref_button_add_binding"):
-        yalign 0.5 xysize (68, 68)
-        text_align (0.5, 0.5)
-        background "#2a2836"
-        hover_background "#ff8335"
-        action action
-        hovered Function(set_pref_tooltip, tooltip)
+    use ui_rect_text_button(
+        L("pref_button_add_binding"),
+        action,
+        width=68,
+        height=68,
+        bg="#2a2836",
+        hover_bg="#ff8335",
+        text_style="pref_setting_btn_text",
+        hovered_action=Function(set_pref_tooltip, tooltip),
+        unhovered_action=Function(clear_pref_tooltip)
+    )
 
 screen preferences():
 
     tag menu
 
-    default pref_tab = "audio"
+    default pref_tab = "display"
     default pref_remapper = pad_remap.ControllerRemap()
     default pref_yadj = ui.adjustment()
     default pref_access_yadj = ui.adjustment()

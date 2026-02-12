@@ -9,10 +9,10 @@ screen preferences_tab_display():
 
         $ left_w = 360
         $ right_w = 1060
-        $ row_h = 78
+        $ row_h = 86
         $ slider_row_h = 96
+        $ slider_h = 36
         $ row_gap = 20
-        $ slider_block_w = 760
 
         side "c r":
             xpos 10
@@ -28,6 +28,7 @@ screen preferences_tab_display():
 
                 hbox:
                     spacing 28
+
 
                     vbox:
                         xsize left_w
@@ -107,38 +108,38 @@ screen preferences_tab_display():
                             xsize right_w
                             ysize slider_row_h
                             hbox:
-                                xpos (right_w - slider_block_w)
-                                spacing 14
+                                xalign 1.0
+                                spacing 8
                                 fixed:
-                                    xsize 100
+                                    xsize 60
                                     ysize slider_row_h
                                     text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
-                                    xsize 560
+                                    xsize 700
                                     ysize slider_row_h
-                                    use ui_slider(Preference("text speed"), style_name="pref_bar", xpos=0, xsize=560, ysize=88, tooltip=L("pref_tip_text_speed"))
+                                    use ui_slider(Preference("text speed"), xpos=0, ypos=((slider_row_h - slider_h) // 2), xsize=700, ysize=slider_h, tooltip=L("pref_tip_text_speed"))
                                 fixed:
-                                    xsize 72
+                                    xsize 60
                                     ysize slider_row_h
-                                    text L("pref_label_max") style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
 
                         fixed:
                             xsize right_w
                             ysize slider_row_h
                             hbox:
-                                xpos (right_w - slider_block_w)
-                                spacing 14
+                                xalign 1.0
+                                spacing 8
                                 fixed:
-                                    xsize 100
+                                    xsize 60
                                     ysize slider_row_h
                                     text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
-                                    xsize 560
+                                    xsize 700
                                     ysize slider_row_h
-                                    use ui_slider(Preference("auto-forward time"), style_name="pref_bar", xpos=0, xsize=560, ysize=88, tooltip=L("pref_tip_auto_forward"))
+                                    use ui_slider(Preference("auto-forward time"), xpos=0, ypos=((slider_row_h - slider_h) // 2), xsize=700, ysize=slider_h, tooltip=L("pref_tip_auto_forward"))
                                 fixed:
-                                    xsize 72
+                                    xsize 60
                                     ysize slider_row_h
-                                    text L("pref_label_max") style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
 
             vbar value YScrollValue("pref_display_vp") keyboard_focus False

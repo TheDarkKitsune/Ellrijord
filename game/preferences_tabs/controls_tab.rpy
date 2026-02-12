@@ -86,6 +86,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                     $ ctrl_right_w = 555
                     $ ctrl_row_h = 72
                     $ ctrl_slider_row_h = 88
+                    $ ctrl_slider_h = 36
                     $ ctrl_slider_block_w = 420
 
                     hbox:
@@ -153,7 +154,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickDeadzoneAdjustment("left"), style_name="pref_bar", xsize=300, ysize=82, tooltip="Adjust the left stick dead zone.")
+                                    use ui_slider(StickDeadzoneAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the left stick dead zone.")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
@@ -178,7 +179,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickSensitivityAdjustment("left"), style_name="pref_bar", xsize=300, ysize=82, tooltip="Adjust the left stick sensitivity.")
+                                    use ui_slider(StickSensitivityAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the left stick sensitivity.")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
@@ -233,7 +234,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickDeadzoneAdjustment("right"), style_name="pref_bar", xsize=300, ysize=82, tooltip="Adjust the right stick dead zone.")
+                                    use ui_slider(StickDeadzoneAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the right stick dead zone.")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
@@ -258,7 +259,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickSensitivityAdjustment("right"), style_name="pref_bar", xsize=300, ysize=82, tooltip="Adjust the right stick sensitivity.")
+                                    use ui_slider(StickSensitivityAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the right stick sensitivity.")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
