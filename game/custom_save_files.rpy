@@ -7,9 +7,9 @@ init -2 python:
 
 style save_title is text:
     font "fonts/trotes/Trotes.ttf"
-    size 72
-    color "#ffffff"
-    outlines [(4, "#6b3aa8", 0, 0)]
+    size 46
+    color "#c9aa83"
+    outlines [(1, "#2a1d14", 0, 0)]
 
 style save_nav_button is button:
     background None
@@ -27,9 +27,12 @@ style save_nav_text is text:
 
 style save_slot_text is text:
     font "fonts/trotes/Trotes.ttf"
-    size 26
-    color "#f3ecff"
-    outlines [(2, "#47286f", 0, 0)]
+    size 34
+    color "#ddd4c7"
+    outlines [(1, "#2a1d14", 0, 0)]
+
+style save_slot_text_selected is save_slot_text:
+    color "#f1e7d8"
 
 style save_meta_label is text:
     font "fonts/trotes/Trotes.ttf"
@@ -87,13 +90,13 @@ screen custom_file_slots(mode="save"):
 
     text title:
         style "save_title"
-        xalign 0.5
-        ypos 30
+        xpos 280
+        ypos 58
 
     # Save slots list + scrollbar.
     side "c r":
         xpos 120
-        ypos 150
+        ypos 120
         xysize (760, 760)
 
         viewport:
@@ -102,22 +105,25 @@ screen custom_file_slots(mode="save"):
             draggable True
             yadjustment slots_yadj
             has vbox
-            spacing 8
+            spacing 14
 
             for i in range(1, SAVE_SLOT_COUNT + 1):
-                $ slot_name = ("Save %d -- %s" % (i, FileSaveName(i, empty="Empty"))) if FileLoadable(i) else "Empty Slot"
-                fixed:
+                $ slot_name = ("Save %d — %s" % (i, FileSaveName(i, empty="Empty"))) if FileLoadable(i) else "Empty Slot"
+                button:
+                    background None
+                    hover_background Solid("#ffffff10")
+                    action SetScreenVariable("selected_slot", i)
                     xsize 720
-                    ysize 56
-                    use ui_png_button(
-                        slot_name,
-                        SetScreenVariable("selected_slot", i),
-                        xsize=720,
-                        ysize=56,
-                        text_style="save_slot_text",
-                        use_alt=mm_alt,
-                        selected=(i == selected_slot)
-                    )
+                    ysize 54
+
+                    hbox:
+                        spacing 16
+                        yalign 0.5
+                        text "•" style "save_slot_text"
+                        if i == selected_slot:
+                            text slot_name style "save_slot_text_selected"
+                        else:
+                            text slot_name style "save_slot_text"
 
         use ui_vscrollbar_for("save_slots_viewport")
 
