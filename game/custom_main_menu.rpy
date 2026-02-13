@@ -121,7 +121,7 @@ screen main_menu():
             hbox:
                 spacing 10
                 use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5)
-                use ui_png_button("EXTRA", ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=36, left_icon_xpad=5)
+                use ui_png_button("EXTRA", ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5)
 
         fixed:
             xalign 0.95
