@@ -39,25 +39,72 @@ init -2 python:
         return bool(m)
 
     def reset_preferences():
+        def _cfg(name, fallback):
+            try:
+                return getattr(config, name)
+            except Exception:
+                return fallback
+
         # Use Ren'Py's built-in reset so all audio/mute flags restore correctly.
         try:
             renpy.reset_preferences()
         except Exception:
             pass
-        # Explicitly restore key settings we want to enforce.
+
+        # Apply explicit defaults through Preference actions first, so Ren'Py's
+        # own preference plumbing updates the bound slider values immediately.
+        default_pref_values = (
+            ("text speed", _cfg("default_text_cps", 0)),
+            ("auto-forward time", _cfg("default_afm_time", 15)),
+            ("music volume", 1.0),
+            ("sound volume", 1.0),
+            ("voice volume", 1.0),
+            # Ren'Py font scale defaults are multiplicative; 1.0 is the midpoint.
+            ("font size", _cfg("default_font_size", 1.0)),
+            ("font line spacing", _cfg("default_font_line_spacing", 1.0)),
+            ("self voicing volume drop", _cfg("default_self_voicing_volume_drop", 0.0)),
+        )
+        for pref_name, pref_value in default_pref_values:
+            try:
+                renpy.store.Preference(pref_name, pref_value)()
+            except Exception:
+                pass
+
+        # Explicitly restore key preference fields used by this custom menu.
         prefs = renpy.game.preferences
         if hasattr(prefs, "fullscreen"):
             prefs.fullscreen = config.default_fullscreen
+        if hasattr(prefs, "skip_unseen"):
+            prefs.skip_unseen = False
+        if hasattr(prefs, "skip_after_choices"):
+            prefs.skip_after_choices = False
         if hasattr(prefs, "text_cps"):
-            prefs.text_cps = 0
+            prefs.text_cps = _cfg("default_text_cps", 0)
         if hasattr(prefs, "afm_time"):
-            prefs.afm_time = 15
+            prefs.afm_time = _cfg("default_afm_time", 15)
+        if hasattr(prefs, "font_transform"):
+            prefs.font_transform = None
+        if hasattr(prefs, "high_contrast_text"):
+            prefs.high_contrast_text = False
+        if hasattr(prefs, "self_voicing"):
+            prefs.self_voicing = False
+        if hasattr(prefs, "clipboard_voicing"):
+            prefs.clipboard_voicing = False
+        if hasattr(prefs, "debug_voicing"):
+            prefs.debug_voicing = False
         if hasattr(prefs, "music_volume"):
             prefs.music_volume = 1.0
         if hasattr(prefs, "sound_volume"):
             prefs.sound_volume = 1.0
         if hasattr(prefs, "voice_volume"):
             prefs.voice_volume = 1.0
+        if hasattr(prefs, "font_size"):
+            prefs.font_size = _cfg("default_font_size", 1.0)
+        if hasattr(prefs, "font_line_spacing"):
+            prefs.font_line_spacing = _cfg("default_font_line_spacing", 1.0)
+        if hasattr(prefs, "self_voicing_volume_drop"):
+            prefs.self_voicing_volume_drop = _cfg("default_self_voicing_volume_drop", 0.0)
+
         # Ensure audio channels are unmuted and at full volume immediately.
         set_all_mute(False)
         for ch in ("music", "sound", "voice"):
@@ -65,6 +112,45 @@ init -2 python:
                 renpy.music.set_volume(1.0, channel=ch)
             except Exception:
                 pass
+
+        # Reset controller-specific persistent settings (not covered by renpy.reset_preferences).
+        for field, value in (
+            ("hold_to_skip", False),
+            ("left_stick_invert_x", False),
+            ("left_stick_invert_y", False),
+            ("right_stick_invert_x", False),
+            ("right_stick_invert_y", False),
+            ("left_stick_sensitivity", 1.0),
+            ("right_stick_sensitivity", 1.0),
+            ("controller_layout", "generic"),
+        ):
+            if hasattr(persistent, field):
+                setattr(persistent, field, value)
+
+        for field in (
+            "left_stick_dead_zone",
+            "right_stick_dead_zone",
+            "left_stick_max",
+            "right_stick_max",
+            "controller_guid_to_type",
+        ):
+            if hasattr(persistent, field):
+                setattr(persistent, field, dict())
+
+        # Reset controller bindings to defaults if the backend helper is available.
+        try:
+            if hasattr(renpy.store, "reset_to_default"):
+                renpy.store.reset_to_default(None)
+        except Exception:
+            pass
+
+        # Rebuild styles so font scale/line-spacing changes apply immediately.
+        try:
+            renpy.style.rebuild()
+        except Exception:
+            pass
+
+        renpy.save_persistent()
         renpy.restart_interaction()
 
     def set_pref_tooltip(text):
