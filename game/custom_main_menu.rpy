@@ -120,8 +120,8 @@ screen main_menu():
 
             hbox:
                 spacing 10
-                use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
-                use ui_png_button("SPECIAL", ShowMenu("special_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
+                use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5)
+                use ui_png_button("EXTRA", ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
 
         fixed:
             xalign 0.95
@@ -131,7 +131,17 @@ screen main_menu():
 
             hbox:
                 spacing 10
-                use ui_png_button(("LightMode" if mm_alt else "DarkMode"), Function(toggle_mm_alt), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
+                use ui_png_button(
+                    ("LightMode" if mm_alt else "DarkMode"),
+                    Function(toggle_mm_alt),
+                    xsize=200,
+                    ysize=42,
+                    text_style="ui_btn_text_small",
+                    use_alt=mm_alt,
+                    left_icon=("gui/lightmode_icon.png" if mm_alt else "gui/darkmode_icon.png"),
+                    left_icon_size=30,
+                    left_icon_xpad=5
+                )
 
                     
             
