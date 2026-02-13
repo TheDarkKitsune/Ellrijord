@@ -212,13 +212,7 @@ screen preferences():
     key "K_q" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, -1))
     key "K_e" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, 1))
 
-    add "gui/game_menu.png"
-
-    # Title/logo
-    add Transform("gui/logo.png", zoom=0.40):
-        xalign 0.5
-        yalign 0.0
-        yoffset -40
+    add Transform("gui/game_menu.png", xsize=config.screen_width, ysize=config.screen_height)
 
     # Top tabs
     hbox:

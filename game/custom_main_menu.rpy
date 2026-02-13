@@ -108,6 +108,7 @@ screen main_menu():
             use ui_png_button("NEW GAME", Start(), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
             use ui_png_button("CONTINUE", ShowMenu("load"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
             use ui_png_button("SETTINGS", ShowMenu("preferences"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("SPECIAL", ShowMenu("special_menu"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
             use ui_png_button("EXIT", Quit(confirm=True), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
 
         # Cloud news button (defined in custom_news_updates.rpy)

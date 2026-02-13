@@ -1,0 +1,201 @@
+# custom_special_menu.rpy
+# Special menu hub + destination pages.
+
+init -2 python:
+    def _special_panel(title, subtitle=""):
+        return {"title": title, "subtitle": subtitle}
+
+
+style special_title is text:
+    font "fonts/trotes/Trotes.ttf"
+    size 72
+    color "#ffffff"
+    outlines [(4, "#6b3aa8", 0, 0)]
+
+style special_subtitle is text:
+    font "fonts/trotes/Trotes.ttf"
+    size 30
+    color "#efe5ff"
+    outlines [(3, "#5a3192", 0, 0)]
+
+style special_card_title is text:
+    font "fonts/trotes/Trotes.ttf"
+    size 38
+    color "#ffffff"
+    outlines [(3, "#5a3192", 0, 0)]
+
+style special_body is text:
+    font "fonts/trotes/Trotes.ttf"
+    size 28
+    color "#f3ecff"
+    outlines [(2, "#47286f", 0, 0)]
+
+
+screen special_menu():
+    tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+
+    add Solid("#120d20aa")
+
+    text "SPECIAL MENU" style "special_title":
+        xalign 0.5
+        ypos 46
+
+    # 2x2 hub buttons.
+    grid 2 2:
+        xalign 0.5
+        yalign 0.52
+        xspacing 90
+        yspacing 70
+
+        use ui_png_button("IMAGE GALLERY", ShowMenu("special_image_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button("MUSIC GALLERY", ShowMenu("special_music_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button("ACHIEVEMENTS", ShowMenu("special_achievements"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button("CREDITS", ShowMenu("special_credits"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+
+    hbox:
+        xalign 0.5
+        yalign 0.93
+        spacing 22
+        use ui_png_button("RETURN", ShowMenu("main_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+
+screen special_image_gallery():
+    tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add Solid("#120d20bb")
+
+    text "IMAGE GALLERY" style "special_title":
+        xalign 0.5
+        ypos 70
+
+    frame:
+        background Solid("#2b2140dd")
+        xalign 0.5
+        yalign 0.52
+        xsize 1300
+        ysize 560
+        padding (40, 30)
+
+        vbox:
+            spacing 18
+            text "Gallery page is ready." style "special_subtitle"
+            text "Add your gallery unlocks/content here.\nIf you already have a gallery screen, you can route this button to it." style "special_body"
+
+    hbox:
+        xalign 0.5
+        yalign 0.93
+        spacing 22
+        use ui_png_button("BACK", ShowMenu("special_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+
+screen special_music_gallery():
+    tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add Solid("#120d20bb")
+
+    text "MUSIC GALLERY" style "special_title":
+        xalign 0.5
+        ypos 70
+
+    frame:
+        background Solid("#2b2140dd")
+        xalign 0.5
+        yalign 0.52
+        xsize 1300
+        ysize 560
+        padding (40, 30)
+
+        vbox:
+            spacing 18
+            text "Music gallery page is ready." style "special_subtitle"
+            text "Hook this page into your music room / jukebox entries." style "special_body"
+
+    hbox:
+        xalign 0.5
+        yalign 0.93
+        spacing 22
+        use ui_png_button("BACK", ShowMenu("special_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+
+screen special_achievements():
+    tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add Solid("#120d20bb")
+
+    text "ACHIEVEMENTS" style "special_title":
+        xalign 0.5
+        ypos 70
+
+    frame:
+        background Solid("#2b2140dd")
+        xalign 0.5
+        yalign 0.52
+        xsize 1300
+        ysize 560
+        padding (40, 30)
+
+        vbox:
+            spacing 18
+            text "Achievements page is ready." style "special_subtitle"
+            text "Display unlocked achievements and progress here." style "special_body"
+
+    hbox:
+        xalign 0.5
+        yalign 0.93
+        spacing 22
+        use ui_png_button("BACK", ShowMenu("special_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+
+screen special_credits():
+    tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add Solid("#120d20bb")
+
+    text "CREDITS" style "special_title":
+        xalign 0.5
+        ypos 70
+
+    frame:
+        background Solid("#2b2140dd")
+        xalign 0.5
+        yalign 0.52
+        xsize 1300
+        ysize 560
+        padding (40, 30)
+
+        vbox:
+            spacing 18
+            text "Credits page is ready." style "special_subtitle"
+            text "Project and contributor credits can go here." style "special_body"
+
+    hbox:
+        xalign 0.5
+        yalign 0.93
+        spacing 22
+        use ui_png_button("BACK", ShowMenu("special_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
