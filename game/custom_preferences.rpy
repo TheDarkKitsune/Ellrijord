@@ -159,8 +159,9 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None, us
 
 screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None, xsize=None, ysize=None):
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
+    $ _label = pref_L(label)
     use ui_png_button(
-        label,
+        _label,
         action,
         zoom=PREF_TINY_ZOOM,
         xsize=xsize,
@@ -223,10 +224,10 @@ screen preferences():
         xpos 120
         ypos 120
         spacing 16
-        use pref_tab_button("DISPLAY", "display", pref_tab, "pref_tip_tab_display")
-        use pref_tab_button("AUDIO", "audio", pref_tab, "pref_tip_tab_audio")
-        use pref_tab_button("CONTROLS", "controls", pref_tab, "pref_tip_tab_controls")
-        use pref_tab_button("ACCESS", "access", pref_tab, "pref_tip_tab_access")
+        use pref_tab_button("pref_tab_display", "display", pref_tab, "pref_tip_tab_display")
+        use pref_tab_button("pref_tab_audio", "audio", pref_tab, "pref_tip_tab_audio")
+        use pref_tab_button("pref_tab_controls", "controls", pref_tab, "pref_tip_tab_controls")
+        use pref_tab_button("pref_tab_access", "access", pref_tab, "pref_tip_tab_access")
 
     # Content area (no panel background, matching save/load style).
     fixed:

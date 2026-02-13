@@ -107,10 +107,10 @@ screen main_menu():
             yalign 0.96
             spacing 20
 
-            use ui_png_button("NEW GAME", Start(), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("CONTINUE", ShowMenu("load"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("SETTINGS", ShowMenu("preferences"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("EXIT", Quit(confirm=True), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button(L("mm_new_game"), Start(), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"))
+            use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"))
+            use ui_png_button(L("mm_settings"), ShowMenu("preferences"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_settings"))
+            use ui_png_button(L("mm_exit"), Quit(confirm=True), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_exit"))
 
         fixed:
             xalign 0.05
@@ -120,8 +120,8 @@ screen main_menu():
 
             hbox:
                 spacing 10
-                use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5)
-                use ui_png_button("EXTRA", ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5)
+                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
+                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
 
         fixed:
             xalign 0.95
@@ -132,7 +132,7 @@ screen main_menu():
             hbox:
                 spacing 10
                 use ui_png_button(
-                    ("LightMode" if mm_alt else "DarkMode"),
+                    (L("mm_light_mode") if mm_alt else L("mm_dark_mode")),
                     Function(toggle_mm_alt),
                     xsize=200,
                     ysize=42,
@@ -140,7 +140,8 @@ screen main_menu():
                     use_alt=mm_alt,
                     left_icon=("gui/lightmode_icon.png" if mm_alt else "gui/darkmode_icon.png"),
                     left_icon_size=30,
-                    left_icon_xpad=5
+                    left_icon_xpad=5,
+                    tooltip=(L("mm_tip_light_mode") if mm_alt else L("mm_tip_dark_mode"))
                 )
 
                     

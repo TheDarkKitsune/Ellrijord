@@ -19,7 +19,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
             xsize 520
             ysize 580
 
-            text "REMAPS" style "pref_setting_label":
+            text L("pref_label_remaps") style "pref_setting_label":
                 xpos 0
                 ypos 0
 
@@ -83,7 +83,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
             xsize 905
             ysize 580
 
-            text "CONTROLLER" style "pref_setting_label":
+            text L("pref_label_controller") style "pref_setting_label":
                 xpos 20
                 ypos 0
 
@@ -116,15 +116,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h
-                            text "HOLD TO SKIP" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_hold_to_skip") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_row_h
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("ON", SetField(persistent, "hold_to_skip", True), selected=persistent.hold_to_skip, tooltip="Hold button to keep skipping", button_id="pref_controls_hold_to_skip_on_btn", ysize=46)
-                                use pref_tiny_button("OFF", SetField(persistent, "hold_to_skip", False), selected=not persistent.hold_to_skip, tooltip="Tap to toggle skipping", ysize=46)
+                                use pref_tiny_button("pref_button_on", SetField(persistent, "hold_to_skip", True), selected=persistent.hold_to_skip, tooltip=L("pref_tip_hold_to_skip_on"), button_id="pref_controls_hold_to_skip_on_btn", ysize=46)
+                                use pref_tiny_button("pref_button_off", SetField(persistent, "hold_to_skip", False), selected=not persistent.hold_to_skip, tooltip=L("pref_tip_hold_to_skip_off"), ysize=46)
                             focused_on "pref_controls_hold_to_skip_on_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -132,15 +132,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h
-                            text "LEFT STICK X-AXIS" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_left_stick_x_axis") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_row_h
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("left", "x", False), selected=not persistent.left_stick_invert_x, tooltip="Normal left stick x-axis", button_id="pref_controls_lx_normal_btn", ysize=46)
-                                use pref_tiny_button("INVERTED", SetStickInversion("left", "x", True), selected=persistent.left_stick_invert_x, tooltip="Invert left stick x-axis", ysize=46)
+                                use pref_tiny_button("pref_button_normal", SetStickInversion("left", "x", False), selected=not persistent.left_stick_invert_x, tooltip=L("pref_tip_left_stick_x_normal"), button_id="pref_controls_lx_normal_btn", ysize=46)
+                                use pref_tiny_button("pref_button_inverted", SetStickInversion("left", "x", True), selected=persistent.left_stick_invert_x, tooltip=L("pref_tip_left_stick_x_inverted"), ysize=46)
                             focused_on "pref_controls_lx_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -148,15 +148,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h
-                            text "LEFT STICK Y-AXIS" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_left_stick_y_axis") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_row_h
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("left", "y", False), selected=not persistent.left_stick_invert_y, tooltip="Normal left stick y-axis", button_id="pref_controls_ly_normal_btn", ysize=46)
-                                use pref_tiny_button("INVERTED", SetStickInversion("left", "y", True), selected=persistent.left_stick_invert_y, tooltip="Invert left stick y-axis", ysize=46)
+                                use pref_tiny_button("pref_button_normal", SetStickInversion("left", "y", False), selected=not persistent.left_stick_invert_y, tooltip=L("pref_tip_left_stick_y_normal"), button_id="pref_controls_ly_normal_btn", ysize=46)
+                                use pref_tiny_button("pref_button_inverted", SetStickInversion("left", "y", True), selected=persistent.left_stick_invert_y, tooltip=L("pref_tip_left_stick_y_inverted"), ysize=46)
                             focused_on "pref_controls_ly_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -164,7 +164,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_slider_row_h
-                            text "LEFT STICK DEAD ZONE" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_left_stick_dead_zone") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_slider_row_h
@@ -174,15 +174,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 54
                                     ysize ctrl_slider_row_h
-                                    text "MIN" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickDeadzoneAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the left stick dead zone.", button_id="pref_controls_l_deadzone_bar")
+                                    use ui_slider(StickDeadzoneAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip=L("pref_tip_left_stick_dead_zone"), button_id="pref_controls_l_deadzone_bar")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
-                                    text "MAX" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_max") style "pref_setting_label" xalign 1.0 yalign 0.5
                             focused_on "pref_controls_l_deadzone_bar" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -190,7 +190,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_slider_row_h
-                            text "LEFT STICK SENSITIVITY" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_left_stick_sensitivity") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_slider_row_h
@@ -200,15 +200,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 54
                                     ysize ctrl_slider_row_h
-                                    text "LOW" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_low") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickSensitivityAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the left stick sensitivity.", button_id="pref_controls_l_sensitivity_bar")
+                                    use ui_slider(StickSensitivityAdjustment("left"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip=L("pref_tip_left_stick_sensitivity"), button_id="pref_controls_l_sensitivity_bar")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
-                                    text "HIGH" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_high") style "pref_setting_label" xalign 1.0 yalign 0.5
                             focused_on "pref_controls_l_sensitivity_bar" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -216,15 +216,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h
-                            text "RIGHT STICK X-AXIS" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_right_stick_x_axis") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_row_h
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("right", "x", False), selected=not persistent.right_stick_invert_x, tooltip="Normal right stick x-axis", button_id="pref_controls_rx_normal_btn", ysize=46)
-                                use pref_tiny_button("INVERTED", SetStickInversion("right", "x", True), selected=persistent.right_stick_invert_x, tooltip="Invert right stick x-axis", ysize=46)
+                                use pref_tiny_button("pref_button_normal", SetStickInversion("right", "x", False), selected=not persistent.right_stick_invert_x, tooltip=L("pref_tip_right_stick_x_normal"), button_id="pref_controls_rx_normal_btn", ysize=46)
+                                use pref_tiny_button("pref_button_inverted", SetStickInversion("right", "x", True), selected=persistent.right_stick_invert_x, tooltip=L("pref_tip_right_stick_x_inverted"), ysize=46)
                             focused_on "pref_controls_rx_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -232,15 +232,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_row_h
-                            text "RIGHT STICK Y-AXIS" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_right_stick_y_axis") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_row_h
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("right", "y", False), selected=not persistent.right_stick_invert_y, tooltip="Normal right stick y-axis", button_id="pref_controls_ry_normal_btn", ysize=46)
-                                use pref_tiny_button("INVERTED", SetStickInversion("right", "y", True), selected=persistent.right_stick_invert_y, tooltip="Invert right stick y-axis", ysize=46)
+                                use pref_tiny_button("pref_button_normal", SetStickInversion("right", "y", False), selected=not persistent.right_stick_invert_y, tooltip=L("pref_tip_right_stick_y_normal"), button_id="pref_controls_ry_normal_btn", ysize=46)
+                                use pref_tiny_button("pref_button_inverted", SetStickInversion("right", "y", True), selected=persistent.right_stick_invert_y, tooltip=L("pref_tip_right_stick_y_inverted"), ysize=46)
                             focused_on "pref_controls_ry_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -248,7 +248,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_slider_row_h
-                            text "RIGHT STICK DEAD ZONE" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_right_stick_dead_zone") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_slider_row_h
@@ -258,15 +258,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 54
                                     ysize ctrl_slider_row_h
-                                    text "MIN" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickDeadzoneAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the right stick dead zone.", button_id="pref_controls_r_deadzone_bar")
+                                    use ui_slider(StickDeadzoneAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip=L("pref_tip_right_stick_dead_zone"), button_id="pref_controls_r_deadzone_bar")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
-                                    text "MAX" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_max") style "pref_setting_label" xalign 1.0 yalign 0.5
                             focused_on "pref_controls_r_deadzone_bar" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -274,7 +274,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                         fixed:
                             xsize ctrl_left_w
                             ysize ctrl_slider_row_h
-                            text "RIGHT STICK SENSITIVITY" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_right_stick_sensitivity") style "pref_setting_label" yalign 0.5
                         fixed:
                             xsize ctrl_right_w
                             ysize ctrl_slider_row_h
@@ -284,15 +284,15 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                                 fixed:
                                     xsize 54
                                     ysize ctrl_slider_row_h
-                                    text "LOW" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_low") style "pref_setting_label" xalign 1.0 yalign 0.5
                                 fixed:
                                     xsize 300
                                     ysize ctrl_slider_row_h
-                                    use ui_slider(StickSensitivityAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip="Adjust the right stick sensitivity.", button_id="pref_controls_r_sensitivity_bar")
+                                    use ui_slider(StickSensitivityAdjustment("right"), style_name="pref_bar", ypos=((ctrl_slider_row_h - ctrl_slider_h) // 2), xsize=300, ysize=ctrl_slider_h, tooltip=L("pref_tip_right_stick_sensitivity"), button_id="pref_controls_r_sensitivity_bar")
                                 fixed:
                                     xsize 50
                                     ysize ctrl_slider_row_h
-                                    text "HIGH" style "pref_setting_label" xalign 1.0 yalign 0.5
+                                    text L("pref_label_high") style "pref_setting_label" xalign 1.0 yalign 0.5
                             focused_on "pref_controls_r_sensitivity_bar" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                 use ui_vscrollbar_for("pref_controls_misc_viewport")
