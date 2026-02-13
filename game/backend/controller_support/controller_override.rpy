@@ -187,17 +187,23 @@ init 100 python in controller_event_replacement:
         """
         THRESHOLD = renpy.display.controller.THRESHOLD
         ZERO_THRESHOLD = renpy.display.controller.ZERO_THRESHOLD
+        # Handle environments where some pygame_sdl2 controller constants are missing.
+        cdev_added = globals().get("CONTROLLERDEVICEADDED", getattr(pygame, "CONTROLLERDEVICEADDED", getattr(pygame, "JOYDEVICEADDED", None)))
+        cdev_removed = globals().get("CONTROLLERDEVICEREMOVED", getattr(pygame, "CONTROLLERDEVICEREMOVED", getattr(pygame, "JOYDEVICEREMOVED", None)))
+        caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pygame, "CONTROLLERAXISMOTION", None))
+        cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pygame, "CONTROLLERBUTTONDOWN", None))
+        cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pygame, "CONTROLLERBUTTONUP", None))
 
         if renpy.config.pass_controller_events:
             rv = ev
         else:
             rv = None
 
-        if ev.type == CONTROLLERDEVICEADDED:
+        if (cdev_added is not None) and ev.type == cdev_added:
             renpy.display.controller.start(ev.which)
             return rv
 
-        elif ev.type == CONTROLLERDEVICEREMOVED:
+        elif (cdev_removed is not None) and ev.type == cdev_removed:
             for k, v in renpy.display.controller.controllers.items():
                 if v.instance_id == ev.which:
                     renpy.display.controller.quit(k)
@@ -205,10 +211,10 @@ init 100 python in controller_event_replacement:
 
             return rv
 
-        elif ev.type == CONTROLLERAXISMOTION:
+        elif (caxis_motion is not None) and ev.type == caxis_motion:
 
             pygame_sdl2.event.pump()
-            events = [ ev ] + pygame.event.get(CONTROLLERAXISMOTION)
+            events = [ ev ] + pygame.event.get(caxis_motion)
 
             for ev in events:
 
@@ -242,9 +248,9 @@ init 100 python in controller_event_replacement:
 
             return rv
 
-        elif ev.type in (CONTROLLERBUTTONDOWN, CONTROLLERBUTTONUP):
+        elif ev.type in tuple(v for v in (cbtn_down, cbtn_up) if v is not None):
 
-            if ev.type == CONTROLLERBUTTONDOWN:
+            if ev.type == cbtn_down:
                 pr = "press"
             else:
                 pr = "release"
