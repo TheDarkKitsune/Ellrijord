@@ -54,7 +54,7 @@ screen extra_menu():
         yspacing 70
 
         use ui_png_button(L("extra_image_gallery"), ShowMenu("extra_image_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
-        use ui_png_button(L("extra_music_gallery"), ShowMenu("extra_music_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button(L("extra_music_gallery"), ShowMenu("music_room", mr=music_room), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
         use ui_png_button(L("extra_achievements"), ShowMenu("extra_achievements"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
         use ui_png_button(L("extra_credits"), ShowMenu("extra_credits"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
 
