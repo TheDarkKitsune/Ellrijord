@@ -1,4 +1,4 @@
-################################################################################
+﻿################################################################################
 ## MUSIC ROOM DECLARATION
 ################################################################################
 init python:
@@ -150,6 +150,8 @@ transform colorize_button(idle=MUSIC_ROOM_IDLE_COLOR,
 transform zoom_button(z):
     zoom z
 
+default mr_layout_open = False
+
 ## A screen that's only for development; allows you to try out the different
 ## layouts on each music room template. You can remove it and references to it
 ## once you've picked a layout.
@@ -157,19 +159,48 @@ screen select_music_room_layout(mr, **properties):
     frame:
         style_prefix 'mr_layout'
         properties properties
-        has hbox
-        xalign 0.5 spacing 20
-        textbutton "Layout 1" action ShowMenu("music_room", mr=mr)
-        textbutton "Layout 2" action ShowMenu("music_room2", mr=mr)
-        textbutton "Layout 3" action ShowMenu("music_room3", mr=mr)
-        textbutton "Layout 4" action ShowMenu("music_room4", mr=mr)
+        has vbox
+        xalign 0.5
+        spacing 8
+
+        if mr_layout_open:
+            frame:
+                style "mr_layout_dropdown_frame"
+                has vbox
+                spacing 2
+                xminimum 240
+
+                textbutton "Layout 1":
+                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room", mr=mr)]
+                textbutton "Layout 2":
+                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room2", mr=mr)]
+                textbutton "Layout 3":
+                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room3", mr=mr)]
+                textbutton "Layout 4":
+                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room4", mr=mr)]
+                textbutton "Layout 5":
+                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room5", mr=mr)]
+
+        textbutton "Layout Select  v":
+            action ToggleVariable("mr_layout_open")
+            xminimum 240
+            text_xalign 0.5
 style mr_layout_frame:
-    background "#21212d" xpadding 15 ypadding 10
+    background "#21212d" xpadding 12 ypadding 10
+style mr_layout_dropdown_frame:
+    background "#141422dd"
+    xpadding 6
+    ypadding 6
 style mr_layout_button:
-    background None
+    background "#2f2f45"
+    hover_background "#3e3e63"
+    selected_background "#45456d"
+    xpadding 12
+    ypadding 8
 style mr_layout_button_text:
     hover_color "#f93c3e" selected_color "#ff8335"
     idle_color "#f7f7ed" insensitive_color "#666"
+    size 22
 
 ################################################################################
 ## SCREENS - VERSION 1
@@ -788,7 +819,7 @@ screen music_room4(mr):
             if current_track:
                 add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 420 ysize 260
             else:
-                text "♪" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
+                text "â™ª" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
 
     text (current_track.name if current_track else _("Track Title")):
         xpos 280
@@ -851,3 +882,172 @@ screen music_room4(mr):
 
     # Layout picker for development/testing.
     use select_music_room_layout(mr, align=(0.5, 1.0), bottom_margin=20)
+
+################################################################################
+## SCREENS - VERSION 5
+################################################################################
+screen music_room5(mr):
+    tag menu
+    default current_track = mr.get_current_song()
+
+    # Neon cyan background.
+    add Solid("#39c8ef")
+    add Solid("#1f3fa355")
+    add Solid("#10143f22")
+
+    # Decorative accents (ASCII-safe).
+    text "*" xpos 126 ypos 92 size 80 color "#ff4dbf"
+    text "*" xpos 300 ypos 58 size 64 color "#ff78d1"
+    text "*" xpos 1600 ypos 96 size 72 color "#ffd7f5"
+    text "*" xpos 1710 ypos 220 size 62 color "#ff70ca"
+    text "*" xpos 1456 ypos 62 size 58 color "#ff4dbf"
+
+    # Main neon shell.
+    fixed:
+        xalign 0.5
+        yalign 0.53
+        xsize 1480
+        ysize 880
+
+        # Glow stack.
+        add Frame(Solid("#ff4cbf55"), 52, 52) xysize (1480, 880)
+        add Frame(Solid("#ff8ecf55"), 48, 48) xpos 6 ypos 6 xysize (1468, 868)
+        add Frame(Solid("#ff4cbf"), 44, 44) xpos 14 ypos 14 xysize (1452, 852)
+        add Frame(Solid("#ffa55f"), 40, 40) xpos 24 ypos 24 xysize (1432, 832)
+        add Frame(Solid("#ef1d95"), 34, 34) xpos 36 ypos 36 xysize (1408, 808)
+        add Frame(Solid("#3d1b6f"), 28, 28) xpos 50 ypos 50 xysize (1380, 780)
+        add Solid("#16173f") xpos 66 ypos 66 xsize 1348 ysize 748
+
+        # Top row: cover + track list.
+        fixed:
+            xpos 102
+            ypos 98
+            xsize 1220
+            ysize 322
+
+            frame:
+                background Frame(Solid("#26135a"), 18, 18)
+                xsize 578
+                ysize 322
+                padding (16, 16)
+
+                fixed:
+                    add Solid("#0d0d39") xysize (546, 290)
+                    if current_track:
+                        add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 540 ysize 284
+                    else:
+                        text _("No Cover") xalign 0.5 yalign 0.5 size 58 color "#ffd5f3"
+
+            side "c r":
+                xpos 606
+                xsize 614
+                ysize 322
+
+                viewport:
+                    id "music_room5_vp"
+                    mousewheel True
+                    draggable True
+                    has vbox
+                    spacing 12
+
+                    for song in mr.get_tracklist(all_tracks=True):
+                        button:
+                            action mr.Play(song.path)
+                            xsize 560
+                            ysize 56
+                            background Frame(Solid("#ff4fbd"), 20, 20)
+                            hover_background Frame(Solid("#ff88db"), 20, 20)
+                            selected_background Frame(Solid("#ffcf70"), 20, 20)
+
+                            add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
+                            text song.name:
+                                xalign 0.5
+                                yalign 0.5
+                                size 32
+                                color ("#ffe1f8" if song is current_track else "#9096c0")
+
+                vbar value YScrollValue("music_room5_vp") style "track_list_vscrollbar"
+
+        # Info row.
+        fixed:
+            xpos 102
+            ypos 440
+            xsize 1220
+            ysize 186
+
+            frame:
+                background Frame(Solid("#231753"), 18, 18)
+                xsize 760
+                ysize 186
+                padding (24, 18)
+
+                vbox:
+                    spacing 8
+                    text (current_track.name if current_track else _("Track Title")) size 48 color "#ffd1f2"
+                    text (current_track.artist if current_track else _("Unknown Artist")) size 30 color "#a6b2e2"
+                    if current_track and current_track.description:
+                        text current_track.description size 24 color "#a8aedd"
+
+            frame:
+                background Frame(Solid("#231753"), 18, 18)
+                xpos 776
+                xsize 444
+                ysize 186
+                padding (20, 16)
+
+                vbox:
+                    spacing 8
+                    text _("Now Playing") size 30 color "#ff91db"
+                    add mr.get_pos(style="music_room_pos")
+                    add mr.get_duration(style="music_room_duration")
+
+        # Bottom transport and seek bar.
+        fixed:
+            xpos 102
+            ypos 646
+            xsize 1220
+            ysize 134
+
+            hbox:
+                spacing 38
+                yalign 0.5
+                imagebutton:
+                    idle "prev_button"
+                    hover "prev_button"
+                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.9)
+                    action mr.Previous()
+                imagebutton:
+                    idle "pause_button"
+                    hover "pause_button"
+                    selected_idle "play_button"
+                    selected_hover "play_button"
+                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.55)
+                    action mr.PlayAction()
+                imagebutton:
+                    idle "next_button"
+                    hover "next_button"
+                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.9)
+                    action mr.Next()
+
+            fixed:
+                xpos 300
+                yalign 0.5
+                xsize 920
+                ysize 36
+                music_bar room mr
+
+    text _("Music Room"):
+        xalign 0.5
+        ypos 20
+        size 56
+        color "#ffe3f9"
+
+    textbutton _("Return"):
+        action Return()
+        xalign 0.96
+        ypos 24
+        text_size 34
+        text_color "#ffe4fa"
+        background None
+
+    use select_music_room_layout(mr, align=(0.5, 1.0), bottom_margin=16)
