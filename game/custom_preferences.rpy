@@ -139,7 +139,7 @@ screen pref_tab_button(label_key, value, current_tab=None, tooltip_key=None, use
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None):
+screen pref_small_button(label_key, action, selected=False, tooltip_key=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None, xsize=None, ysize=None):
     $ label = pref_L(label_key)
     $ tooltip = pref_L(tooltip_key) if tooltip_key else label
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
@@ -147,6 +147,8 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None, us
         label,
         action,
         zoom=PREF_SM_ZOOM,
+        xsize=xsize,
+        ysize=ysize,
         text_style=text_style,
         use_alt=_use_alt,
         button_id=button_id,
@@ -155,12 +157,14 @@ screen pref_small_button(label_key, action, selected=False, tooltip_key=None, us
         unhovered_action=Function(clear_pref_tooltip)
     )
 
-screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None):
+screen pref_tiny_button(label, action, selected=False, tooltip=None, use_alt=None, text_style="pref_setting_btn_text", button_id=None, xsize=None, ysize=None):
     $ _use_alt = bool(getattr(persistent, "mm_alt", False)) if use_alt is None else use_alt
     use ui_png_button(
         label,
         action,
         zoom=PREF_TINY_ZOOM,
+        xsize=xsize,
+        ysize=ysize,
         text_style=text_style,
         use_alt=_use_alt,
         button_id=button_id,
@@ -216,7 +220,7 @@ screen preferences():
 
     # Top tabs
     hbox:
-        xpos 240
+        xpos 120
         ypos 120
         spacing 16
         use pref_tab_button("DISPLAY", "display", pref_tab, "pref_tip_tab_display")
@@ -224,15 +228,12 @@ screen preferences():
         use pref_tab_button("CONTROLS", "controls", pref_tab, "pref_tip_tab_controls")
         use pref_tab_button("ACCESS", "access", pref_tab, "pref_tip_tab_access")
 
-    # Content panel
+    # Content area (no panel background, matching save/load style).
     fixed:
-        xpos 240
+        xpos 120
         ypos 210
         xsize 1560
         ysize 700
-
-        add Solid("#6b3aa8") xsize 1560 ysize 700
-        add Solid("#1b1b26cc") xpos 6 ypos 6 xsize 1548 ysize 688
 
         frame:
             background None

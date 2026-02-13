@@ -41,8 +41,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
 
                     hbox:
                         spacing 18
-                        use pref_small_button("pref_button_calibrate_gamepad", GamepadCalibrate(), tooltip_key="pref_tip_calibrate_gamepad", button_id="pref_controls_calibrate_btn")
-                        use pref_small_button("pref_button_change_icon_set", CycleControllerLayout(), tooltip_key="pref_tip_change_icon_set")
+                        use pref_small_button("pref_button_calibrate_gamepad", GamepadCalibrate(), tooltip_key="pref_tip_calibrate_gamepad", button_id="pref_controls_calibrate_btn", xsize=215, ysize=46)
+                        use pref_small_button("pref_button_change_icon_set", CycleControllerLayout(), tooltip_key="pref_tip_change_icon_set", xsize=215, ysize=46)
 
                     for title, act, p in pad_remap.REMAPPABLE_EVENTS:
                         $ act_id = act.replace(" ", "_").replace("/", "_").replace("(", "").replace(")", "")
@@ -123,8 +123,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("ON", SetField(persistent, "hold_to_skip", True), selected=persistent.hold_to_skip, tooltip="Hold button to keep skipping", button_id="pref_controls_hold_to_skip_on_btn")
-                                use pref_tiny_button("OFF", SetField(persistent, "hold_to_skip", False), selected=not persistent.hold_to_skip, tooltip="Tap to toggle skipping")
+                                use pref_tiny_button("ON", SetField(persistent, "hold_to_skip", True), selected=persistent.hold_to_skip, tooltip="Hold button to keep skipping", button_id="pref_controls_hold_to_skip_on_btn", ysize=46)
+                                use pref_tiny_button("OFF", SetField(persistent, "hold_to_skip", False), selected=not persistent.hold_to_skip, tooltip="Tap to toggle skipping", ysize=46)
                             focused_on "pref_controls_hold_to_skip_on_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -139,8 +139,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("left", "x", False), selected=not persistent.left_stick_invert_x, tooltip="Normal left stick x-axis", button_id="pref_controls_lx_normal_btn")
-                                use pref_tiny_button("INVERTED", SetStickInversion("left", "x", True), selected=persistent.left_stick_invert_x, tooltip="Invert left stick x-axis")
+                                use pref_tiny_button("NORMAL", SetStickInversion("left", "x", False), selected=not persistent.left_stick_invert_x, tooltip="Normal left stick x-axis", button_id="pref_controls_lx_normal_btn", ysize=46)
+                                use pref_tiny_button("INVERTED", SetStickInversion("left", "x", True), selected=persistent.left_stick_invert_x, tooltip="Invert left stick x-axis", ysize=46)
                             focused_on "pref_controls_lx_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -155,8 +155,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("left", "y", False), selected=not persistent.left_stick_invert_y, tooltip="Normal left stick y-axis", button_id="pref_controls_ly_normal_btn")
-                                use pref_tiny_button("INVERTED", SetStickInversion("left", "y", True), selected=persistent.left_stick_invert_y, tooltip="Invert left stick y-axis")
+                                use pref_tiny_button("NORMAL", SetStickInversion("left", "y", False), selected=not persistent.left_stick_invert_y, tooltip="Normal left stick y-axis", button_id="pref_controls_ly_normal_btn", ysize=46)
+                                use pref_tiny_button("INVERTED", SetStickInversion("left", "y", True), selected=persistent.left_stick_invert_y, tooltip="Invert left stick y-axis", ysize=46)
                             focused_on "pref_controls_ly_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -223,8 +223,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("right", "x", False), selected=not persistent.right_stick_invert_x, tooltip="Normal right stick x-axis", button_id="pref_controls_rx_normal_btn")
-                                use pref_tiny_button("INVERTED", SetStickInversion("right", "x", True), selected=persistent.right_stick_invert_x, tooltip="Invert right stick x-axis")
+                                use pref_tiny_button("NORMAL", SetStickInversion("right", "x", False), selected=not persistent.right_stick_invert_x, tooltip="Normal right stick x-axis", button_id="pref_controls_rx_normal_btn", ysize=46)
+                                use pref_tiny_button("INVERTED", SetStickInversion("right", "x", True), selected=persistent.right_stick_invert_x, tooltip="Invert right stick x-axis", ysize=46)
                             focused_on "pref_controls_rx_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
@@ -239,8 +239,8 @@ screen preferences_tab_controls(pref_remapper, pref_yadj):
                             hbox:
                                 xalign 1.0
                                 spacing 8
-                                use pref_tiny_button("NORMAL", SetStickInversion("right", "y", False), selected=not persistent.right_stick_invert_y, tooltip="Normal right stick y-axis", button_id="pref_controls_ry_normal_btn")
-                                use pref_tiny_button("INVERTED", SetStickInversion("right", "y", True), selected=persistent.right_stick_invert_y, tooltip="Invert right stick y-axis")
+                                use pref_tiny_button("NORMAL", SetStickInversion("right", "y", False), selected=not persistent.right_stick_invert_y, tooltip="Normal right stick y-axis", button_id="pref_controls_ry_normal_btn", ysize=46)
+                                use pref_tiny_button("INVERTED", SetStickInversion("right", "y", True), selected=persistent.right_stick_invert_y, tooltip="Invert right stick y-axis", ysize=46)
                             focused_on "pref_controls_ry_normal_btn" key "focus_left" action [SetScreenVariable("pref_controls_side", "remaps"), SetFocus("preferences_tab_controls", "pref_controls_calibrate_btn")]
 
                     hbox:
