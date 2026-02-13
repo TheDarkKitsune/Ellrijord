@@ -1,5 +1,5 @@
 # custom_news_updates.rpy
-# News / Updates screen and main-menu cloud button.
+# News / Updates screen.
 # Uses existing GUI assets to avoid missing-file errors.
 
 init -2 python:
@@ -78,23 +78,6 @@ style news_cloud_text is text:
     outlines [(2, "#6b3aa8", 0, 0)]
     xalign 0.5
     yalign 0.5
-
-
-screen news_menu_button(bg_action=None, bg_label="BG", bg_use_alt=False, news_use_alt=False):
-    # Small cloud icon on main menu to open News/Updates.
-    zorder 20
-
-    fixed:
-        xalign 0.06
-        yalign 0.95
-        xsize 240
-        ysize 80
-
-        hbox:
-            spacing 8
-            use ui_png_button("NEWS", ShowMenu("news_updates"), zoom=0.35, text_style="ui_btn_text_small", use_alt=news_use_alt)
-            if bg_action is not None:
-                use ui_png_button(bg_label, bg_action, zoom=0.35, text_style="ui_btn_text_small", use_alt=bg_use_alt)
 
 
 screen news_updates():

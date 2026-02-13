@@ -37,10 +37,10 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=1, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None):
+screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None):
     $ scale = zoom * BTN_VISUAL_SCALE
-    $ btn_w = int(BTN_SRC_W * scale)
-    $ btn_h = int(BTN_SRC_H * scale)
+    $ btn_w = int(BTN_SRC_W * scale) if xsize is None else int(xsize)
+    $ btn_h = int(BTN_SRC_H * scale) if ysize is None else int(ysize)
     $ idle_disp = "gui/btn_idle.png"
     $ hover_disp = "gui/btn_hover.png"
     $ disabled_disp = "gui/btn_disabled.png"
