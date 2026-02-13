@@ -76,14 +76,13 @@ screen main_menu():
 
     tag menu
 
-    default mm_track = None
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
     python:
         desired = "audio/Shattered_Remains.mp3" if mm_alt else "audio/Magical_Hallways.mp3"
-        if mm_track != desired:
-            renpy.music.play(desired, channel="music", loop=True)
-            mm_track = desired
+        # This block can be evaluated many times during UI interactions.
+        # if_changed=True prevents music from restarting on hover/scroll/etc.
+        renpy.music.play(desired, channel="music", loop=True, if_changed=True)
 
     if mm_alt:
         add im.Scale("gui/mainmenu_bg2.png", 1920, 1080)
