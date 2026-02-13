@@ -49,6 +49,11 @@ init -2 python:
                 return item
         return NEWS_ITEMS[0]
 
+    def _news_item_text(item, field):
+        key = "news_{0}_{1}".format(item.get("id", ""), field)
+        txt = L(key)
+        return txt if txt != key else item.get(field, "")
+
 
 style news_title is text:
     font "fonts/trotes/Trotes.ttf"
@@ -101,11 +106,11 @@ screen news_updates():
         add Solid("#2b2440cc") xpos 6 ypos 6 xsize (NEWS_PANEL_W - 12) ysize (NEWS_PANEL_H - 12)
 
         # Header / body text (left)
-        text "News" style "news_title":
+        text L("news_title") style "news_title":
             xpos 40
             ypos 26
 
-        text "The Version 1.0 release is available now!\nMain Story, AU Story, and new content have been added.\nLimited-time updates will be listed here." style "news_body":
+        text L("news_summary") style "news_body":
             xpos 40
             ypos 80
             xsize 900
@@ -128,7 +133,7 @@ screen news_updates():
                     yalign=0.5
                 )
             else:
-                text "HERO IMAGE" style "news_body":
+                text L("news_hero_placeholder") style "news_body":
                     xalign 0.5
                     yalign 0.5
 
@@ -146,12 +151,12 @@ screen news_updates():
         xalign 0.5
         yalign 0.93
         spacing 16
-        use ui_png_button("BACK", ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen news_tile(item, news_selected):
     use ui_news_tile_button(
-        item["title"],
+        _news_item_text(item, "title"),
         [SetScreenVariable("news_selected", item["id"]), Show("news_updates_detail", news_id=item["id"])],
         image=item.get("image"),
         width=NEWS_TILE_W,
@@ -181,11 +186,11 @@ screen news_updates_detail(news_id):
 
         vbox:
             spacing 18
-            text item["title"] style "news_title"
-            text item["body"] style "news_body"
+            text _news_item_text(item, "title") style "news_title"
+            text _news_item_text(item, "body") style "news_body"
 
             null height 10
 
             hbox:
                 xalign 1.0
-                use ui_png_button("CLOSE", Hide("news_updates_detail"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
+                use ui_png_button(L("news_close"), Hide("news_updates_detail"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)

@@ -55,7 +55,7 @@ screen preferences_tab_display():
                         fixed:
                             xsize left_w
                             ysize row_h
-                            text "LANGUAGE" style "pref_setting_label" yalign 0.5
+                            text L("pref_label_language") style "pref_setting_label" yalign 0.5
 
                         fixed:
                             xsize left_w
@@ -104,8 +104,8 @@ screen preferences_tab_display():
                             hbox:
                                 xalign 1.0
                                 spacing 12
-                                use pref_small_button("ENGLISH (US)", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us")
-                                use pref_small_button("ESPANOL (ES)", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es")
+                                use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us", tooltip_key="pref_tip_lang_en_us")
+                                use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es", tooltip_key="pref_tip_lang_es_es")
 
                         fixed:
                             xsize right_w

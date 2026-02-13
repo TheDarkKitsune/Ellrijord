@@ -77,8 +77,8 @@ screen custom_file_slots(mode="save"):
     default selected_slot = 1
     default slots_yadj = ui.adjustment()
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
-    $ title = "Save Files" if mode == "save" else "Load Files"
-    $ action_label = "OVERWRITE SAVE" if mode == "save" else "LOAD GAME"
+    $ title = L("save_title_save") if mode == "save" else L("save_title_load")
+    $ action_label = L("save_action_overwrite") if mode == "save" else L("save_action_load")
     $ can_open = (mode == "save") or FileLoadable(selected_slot)
 
     if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
@@ -108,7 +108,7 @@ screen custom_file_slots(mode="save"):
             spacing 14
 
             for i in range(1, SAVE_SLOT_COUNT + 1):
-                $ slot_name = ("Save %d — %s" % (i, FileSaveName(i, empty="Empty"))) if FileLoadable(i) else "Empty Slot"
+                $ slot_name = (("{0} {1} - {2}".format(L("save_slot_prefix"), i, FileSaveName(i, empty=L("save_empty_slot")))) if FileLoadable(i) else L("save_empty_slot"))
                 button:
                     background None
                     hover_background Solid("#ffffff10")
@@ -119,7 +119,7 @@ screen custom_file_slots(mode="save"):
                     hbox:
                         spacing 16
                         yalign 0.5
-                        text "•" style "save_slot_text"
+                        text "*" style "save_slot_text"
                         if i == selected_slot:
                             text slot_name style "save_slot_text_selected"
                         else:
@@ -162,14 +162,14 @@ screen custom_file_slots(mode="save"):
                 disabled=(not can_open)
             )
 
-        text "Save Time" style "save_meta_label":
+        text L("save_time_label") style "save_meta_label":
             xpos 0
             ypos 500
         text FileTime(selected_slot, format="%Y.%m.%d. - %H:%M", empty="--") style "save_meta_value":
             xpos 0
             ypos 548
 
-        text "Play Time" style "save_meta_label":
+        text L("play_time_label") style "save_meta_label":
             xpos 540
             ypos 500
         text "00:00:00" style "save_meta_value":
@@ -181,17 +181,17 @@ screen custom_file_slots(mode="save"):
             ypos 626
             xsize 360
             ysize 58
-            use ui_png_button("OVERWRITE SAVE", FileSave(selected_slot), xsize=360, ysize=58, text_style="ui_btn_text_small", use_alt=mm_alt, disabled=(mode != "save"))
+            use ui_png_button(L("save_action_overwrite"), FileSave(selected_slot), xsize=360, ysize=58, text_style="ui_btn_text_small", use_alt=mm_alt, disabled=(mode != "save"))
 
         fixed:
             xpos 540
             ypos 626
             xsize 320
             ysize 58
-            use ui_png_button("DELETE SAVE", FileDelete(selected_slot), xsize=320, ysize=58, text_style="ui_btn_text_small", use_alt=mm_alt, disabled=(not FileLoadable(selected_slot)))
+            use ui_png_button(L("save_action_delete"), FileDelete(selected_slot), xsize=320, ysize=58, text_style="ui_btn_text_small", use_alt=mm_alt, disabled=(not FileLoadable(selected_slot)))
 
     hbox:
         xalign 0.5
         yalign 0.95
         spacing 16
-        use ui_png_button("BACK", Return(), xsize=260, ysize=56, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), Return(), xsize=260, ysize=56, text_style="ui_btn_text_small", use_alt=mm_alt)

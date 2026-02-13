@@ -42,7 +42,7 @@ screen extra_menu():
 
     add Solid("#120d20aa")
 
-    text "EXTRA MENU" style "extra_title":
+    text L("extra_menu_title") style "extra_title":
         xalign 0.5
         ypos 46
 
@@ -53,16 +53,16 @@ screen extra_menu():
         xspacing 90
         yspacing 70
 
-        use ui_png_button("IMAGE GALLERY", ShowMenu("extra_image_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
-        use ui_png_button("MUSIC GALLERY", ShowMenu("music_room", mr=music_room), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
-        use ui_png_button("ACHIEVEMENTS", ShowMenu("extra_achievements"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
-        use ui_png_button("CREDITS", ShowMenu("extra_credits"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button(L("extra_image_gallery"), ShowMenu("extra_image_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button(L("extra_music_gallery"), ShowMenu("extra_music_gallery"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button(L("extra_achievements"), ShowMenu("extra_achievements"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
+        use ui_png_button(L("extra_credits"), ShowMenu("extra_credits"), zoom=0.95, text_style="ui_btn_text", use_alt=mm_alt)
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
-        use ui_png_button("RETURN", ShowMenu("main_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("extra_return"), ShowMenu("main_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_image_gallery():
@@ -75,7 +75,7 @@ screen extra_image_gallery():
         add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
-    text "IMAGE GALLERY" style "extra_title":
+    text L("extra_image_gallery") style "extra_title":
         xalign 0.5
         ypos 70
 
@@ -89,14 +89,14 @@ screen extra_image_gallery():
 
         vbox:
             spacing 18
-            text "Gallery page is ready." style "extra_subtitle"
-            text "Add your gallery unlocks/content here.\nIf you already have a gallery screen, you can route this button to it." style "extra_body"
+            text L("extra_image_gallery_subtitle") style "extra_subtitle"
+            text L("extra_image_gallery_body") style "extra_body"
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
-        use ui_png_button("BACK", ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_music_gallery():
@@ -109,7 +109,7 @@ screen extra_music_gallery():
         add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
-    text "MUSIC GALLERY" style "extra_title":
+    text L("extra_music_gallery") style "extra_title":
         xalign 0.5
         ypos 70
 
@@ -123,14 +123,14 @@ screen extra_music_gallery():
 
         vbox:
             spacing 18
-            text "Music gallery page is ready." style "extra_subtitle"
-            text "Hook this page into your music room / jukebox entries." style "extra_body"
+            text L("extra_music_gallery_subtitle") style "extra_subtitle"
+            text L("extra_music_gallery_body") style "extra_body"
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
-        use ui_png_button("BACK", ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_achievements():
@@ -143,7 +143,7 @@ screen extra_achievements():
         add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
-    text "ACHIEVEMENTS" style "extra_title":
+    text L("extra_achievements") style "extra_title":
         xalign 0.5
         ypos 70
 
@@ -157,14 +157,14 @@ screen extra_achievements():
 
         vbox:
             spacing 18
-            text "Achievements page is ready." style "extra_subtitle"
-            text "Display unlocked achievements and progress here." style "extra_body"
+            text L("extra_achievements_subtitle") style "extra_subtitle"
+            text L("extra_achievements_body") style "extra_body"
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
-        use ui_png_button("BACK", ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_credits():
@@ -177,7 +177,7 @@ screen extra_credits():
         add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
-    text "CREDITS" style "extra_title":
+    text L("extra_credits") style "extra_title":
         xalign 0.5
         ypos 70
 
@@ -191,11 +191,11 @@ screen extra_credits():
 
         vbox:
             spacing 18
-            text "Credits page is ready." style "extra_subtitle"
-            text "Project and contributor credits can go here." style "extra_body"
+            text L("extra_credits_subtitle") style "extra_subtitle"
+            text L("extra_credits_body") style "extra_body"
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
-        use ui_png_button("BACK", ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+        use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
