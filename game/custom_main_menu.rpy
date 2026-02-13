@@ -122,6 +122,16 @@ screen main_menu():
                 spacing 10
                 use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
                 use ui_png_button("SPECIAL", ShowMenu("special_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+        fixed:
+            xalign 0.95
+            yalign 0.95
+            xsize 200
+            ysize 42
+
+            hbox:
+                spacing 10
                 use ui_png_button(("LightMode" if mm_alt else "DarkMode"), Function(toggle_mm_alt), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
 
+                    
             
