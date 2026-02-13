@@ -6,7 +6,7 @@
 #   gui/btn_hover.png
 
 init -2 python:
-    BTN_ZOOM = 0.8
+    BTN_ZOOM = 1
 
     TOGGLE_ZOOM = 0.35
 
@@ -95,28 +95,32 @@ screen main_menu():
 
     fixed:
 
-        add Transform("gui/logo.png", zoom=0.80) at logo_bob:
+        add Transform("gui/logo.png") at logo_bob:
             xalign 0.5
             yanchor 0.0
-            ypos -250
+            ypos 100
+            xsize 600
+            ysize 500
 
         vbox:
             xalign 0.5
             yalign 0.96
-            spacing 4
+            spacing 20
 
-            use ui_png_button("NEW GAME", Start(), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("CONTINUE", ShowMenu("load"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("SETTINGS", ShowMenu("preferences"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("SPECIAL", ShowMenu("special_menu"), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
-            use ui_png_button("EXIT", Quit(confirm=True), zoom=BTN_ZOOM, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("NEW GAME", Start(), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("CONTINUE", ShowMenu("load"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("SETTINGS", ShowMenu("preferences"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
+            use ui_png_button("EXIT", Quit(confirm=True), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt)
 
-        # Cloud news button (defined in custom_news_updates.rpy)
-        use news_menu_button(
-            bg_action=Function(toggle_mm_alt),
-            bg_label=("LightMode" if mm_alt else "DarkMode"),
-            bg_use_alt=mm_alt,
-            news_use_alt=mm_alt
-        )
+        fixed:
+            xalign 0.05
+            yalign 0.95
+            xsize 200
+            ysize 42
+
+            hbox:
+                spacing 10
+                use ui_png_button("NEWS", ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
+                use ui_png_button(("LightMode" if mm_alt else "DarkMode"), Function(toggle_mm_alt), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt)
 
             

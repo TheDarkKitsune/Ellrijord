@@ -2,8 +2,8 @@
 # Shared slider styles/components.
 
 init -2 python:
-    UI_SLIDER_THUMB_W = 22
-    UI_SLIDER_THUMB_H = 30
+    UI_SLIDER_THUMB_W = 36
+    UI_SLIDER_THUMB_H = 36
     UI_SLIDER_THUMB_YOFFSET = 0
 
 style ui_slider_bar is slider:
