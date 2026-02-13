@@ -10,6 +10,7 @@ screen preferences_tab_display():
         $ left_w = 360
         $ right_w = 1060
         $ row_h = 86
+        $ lang_row_h = 142
         $ slider_row_h = 96
         $ slider_h = 36
         $ row_gap = 20
@@ -54,7 +55,7 @@ screen preferences_tab_display():
 
                         fixed:
                             xsize left_w
-                            ysize row_h
+                            ysize lang_row_h
                             text L("pref_label_language") style "pref_setting_label" yalign 0.5
 
                         fixed:
@@ -100,12 +101,21 @@ screen preferences_tab_display():
 
                         fixed:
                             xsize right_w
-                            ysize row_h
-                            hbox:
+                            ysize lang_row_h
+                            vbox:
                                 xalign 1.0
-                                spacing 12
-                                use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us", tooltip_key="pref_tip_lang_en_us")
-                                use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es", tooltip_key="pref_tip_lang_es_es")
+                                spacing 8
+                                hbox:
+                                    xalign 1.0
+                                    spacing 12
+                                    use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us", tooltip_key="pref_tip_lang_en_us")
+                                    use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es", tooltip_key="pref_tip_lang_es_es")
+                                    use pref_small_button("pref_lang_fr_fr", Function(set_ui_lang, "fr_fr"), selected=get_ui_lang() == "fr_fr", tooltip_key="pref_tip_lang_fr_fr")
+                                hbox:
+                                    xalign 1.0
+                                    spacing 12
+                                    use pref_small_button("pref_lang_de_de", Function(set_ui_lang, "de_de"), selected=get_ui_lang() == "de_de", tooltip_key="pref_tip_lang_de_de")
+                                    use pref_small_button("pref_lang_pt_br", Function(set_ui_lang, "pt_br"), selected=get_ui_lang() == "pt_br", tooltip_key="pref_tip_lang_pt_br")
 
                         fixed:
                             xsize right_w
