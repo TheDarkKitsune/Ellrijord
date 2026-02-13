@@ -37,7 +37,7 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None):
+screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None, left_icon=None, left_icon_size=None, left_icon_xpad=12):
     $ scale = zoom * BTN_VISUAL_SCALE
     $ btn_w = int(BTN_SRC_W * scale) if xsize is None else int(xsize)
     $ btn_h = int(BTN_SRC_H * scale) if ysize is None else int(ysize)
@@ -51,6 +51,10 @@ screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="
     $ disabled_img = Transform(Frame(disabled_disp, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
     $ hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
+    $ icon_sz = int(left_icon_size) if left_icon_size is not None else int(btn_h * 0.62)
+    $ icon_x = int(left_icon_xpad)
+    $ icon_y = int((btn_h - icon_sz) / 2)
+    $ icon_disp = Transform(left_icon, xsize=icon_sz, ysize=icon_sz, xpos=icon_x, ypos=icon_y) if left_icon is not None else Null(width=0, height=0)
 
     imagebutton:
         if button_id is not None:
@@ -69,18 +73,21 @@ screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="
         idle Fixed(
             At(idle_img, btn_idle_fx(1.0, yoffset)),
             At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
+            At(icon_disp, btn_idle_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
         hover Fixed(
             At(hover_img, btn_hover_fx(1.0, yoffset)),
             At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_hover_fx(1.0, yoffset)),
+            At(icon_disp, btn_hover_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
         insensitive Fixed(
             At(disabled_img, btn_idle_fx(1.0, yoffset)),
             At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
+            At(icon_disp, btn_idle_fx(1.0, yoffset)),
             xsize=btn_w,
             ysize=btn_h
         )
