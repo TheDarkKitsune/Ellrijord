@@ -2,6 +2,7 @@
 ## MUSIC ROOM DECLARATION
 ################################################################################
 init python:
+    import os
     #################### STEP 1: Set up the music room.
     ## You can make multiple music rooms consisting of different sets of tracks,
     ## if you so desire, or use one music room for all your music. You only need
@@ -36,26 +37,28 @@ init python:
     ## layouts resize it. It should typically be square.
     music_room.default_art = "gui/music_room/cover_art.webp"
 
-    ## Now you can declare the music files. These will appear in the music room
-    ## in the order you declare them in, unless you set alphabetical=True above.
-    # Your in-game soundtrack entries.
-    music_room.add(
-        name=_("Magical Hallways"),
-        path="audio/Magical_Hallways.mp3",
-        artist="Ellrijord OST",
-        art=None,
-        description=_("Main menu theme."),
-        unlock_condition="True",
+    ## Auto-register all music files in game/audio.
+    ## This makes new tracks appear in the music gallery without extra edits.
+    track_exts = (".mp3", ".ogg", ".opus", ".wav", ".flac", ".m4a")
+    audio_files = sorted(
+        f for f in renpy.list_files()
+        if f.startswith("audio/") and os.path.splitext(f)[1].lower() in track_exts
     )
 
-    music_room.add(
-        name=_("Shattered Remains"),
-        path="audio/Shattered_Remains.mp3",
-        artist="Ellrijord OST",
-        art=None,
-        description=_("Dark mode main menu theme."),
-        unlock_condition="True",
-    )
+    for f in audio_files:
+        base = os.path.splitext(os.path.basename(f))[0]
+        pretty = base.replace("_", " ")
+        artist_name = "Aelx Coldfire Music"
+        if base in ("Magical_Hallways", "Shattered_Remains"):
+            artist_name = "Ellrijord OST"
+        music_room.add(
+            name=_(pretty),
+            path=f,
+            artist=artist_name,
+            art=None,
+            description=_("Soundtrack track."),
+            unlock_condition="True",
+        )
 
 
 ################################################################################

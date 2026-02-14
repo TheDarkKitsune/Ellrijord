@@ -188,11 +188,11 @@ init 100 python in controller_event_replacement:
         THRESHOLD = renpy.display.controller.THRESHOLD
         ZERO_THRESHOLD = renpy.display.controller.ZERO_THRESHOLD
         # Handle environments where some pygame_sdl2 controller constants are missing.
-        cdev_added = globals().get("CONTROLLERDEVICEADDED", getattr(pygame, "CONTROLLERDEVICEADDED", getattr(pygame, "JOYDEVICEADDED", None)))
-        cdev_removed = globals().get("CONTROLLERDEVICEREMOVED", getattr(pygame, "CONTROLLERDEVICEREMOVED", getattr(pygame, "JOYDEVICEREMOVED", None)))
-        caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pygame, "CONTROLLERAXISMOTION", None))
-        cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pygame, "CONTROLLERBUTTONDOWN", None))
-        cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pygame, "CONTROLLERBUTTONUP", None))
+        cdev_added = globals().get("CONTROLLERDEVICEADDED", getattr(pygame_sdl2, "CONTROLLERDEVICEADDED", getattr(pygame_sdl2, "JOYDEVICEADDED", None)))
+        cdev_removed = globals().get("CONTROLLERDEVICEREMOVED", getattr(pygame_sdl2, "CONTROLLERDEVICEREMOVED", getattr(pygame_sdl2, "JOYDEVICEREMOVED", None)))
+        caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pygame_sdl2, "CONTROLLERAXISMOTION", None))
+        cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pygame_sdl2, "CONTROLLERBUTTONDOWN", None))
+        cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pygame_sdl2, "CONTROLLERBUTTONUP", None))
 
         if renpy.config.pass_controller_events:
             rv = ev
@@ -214,7 +214,7 @@ init 100 python in controller_event_replacement:
         elif (caxis_motion is not None) and ev.type == caxis_motion:
 
             pygame_sdl2.event.pump()
-            events = [ ev ] + pygame.event.get(caxis_motion)
+            events = [ ev ] + pygame_sdl2.event.get(caxis_motion)
 
             for ev in events:
 
