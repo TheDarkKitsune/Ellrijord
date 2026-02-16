@@ -36,10 +36,7 @@ transform gentle_flash:
     repeat
 
 label splashscreen():
-    ## With controller support, it's good to have a "press any button" screens
-    ## to start, so we know the player is using a controller.
-    ## This lets Ren'Py set up default_focus as well.
-    call screen press_any_button
+    ## Skip startup input gate and proceed directly.
     return
 
 ## After Load ##################################################################

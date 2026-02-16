@@ -3,6 +3,59 @@
 ################################################################################
 init python:
     import os
+
+    if not hasattr(persistent, "music_room_unlocked_keys") or persistent.music_room_unlocked_keys is None:
+        persistent.music_room_unlocked_keys = set()
+
+    def _get_music_unlocked_set():
+        """
+        Return a safe set for unlocked music keys, normalizing old/bad data.
+        """
+        raw = getattr(persistent, "music_room_unlocked_keys", None)
+        if raw is None:
+            unlocked = set()
+        else:
+            try:
+                unlocked = set(raw)
+            except Exception:
+                unlocked = set()
+        if raw is None or raw is not unlocked:
+            persistent.music_room_unlocked_keys = unlocked
+        return unlocked
+
+    def music_track_key(path_or_name):
+        """
+        Normalize a track path or name into a stable unlock key.
+        """
+        base = os.path.splitext(os.path.basename(path_or_name))[0]
+        return base.lower()
+
+    def music_track_unlocked(key):
+        """
+        Returns True if a music track key is unlocked in persistent data.
+        """
+        unlocked = _get_music_unlocked_set()
+        return key in unlocked
+
+    def unlock_music_track(path_or_name):
+        """
+        Unlock a music track by filename or path.
+        Example: unlock_music_track("audio/Magical_Hallways.mp3")
+                 unlock_music_track("Magical_Hallways")
+        """
+        key = music_track_key(path_or_name)
+        unlocked = _get_music_unlocked_set()
+        if key not in unlocked:
+            unlocked.add(key)
+            persistent.music_room_unlocked_keys = unlocked
+            renpy.save_persistent()
+
+    def reset_music_track_unlocks():
+        """
+        Relock all music tracks.
+        """
+        persistent.music_room_unlocked_keys = set()
+        renpy.save_persistent()
     #################### STEP 1: Set up the music room.
     ## You can make multiple music rooms consisting of different sets of tracks,
     ## if you so desire, or use one music room for all your music. You only need
@@ -40,24 +93,54 @@ init python:
     ## Auto-register all music files in game/audio.
     ## This makes new tracks appear in the music gallery without extra edits.
     track_exts = (".mp3", ".ogg", ".opus", ".wav", ".flac", ".m4a")
-    audio_files = sorted(
+    all_audio_files = [
         f for f in renpy.list_files()
         if f.startswith("audio/") and os.path.splitext(f)[1].lower() in track_exts
-    )
+    ]
 
-    for f in audio_files:
+    # Keep one file per track name, preferring converted assets when present.
+    def _audio_rank(path):
+        # Highest priority first:
+        # 1) audio/converted/*  (Ren'Py-safe converted WAVs)
+        # 2) mp3/ogg/opus
+        # 3) wav/flac/m4a
+        ext = os.path.splitext(path)[1].lower()
+        in_converted = path.startswith("audio/converted/")
+        if in_converted:
+            return (0, path.lower())
+        if ext in (".mp3", ".ogg", ".opus"):
+            return (1, path.lower())
+        return (2, path.lower())
+
+    chosen_by_base = {}
+    paths_by_base = {}
+    for f in sorted(all_audio_files, key=_audio_rank):
+        base = os.path.splitext(os.path.basename(f))[0]
+        key = base.lower()
+        if key not in paths_by_base:
+            paths_by_base[key] = []
+        paths_by_base[key].append(f)
+        if key not in chosen_by_base:
+            chosen_by_base[key] = f
+
+    for base_key in sorted(chosen_by_base.keys()):
+        f = chosen_by_base[base_key]
         base = os.path.splitext(os.path.basename(f))[0]
         pretty = base.replace("_", " ")
         artist_name = "Aelx Coldfire Music"
         if base in ("Magical_Hallways", "Shattered_Remains"):
             artist_name = "Ellrijord OST"
+
+        # Locked until manually unlocked by script via unlock_music_track(...).
+        unlock_condition = "music_track_unlocked({})".format(repr(base_key))
+
         music_room.add(
             name=_(pretty),
             path=f,
             artist=artist_name,
             art=None,
             description=_("Soundtrack track."),
-            unlock_condition="True",
+            unlock_condition=unlock_condition,
         )
 
 
@@ -257,6 +340,7 @@ screen music_room(mr):
             for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
                 button:
                     action mr.Play(song.path)
+                    sensitive (not song.locked)
                     has hbox
                     fixed:
                         if song is current_track:
@@ -271,8 +355,12 @@ screen music_room(mr):
                     vbox:
                         spacing 4
                         ## Track info
-                        label song.name
-                        text song.artist
+                        if song.locked:
+                            label " "
+                            text " "
+                        else:
+                            label song.name
+                            text song.artist
 
     ## This holds the album art, song title, artist, music bar, and music
     ## controls. You may adjust this however you wish! The important part
@@ -467,9 +555,10 @@ screen music_room2(mr):
                     mousewheel True scrollbars "vertical" draggable True
                     has vbox
                     label _("Track List") style "music_room_title" xalign 0.5
-                    for num, song in enumerate(mr.get_tracklist()):
+                    for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
                         button:
                             action mr.Play(song.path)
+                            sensitive (not song.locked)
                             has hbox
                             fixed:
                                 if song is current_track:
@@ -483,8 +572,12 @@ screen music_room2(mr):
                             vbox:
                                 spacing 4
                                 ## Track info
-                                label song.name
-                                text song.artist
+                                if song.locked:
+                                    label " "
+                                    text " "
+                                else:
+                                    label song.name
+                                    text song.artist
             vbox:
                 yalign 0.0
                 if current_track:
@@ -655,6 +748,7 @@ screen music_room3(mr):
                 for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
                     button:
                         action mr.Play(song.path)
+                        sensitive (not song.locked)
                         has hbox
                         fixed:
                             if song is current_track:
@@ -670,8 +764,12 @@ screen music_room3(mr):
                         vbox:
                             spacing 4
                             ## Track info
-                            label song.name
-                            text song.artist
+                            if song.locked:
+                                label " "
+                                text " "
+                            else:
+                                label song.name
+                                text song.artist
 
         ## This holds the album art, song title, artist, music bar, and music
         ## controls. You may adjust this however you wish! The important part
@@ -847,6 +945,7 @@ screen music_room4(mr):
             for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
                 button:
                     action mr.Play(song.path)
+                    sensitive (not song.locked)
                     xsize 790
                     ysize 88
                     background Frame(Solid("#000742"), 22, 22)
@@ -856,7 +955,10 @@ screen music_room4(mr):
                     fixed:
                         add Solid("#efe3a7") xsize 790 ysize 88
                         add Solid("#000742") xpos 6 ypos 6 xsize 778 ysize 76
-                        text song.name xalign 0.5 yalign 0.5 size 42 color ("#d9def2" if song is current_track else "#868aaa")
+                        if song.locked:
+                            text " " xalign 0.5 yalign 0.5 size 42 color "#868aaa"
+                        else:
+                            text song.name xalign 0.5 yalign 0.5 size 42 color ("#d9def2" if song is current_track else "#868aaa")
                         text "*" xpos 22 yalign 0.5 size 32 color "#efe3a7"
                         text "*" xalign 0.97 yalign 0.5 size 32 color "#efe3a7"
 
@@ -956,6 +1058,7 @@ screen music_room5(mr):
                     for song in mr.get_tracklist(all_tracks=True):
                         button:
                             action mr.Play(song.path)
+                            sensitive (not song.locked)
                             xsize 560
                             ysize 56
                             background Frame(Solid("#ff4fbd"), 20, 20)
@@ -963,11 +1066,18 @@ screen music_room5(mr):
                             selected_background Frame(Solid("#ffcf70"), 20, 20)
 
                             add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
-                            text song.name:
-                                xalign 0.5
-                                yalign 0.5
-                                size 32
-                                color ("#ffe1f8" if song is current_track else "#9096c0")
+                            if song.locked:
+                                text " ":
+                                    xalign 0.5
+                                    yalign 0.5
+                                    size 32
+                                    color "#9096c0"
+                            else:
+                                text song.name:
+                                    xalign 0.5
+                                    yalign 0.5
+                                    size 32
+                                    color ("#ffe1f8" if song is current_track else "#9096c0")
 
                 vbar value YScrollValue("music_room5_vp") style "track_list_vscrollbar"
 

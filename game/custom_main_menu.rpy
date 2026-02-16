@@ -83,6 +83,9 @@ screen main_menu():
         # This block can be evaluated many times during UI interactions.
         # if_changed=True prevents music from restarting on hover/scroll/etc.
         renpy.music.play(desired, channel="music", loop=True, if_changed=True)
+        # Mark currently playing main-menu track as discovered for the music room.
+        if "unlock_music_track" in globals():
+            unlock_music_track(desired)
 
     if mm_alt:
         add im.Scale("gui/mainmenu_bg2.png", 1920, 1080)
