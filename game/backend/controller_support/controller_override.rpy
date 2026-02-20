@@ -187,12 +187,13 @@ init 100 python in controller_event_replacement:
         """
         THRESHOLD = renpy.display.controller.THRESHOLD
         ZERO_THRESHOLD = renpy.display.controller.ZERO_THRESHOLD
-        # Handle environments where some pygame_sdl2 controller constants are missing.
-        cdev_added = globals().get("CONTROLLERDEVICEADDED", getattr(pygame_sdl2, "CONTROLLERDEVICEADDED", getattr(pygame_sdl2, "JOYDEVICEADDED", None)))
-        cdev_removed = globals().get("CONTROLLERDEVICEREMOVED", getattr(pygame_sdl2, "CONTROLLERDEVICEREMOVED", getattr(pygame_sdl2, "JOYDEVICEREMOVED", None)))
-        caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pygame_sdl2, "CONTROLLERAXISMOTION", None))
-        cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pygame_sdl2, "CONTROLLERBUTTONDOWN", None))
-        cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pygame_sdl2, "CONTROLLERBUTTONUP", None))
+        # Handle environments where controller constants may differ/miss.
+        pg = globals().get("pygame", None)
+        cdev_added = globals().get("CONTROLLERDEVICEADDED", getattr(pg, "CONTROLLERDEVICEADDED", getattr(pg, "JOYDEVICEADDED", None)))
+        cdev_removed = globals().get("CONTROLLERDEVICEREMOVED", getattr(pg, "CONTROLLERDEVICEREMOVED", getattr(pg, "JOYDEVICEREMOVED", None)))
+        caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pg, "CONTROLLERAXISMOTION", None))
+        cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pg, "CONTROLLERBUTTONDOWN", None))
+        cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pg, "CONTROLLERBUTTONUP", None))
 
         if renpy.config.pass_controller_events:
             rv = ev
@@ -213,8 +214,11 @@ init 100 python in controller_event_replacement:
 
         elif (caxis_motion is not None) and ev.type == caxis_motion:
 
-            pygame_sdl2.event.pump()
-            events = [ ev ] + pygame_sdl2.event.get(caxis_motion)
+            if pg is not None and hasattr(pg, "event"):
+                pg.event.pump()
+                events = [ ev ] + pg.event.get(caxis_motion)
+            else:
+                events = [ ev ]
 
             for ev in events:
 

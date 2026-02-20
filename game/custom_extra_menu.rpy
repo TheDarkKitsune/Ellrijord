@@ -265,6 +265,7 @@ style extra_hub_chip_card_text is text:
 
 screen extra_menu():
     tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
     $ char_cfg_items = _gallery_items_from_list(gallery_character_images)
     $ gameplay_cfg_items = _gallery_items_from_list(gallery_gameplay_images)
     $ secret_cfg_items = _gallery_items_from_list(gallery_secret_images)
@@ -274,143 +275,71 @@ screen extra_menu():
     $ secret_preview = (secret_cfg_items[0]["path"] if secret_cfg_items else _gallery_with_placeholders("gui/gallery/secret", "Secret", 1)[0]["path"])
     $ extra_preview = (extra_cfg_items[0]["path"] if extra_cfg_items else _gallery_with_placeholders("gui/gallery/extra", "Extra", 1)[0]["path"])
     $ music_preview = "gui/music_room/cover_art.webp" if renpy.loadable("gui/music_room/cover_art.webp") else gameplay_preview
+    $ panel_w = NEWS_PANEL_W
+    $ panel_h = NEWS_PANEL_H
+    $ hero_w = NEWS_HERO_W
+    $ hero_h = NEWS_HERO_H
+    $ hero_img = "gui/news/update_image.png" if renpy.loadable("gui/news/update_image.png") else secret_preview
+    $ tile_bg = "gui/news/main_story.png" if renpy.loadable("gui/news/main_story.png") else char_preview
+    $ tile_music = "gui/news/side_story.png" if renpy.loadable("gui/news/side_story.png") else music_preview
+    $ tile_ach = "gui/news/bug_fixes.png" if renpy.loadable("gui/news/bug_fixes.png") else gameplay_preview
+    $ tile_credits = "gui/news/future_characters.png" if renpy.loadable("gui/news/future_characters.png") else extra_preview
+    $ news_bg = "gui/news/new_background.png" if renpy.loadable("gui/news/new_background.png") else "gui/news/news_background.png"
 
-    add Solid("#d7e6f2")
-
-    # Simple geometric background accents.
-    add Transform(Solid("#b8d1e655"), rotate=22, xpos=-140, ypos=130, xsize=980, ysize=5)
-    add Transform(Solid("#b8d1e655"), rotate=-16, xpos=500, ypos=32, xsize=1260, ysize=5)
-    add Transform(Solid("#b8d1e655"), rotate=13, xpos=980, ypos=420, xsize=880, ysize=5)
-    add Transform(Solid("#b8d1e655"), rotate=-28, xpos=120, ypos=780, xsize=760, ysize=5)
+    add im.Scale(news_bg, config.screen_width, config.screen_height)
 
     fixed:
         xalign 0.5
-        yalign 0.40
-        xsize 1880
-        ysize 760
+        yalign 0.52
+        xsize panel_w
+        ysize panel_h
+
+        add Solid("#6b3aa8") xsize panel_w ysize panel_h
+        add Solid("#2b2440cc") xpos 6 ypos 6 xsize (panel_w - 12) ysize (panel_h - 12)
+
+        text "Extra":
+            style "news_title"
+            xpos 40
+            ypos 26
+
+        text "Choose a section.\nImage Gallery, Music Gallery, Achievements, and Credits are below.\nClick the top-right image to open Secrets.":
+            style "news_body"
+            xpos 40
+            ypos 80
+            xsize 900
+
+        button:
+            action ShowMenu("secret_codes")
+            background None
+            hover_background None
+            xpos 1020
+            ypos 40
+            xsize hero_w
+            ysize hero_h
+            fixed:
+                xysize (hero_w, hero_h)
+                add Solid("#ffffff20") xsize hero_w ysize hero_h
+                add Transform(hero_img, fit="contain", xsize=hero_w, ysize=hero_h, xalign=0.5, yalign=0.5)
+                text "Secrets":
+                    style "news_tile_text"
+                    xalign 0.5
+                    yalign 0.9
 
         hbox:
-            xalign 0.5
-            yalign 0.5
-            spacing 48
+            xpos 60
+            ypos 420
+            spacing 24
 
-            button:
-                action ShowMenu("extra_image_gallery")
-                background None
-                hover_background None
-                xsize 330
-                ysize 700
-                fixed:
-                    xysize (330, 700)
-                    add Solid("#6d58e5") xpos 37 ypos 120 xsize 256 ysize 432
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=43)
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=458)
-                    add Solid("#f7f8ff") xpos 45 ypos 128 xsize 240 ysize 416
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=51)
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=466)
-                    fixed:
-                        xpos 53
-                        ypos 136
-                        xysize (224, 400)
-                        clipping True
-                        add Transform(char_preview, fit="cover", xysize=(224, 400), xalign=0.5, yalign=0.5)
+            use ui_news_tile_button("Image Gallery", ShowMenu("extra_image_gallery"), image=tile_bg, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
+            use ui_news_tile_button("Music Gallery", ShowMenu("music_room", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
+            use ui_news_tile_button("Achievements", ShowMenu("achievement_gallery"), image=tile_ach, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
+            use ui_news_tile_button("Credits", ShowMenu("extra_credits"), image=tile_credits, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
 
-            button:
-                action ShowMenu("music_room", mr=music_room)
-                background None
-                hover_background None
-                xsize 330
-                ysize 700
-                fixed:
-                    xysize (330, 700)
-                    add Solid("#6d58e5") xpos 37 ypos 120 xsize 256 ysize 432
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=43)
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=458)
-                    add Solid("#f7f8ff") xpos 45 ypos 128 xsize 240 ysize 416
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=51)
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=466)
-                    fixed:
-                        xpos 53
-                        ypos 136
-                        xysize (224, 400)
-                        clipping True
-                        add Transform(music_preview, fit="cover", xysize=(224, 400), xalign=0.5, yalign=0.5)
-
-            button:
-                action ShowMenu("achievement_gallery")
-                background None
-                hover_background None
-                xsize 330
-                ysize 700
-                fixed:
-                    xysize (330, 700)
-                    add Solid("#6d58e5") xpos 37 ypos 120 xsize 256 ysize 432
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=43)
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=458)
-                    add Solid("#f7f8ff") xpos 45 ypos 128 xsize 240 ysize 416
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=51)
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=466)
-                    fixed:
-                        xpos 53
-                        ypos 136
-                        xysize (224, 400)
-                        clipping True
-                        add Transform(gameplay_preview, fit="cover", xysize=(224, 400), xalign=0.5, yalign=0.5)
-
-            button:
-                action ShowMenu("extra_credits")
-                background None
-                hover_background None
-                xsize 330
-                ysize 700
-                fixed:
-                    xysize (330, 700)
-                    add Solid("#6d58e5") xpos 37 ypos 120 xsize 256 ysize 432
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=43)
-                    add Transform(Solid("#6d58e5"), rotate=45, xsize=170, ysize=170, xalign=0.5, ypos=458)
-                    add Solid("#f7f8ff") xpos 45 ypos 128 xsize 240 ysize 416
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=51)
-                    add Transform(Solid("#f7f8ff"), rotate=45, xsize=154, ysize=154, xalign=0.5, ypos=466)
-                    fixed:
-                        xpos 53
-                        ypos 136
-                        xysize (224, 400)
-                        clipping True
-                        add Transform(extra_preview, fit="cover", xysize=(224, 400), xalign=0.5, yalign=0.5)
-
-    # 5th card underneath, horizontal, for Secrets.
-    button:
-        action ShowMenu("extra_image_gallery_grid", initial_tab="secret")
+    hbox:
         xalign 0.5
-        ypos 760
-        xsize 640
-        ysize 210
-        background None
-        hover_background None
-        fixed:
-            xysize (640, 210)
-            add Solid("#6d58e5") xysize (640, 210)
-            add Solid("#f7f8ff") xpos 8 ypos 8 xysize (624, 194)
-            fixed:
-                xpos 14
-                ypos 14
-                xysize (612, 182)
-                clipping True
-                add Transform(secret_preview, fit="cover", xysize=(612, 182), xalign=0.5, yalign=0.5)
-            add Solid("#291f53aa") xpos 14 ypos 141 xsize 612 ysize 55
-            text "Secrets" style "extra_hub_chip_card_text" xalign 0.5 yalign 0.92
-
-    textbutton "<-":
-        action ShowMenu("main_menu")
-        xpos 1820
-        ypos 38
-        xsize 90
-        ysize 90
-        background Frame(Solid("#000000"), 45, 45)
-        text_size 42
-        text_color "#ffffff"
-        text_xalign 0.5
-        text_yalign 0.5
+        yalign 0.93
+        spacing 16
+        use ui_png_button(L("pref_button_back"), ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_image_gallery():
@@ -424,77 +353,77 @@ screen extra_image_gallery():
     $ gameplay_preview = (gameplay_cfg_items[0]["path"] if gameplay_cfg_items else _gallery_with_placeholders("gui/gallery/gameplay", "Gameplay", 1)[0]["path"])
     $ secret_preview = (secret_cfg_items[0]["path"] if secret_cfg_items else _gallery_with_placeholders("gui/gallery/secret", "Secret", 1)[0]["path"])
     $ extra_preview = (extra_cfg_items[0]["path"] if extra_cfg_items else _gallery_with_placeholders("gui/gallery/extra", "Extra", 1)[0]["path"])
-
     if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
         add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
     else:
         add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
 
-    textbutton "GALLERY  >":
-        action NullAction()
-        xpos 48
-        ypos 40
-        background Frame(Solid("#ead8df"), 8, 8)
-        xminimum 320
-        yminimum 76
-        text_size 48
-        text_color "#2b2b31"
-        text_xalign 0.5
-        text_yalign 0.5
+    frame:
+        background Solid("#2b2440d8")
+        xalign 0.5
+        yalign 0.54
+        xsize 1720
+        ysize 860
+        padding (26, 22)
 
-    textbutton "<-":
-        action ShowMenu("extra_menu")
-        xpos 1820
-        ypos 40
-        xsize 90
-        ysize 90
-        background Frame(Solid("#000000"), 45, 45)
-        text_size 42
-        text_color "#ffffff"
-        text_xalign 0.5
-        text_yalign 0.5
+        vbox:
+            spacing 20
+
+            text "Image Gallery":
+                style "extra_title"
+                size 78
+                xalign 0.5
+
+            hbox:
+                spacing 28
+                xalign 0.5
+
+                use ui_news_tile_button(
+                    "Character Images",
+                    ShowMenu("extra_character_gallery"),
+                    image=chars_preview,
+                    width=380,
+                    height=240,
+                    bg="#3a3152",
+                    hover_bg="#4a3a6a",
+                    text_style="news_tile_text"
+                )
+                use ui_news_tile_button(
+                    "Gameplay Images",
+                    ShowMenu("extra_image_gallery_grid", initial_tab="gameplay"),
+                    image=gameplay_preview,
+                    width=380,
+                    height=240,
+                    bg="#3a3152",
+                    hover_bg="#4a3a6a",
+                    text_style="news_tile_text"
+                )
+                use ui_news_tile_button(
+                    "Secret Images",
+                    ShowMenu("extra_image_gallery_grid", initial_tab="secret"),
+                    image=secret_preview,
+                    width=380,
+                    height=240,
+                    bg="#3a3152",
+                    hover_bg="#4a3a6a",
+                    text_style="news_tile_text"
+                )
+                use ui_news_tile_button(
+                    "Extra",
+                    ShowMenu("extra_image_gallery_grid", initial_tab="extra"),
+                    image=extra_preview,
+                    width=380,
+                    height=240,
+                    bg="#3a3152",
+                    hover_bg="#4a3a6a",
+                    text_style="news_tile_text"
+                )
 
     hbox:
         xalign 0.5
-        ypos 220
-        spacing 60
-
-        button style "extra_gallery_hub_card" action ShowMenu("extra_character_gallery"):
-            fixed:
-                xysize (420, 710)
-                add Solid("#111111") xysize (420, 710)
-                add Solid("#ead8df") xpos 3 ypos 3 xysize (414, 704)
-                add chars_preview fit "contain" xpos 6 ypos 6 xysize (408, 698)
-
-        button style "extra_gallery_hub_card" action ShowMenu("extra_image_gallery_grid", initial_tab="gameplay"):
-            fixed:
-                xysize (420, 710)
-                add Solid("#111111") xysize (420, 710)
-                add Solid("#ead8df") xpos 3 ypos 3 xysize (414, 704)
-                if gameplay_cfg_items:
-                    add gameplay_preview fit "contain" xpos 6 ypos 6 xysize (408, 698)
-                else:
-                    add (LOCKED_GALLERY_TILE if renpy.loadable(LOCKED_GALLERY_TILE) else LOCKED_GALLERY_TILE_FALLBACK) fit "contain" xpos 6 ypos 6 xysize (408, 698)
-
-        button style "extra_gallery_hub_card" action ShowMenu("extra_image_gallery_grid", initial_tab="secret"):
-            fixed:
-                xysize (420, 710)
-                add Solid("#111111") xysize (420, 710)
-                add Solid("#ead8df") xpos 3 ypos 3 xysize (414, 704)
-                if secret_cfg_items:
-                    add secret_preview fit "contain" xpos 6 ypos 6 xysize (408, 698)
-                else:
-                    add (LOCKED_GALLERY_TILE if renpy.loadable(LOCKED_GALLERY_TILE) else LOCKED_GALLERY_TILE_FALLBACK) fit "contain" xpos 6 ypos 6 xysize (408, 698)
-
-        button style "extra_gallery_hub_card" action ShowMenu("extra_image_gallery_grid", initial_tab="extra"):
-            fixed:
-                xysize (420, 710)
-                add Solid("#111111") xysize (420, 710)
-                add Solid("#ead8df") xpos 3 ypos 3 xysize (414, 704)
-                if extra_cfg_items:
-                    add extra_preview fit "contain" xpos 6 ypos 6 xysize (408, 698)
-                else:
-                    add (LOCKED_GALLERY_TILE if renpy.loadable(LOCKED_GALLERY_TILE) else LOCKED_GALLERY_TILE_FALLBACK) fit "contain" xpos 6 ypos 6 xysize (408, 698)
+        yalign 0.93
+        spacing 16
+        use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
 screen extra_character_gallery():

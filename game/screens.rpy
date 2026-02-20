@@ -111,7 +111,7 @@ style window:
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
-    background Image("gui/textbox.png", xalign=0.5, yalign=1.0)
+    background Image("gui/textboxx.png", xalign=0.5, yalign=0.0)
 
 style namebox:
     xpos gui.name_xpos
@@ -178,9 +178,22 @@ style choice_vbox:
 
 style choice_button is default:
     properties gui.button_properties("choice_button")
+    xalign 0.5
+    xminimum 1185
+    yminimum 80
+    background Frame("gui/button/choice_idle_background.png", 32, 16, 32, 16)
+    hover_background Frame("gui/button/choice_hover_background.png", 32, 16, 32, 16)
+    insensitive_background Frame("gui/button/choice_idle_background.png", 32, 16, 32, 16)
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
+    xalign 0.5
+    yalign 0.5
+    idle_color "#ffffff"
+    hover_color "#ffffff"
+    selected_idle_color "#ffffff"
+    selected_hover_color "#ffffff"
+    outlines [ (2, "#00000088", 0, 0) ]
 
 
 screen quick_menu():
