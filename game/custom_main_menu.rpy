@@ -107,37 +107,37 @@ screen main_menu():
         vbox:
             xalign 0.5
             yalign 0.96
-            spacing 20
+            spacing 16
 
-            use ui_png_button(L("mm_new_game"), Start(), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"))
-            use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"))
-            use ui_png_button(L("mm_settings"), ShowMenu("preferences"), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_settings"))
-            use ui_png_button(L("mm_exit"), Quit(confirm=True), xsize=672, ysize=104, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_exit"))
+            use ui_png_button(L("mm_new_game"), Start(), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"))
+            use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"))
+            use ui_png_button(L("mm_settings"), ShowMenu("preferences"), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_settings"))
+            use ui_png_button(L("mm_exit"), Quit(confirm=True), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_exit"))
 
         fixed:
             xalign 0.05
             yalign 0.95
-            xsize 200
-            ysize 42
+            xsize 220
+            ysize 48
 
             hbox:
-                spacing 10
-                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
-                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=200, ysize=42, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
+                spacing 12
+                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
+                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
 
         fixed:
             xalign 0.95
             yalign 0.95
-            xsize 200
-            ysize 42
+            xsize 220
+            ysize 48
 
             hbox:
-                spacing 10
+                spacing 12
                 use ui_png_button(
                     (L("mm_light_mode") if mm_alt else L("mm_dark_mode")),
                     Function(toggle_mm_alt),
-                    xsize=200,
-                    ysize=42,
+                    xsize=220,
+                    ysize=48,
                     text_style="ui_btn_text_small",
                     use_alt=mm_alt,
                     left_icon=("gui/lightmode_icon.png" if mm_alt else "gui/darkmode_icon.png"),

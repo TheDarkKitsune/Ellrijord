@@ -2,6 +2,9 @@
 # Standalone Secrets code-entry screen and unlock handlers.
 
 default secrets_feedback = "Enter a secret code to unlock special content."
+default persistent.secret_codes_redeemed = set()
+default persistent.music_room_unlocked_keys = set()
+default persistent.secret_cheats_unlocked = False
 
 init -2 python:
     import os
@@ -190,13 +193,20 @@ screen secret_codes():
             ysize 88
             padding (18, 14)
 
-            input:
-                value ScreenVariableInputValue("secret_code_input")
-                length 48
-                style "news_body"
-                color "#ffffff"
-                caret "#ffffff"
-                xfill True
+            fixed:
+                xsize 820
+                ysize 52
+                clipping True
+
+                input:
+                    id "secret_code_field"
+                    value ScreenVariableInputValue("secret_code_input")
+                    length 50
+                    default True
+                    style "secret_code_input_text"
+                    xpos 0
+                    ypos 0
+                    xsize 820
 
         hbox:
             xpos 50
@@ -224,8 +234,37 @@ screen secret_codes():
             vbox:
                 spacing 6
                 text "Known Codes" style "news_title"
-                text "STARFALL - unlock secret gallery images" style "news_body"
-                text "MELODYKEY - unlock all music tracks" style "news_body"
-                text "VOIDMODE - unlock cheats flag" style "news_body"
-                text "FOGRESET - relock all discovered gallery images" style "news_body"
-                text "MUTEVAULT - relock all discovered music tracks" style "news_body"
+
+                side "c r":
+                    spacing 8
+                    xfill True
+                    yfill True
+
+                    viewport:
+                        id "secret_codes_vp"
+                        draggable True
+                        mousewheel True
+                        scrollbars None
+                        xfill True
+                        yfill True
+
+                        vbox:
+                            spacing 6
+                            text "STARFALL - unlock secret gallery images" style "news_body"
+                            text "MELODYKEY - unlock all music tracks" style "news_body"
+                            text "VOIDMODE - unlock cheats flag" style "news_body"
+                            text "FOGRESET - relock all discovered gallery images" style "news_body"
+                            text "MUTEVAULT - relock all discovered music tracks" style "news_body"
+
+                    use ui_vscrollbar_for("secret_codes_vp")
+
+
+style secret_code_input_text is input:
+    font "fonts/trotes/Trotes.ttf"
+    size 34
+    color "#ffffff"
+    selected_color "#ffffff"
+    selected_idle_color "#ffffff"
+    selected_hover_color "#ffffff"
+    hover_color "#ffffff"
+    outlines [ (1, "#00000055", 0, 0) ]
