@@ -194,6 +194,22 @@ init 100 python in controller_event_replacement:
         caxis_motion = globals().get("CONTROLLERAXISMOTION", getattr(pg, "CONTROLLERAXISMOTION", None))
         cbtn_down = globals().get("CONTROLLERBUTTONDOWN", getattr(pg, "CONTROLLERBUTTONDOWN", None))
         cbtn_up = globals().get("CONTROLLERBUTTONUP", getattr(pg, "CONTROLLERBUTTONUP", None))
+        joy_axis_motion = getattr(pg, "JOYAXISMOTION", None) if pg is not None else None
+        joy_hat_motion = getattr(pg, "JOYHATMOTION", None) if pg is not None else None
+        joy_ball_motion = getattr(pg, "JOYBALLMOTION", None) if pg is not None else None
+        joy_btn_down = getattr(pg, "JOYBUTTONDOWN", None) if pg is not None else None
+        joy_btn_up = getattr(pg, "JOYBUTTONUP", None) if pg is not None else None
+        joy_dev_added = getattr(pg, "JOYDEVICEADDED", None) if pg is not None else None
+        joy_dev_removed = getattr(pg, "JOYDEVICEREMOVED", None) if pg is not None else None
+        joy_events = tuple(v for v in (
+            joy_axis_motion,
+            joy_hat_motion,
+            joy_ball_motion,
+            joy_btn_down,
+            joy_btn_up,
+            joy_dev_added,
+            joy_dev_removed,
+        ) if v is not None)
 
         if renpy.config.pass_controller_events:
             rv = ev
@@ -262,15 +278,7 @@ init 100 python in controller_event_replacement:
             renpy.display.controller.controller_event(get_string_for_button(ev.button), pr)
             return rv
 
-        elif ev.type in (
-                pygame.JOYAXISMOTION,
-                pygame.JOYHATMOTION,
-                pygame.JOYBALLMOTION,
-                pygame.JOYBUTTONDOWN,
-                pygame.JOYBUTTONUP,
-                pygame.JOYDEVICEADDED,
-                pygame.JOYDEVICEREMOVED,
-                ):
+        elif joy_events and ev.type in joy_events:
 
             if not renpy.config.pass_joystick_events:
                 return None
@@ -384,9 +392,14 @@ init 100 python in controller_event_replacement:
             try: # This might fail during init
                 should_max_default = pad_config.EVENT_LISTENER.last_event_type != pad_config.EventListener.MOUSE
             except NameError:
+                pg = globals().get("pygame", None)
+                mouse_btn_down = getattr(pg, "MOUSEBUTTONDOWN", None) if pg is not None else None
+                mouse_btn_up = getattr(pg, "MOUSEBUTTONUP", None) if pg is not None else None
+                mouse_motion = getattr(pg, "MOUSEMOTION", None) if pg is not None else None
+                mouse_events = tuple(v for v in (mouse_btn_down, mouse_btn_up, mouse_motion) if v is not None)
                 should_max_default = ((renpy.display.interface.last_event is None)
-                    or (renpy.display.interface.last_event.type not in [
-                    pygame.MOUSEBUTTONDOWN, pygame.MOUSEBUTTONUP, pygame.MOUSEMOTION ]))
+                    or (not mouse_events)
+                    or (renpy.display.interface.last_event.type not in mouse_events))
 
         # Is this an explicit change, using the override operation?
         explicit = False
