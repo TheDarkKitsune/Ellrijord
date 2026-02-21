@@ -1,6 +1,8 @@
 # custom_extra_menu.rpy
 # Extra menu hub + destination pages.
 
+default persistent.gallery_unlocked_images = set()
+
 init -2 python:
     import os
     LOCKED_GALLERY_TILE = "gui/gallery/locked_tile.png"
