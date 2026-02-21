@@ -22,6 +22,18 @@ init -2 python:
             "desc": "Unlocks developer cheats/features flag.",
             "type": "cheats",
         },
+        "FOGRESET": {
+            "title": "Image Discoveries Reset",
+            "desc": "Relocks all discovered gallery images.",
+            "type": "reset_gallery",
+            "repeatable": True,
+        },
+        "MUTEVAULT": {
+            "title": "Music Discoveries Reset",
+            "desc": "Relocks all discovered music tracks.",
+            "type": "reset_music",
+            "repeatable": True,
+        },
     }
 
     def _secret_redeemed_set():
@@ -76,6 +88,24 @@ init -2 python:
             count += 1
         return count
 
+    def _reset_all_gallery_unlocks():
+        reset_gallery = getattr(renpy.store, "reset_gallery_unlocks", None)
+        if callable(reset_gallery):
+            reset_gallery()
+            return
+
+        persistent.gallery_unlocked_images = set()
+        renpy.save_persistent()
+
+    def _reset_all_music_unlocks():
+        reset_music = getattr(renpy.store, "reset_music_track_unlocks", None)
+        if callable(reset_music):
+            reset_music()
+            return
+
+        persistent.music_room_unlocked_keys = set()
+        renpy.save_persistent()
+
     def redeem_secret_code(code_text):
         code = (code_text or "").strip().upper()
         if not code:
@@ -90,7 +120,8 @@ init -2 python:
             return
 
         redeemed = _secret_redeemed_set()
-        if code in redeemed:
+        repeatable = bool(data.get("repeatable", False))
+        if (not repeatable) and code in redeemed:
             renpy.store.secrets_feedback = data["title"] + " (already redeemed)."
             renpy.restart_interaction()
             return
@@ -107,12 +138,19 @@ init -2 python:
             persistent.secret_cheats_unlocked = True
             renpy.save_persistent()
             renpy.store.secrets_feedback = "{}: Cheats flag enabled.".format(data["title"])
+        elif unlock_type == "reset_gallery":
+            _reset_all_gallery_unlocks()
+            renpy.store.secrets_feedback = "{}: all gallery images relocked.".format(data["title"])
+        elif unlock_type == "reset_music":
+            _reset_all_music_unlocks()
+            renpy.store.secrets_feedback = "{}: all music tracks relocked.".format(data["title"])
         else:
             renpy.store.secrets_feedback = "Code accepted."
 
-        redeemed.add(code)
-        persistent.secret_codes_redeemed = redeemed
-        renpy.save_persistent()
+        if not repeatable:
+            redeemed.add(code)
+            persistent.secret_codes_redeemed = redeemed
+            renpy.save_persistent()
         renpy.restart_interaction()
 
 
@@ -189,3 +227,5 @@ screen secret_codes():
                 text "STARFALL - unlock secret gallery images" style "news_body"
                 text "MELODYKEY - unlock all music tracks" style "news_body"
                 text "VOIDMODE - unlock cheats flag" style "news_body"
+                text "FOGRESET - relock all discovered gallery images" style "news_body"
+                text "MUTEVAULT - relock all discovered music tracks" style "news_body"

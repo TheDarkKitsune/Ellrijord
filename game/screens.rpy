@@ -234,6 +234,62 @@ style quick_button_text:
     properties gui.text_properties("quick_button")
 
 
+## Auto indicator screen #######################################################
+##
+## This indicates that auto-forward mode is currently enabled.
+##
+init python:
+    def auto_indicator():
+        # Auto mode is on.
+        if preferences.afm_enable and not renpy.get_screen("auto_indicator"):
+            renpy.show_screen("auto_indicator")
+        # Auto mode is off.
+        elif (not preferences.afm_enable) and renpy.get_screen("auto_indicator"):
+            renpy.hide_screen("auto_indicator")
+
+    # Keep this in overlay functions so the indicator auto-updates.
+    if auto_indicator not in config.overlay_functions:
+        config.overlay_functions.append(auto_indicator)
+
+screen auto_indicator():
+
+    zorder 100
+    style_prefix "auto"
+
+    frame:
+        has hbox
+
+        text _("Auto-Forward")
+
+        text u"\u25B8" at auto_blink(1.0) style "skip_triangle"
+
+## This transform blinks the indicator arrow.
+transform auto_blink(cycle):
+    alpha 0.0
+    linear 0.5 alpha 1.0
+    pause 0.2
+    linear 0.5 alpha 0.0
+    pause (cycle - .4)
+    repeat
+
+style auto_hbox:
+    spacing 9
+
+style auto_frame:
+    is empty
+    ypos 15
+    background Frame("#0008", 24, 8, 75, 8, tile=False)
+    padding (24, 8, 75, 8)
+
+style auto_text:
+    size 24
+
+style auto_triangle:
+    is auto_text
+    # This font includes the black right-pointing small triangle glyph.
+    font "DejaVuSans.ttf"
+
+
 
 ################################################################################
 ## Main and Game Menu Screens
