@@ -415,6 +415,7 @@ screen extra_menu():
 
 screen extra_image_gallery():
     tag menu
+    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
     $ char_cfg_items = _gallery_items_from_list(gallery_character_images)
     $ gameplay_cfg_items = _gallery_items_from_list(gallery_gameplay_images)
     $ secret_cfg_items = _gallery_items_from_list(gallery_secret_images)
@@ -424,7 +425,10 @@ screen extra_image_gallery():
     $ secret_preview = (secret_cfg_items[0]["path"] if secret_cfg_items else _gallery_with_placeholders("gui/gallery/secret", "Secret", 1)[0]["path"])
     $ extra_preview = (extra_cfg_items[0]["path"] if extra_cfg_items else _gallery_with_placeholders("gui/gallery/extra", "Extra", 1)[0]["path"])
 
-    add Solid("#e8d4dd")
+    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    else:
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
 
     textbutton "GALLERY  >":
         action NullAction()

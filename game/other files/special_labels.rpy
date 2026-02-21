@@ -36,7 +36,9 @@ transform gentle_flash:
     repeat
 
 label splashscreen():
-    ## Skip startup input gate and proceed directly.
+    $ launch_video = "movies/Launch.webm" if renpy.loadable("movies/Launch.webm") else ("Launch.webm" if renpy.loadable("Launch.webm") else None)
+    if launch_video:
+        $ renpy.movie_cutscene(launch_video)
     return
 
 ## After Load ##################################################################

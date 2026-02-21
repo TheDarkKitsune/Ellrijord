@@ -30,6 +30,16 @@ init python:
         base = os.path.splitext(os.path.basename(path_or_name))[0]
         return base.lower()
 
+    # Per-track unlock hints shown while a track is still locked.
+    MUSIC_TRACK_HINTS = {
+        "magical_hallways": "Hint: Main Menu (Light mode).",
+        "shattered_remains": "Hint: Main Menu (Dark mode).",
+    }
+
+    def music_track_hint(path_or_name):
+        key = music_track_key(path_or_name)
+        return MUSIC_TRACK_HINTS.get(key, "Hint: Discover this track during story/events.")
+
     def music_track_unlocked(key):
         """
         Returns True if a music track key is unlocked in persistent data.
@@ -356,8 +366,8 @@ screen music_room(mr):
                         spacing 4
                         ## Track info
                         if song.locked:
-                            label " "
-                            text " "
+                            label _("Locked Track")
+                            text _(music_track_hint(song.path))
                         else:
                             label song.name
                             text song.artist
@@ -573,8 +583,8 @@ screen music_room2(mr):
                                 spacing 4
                                 ## Track info
                                 if song.locked:
-                                    label " "
-                                    text " "
+                                    label _("Locked Track")
+                                    text _(music_track_hint(song.path))
                                 else:
                                     label song.name
                                     text song.artist
@@ -765,8 +775,8 @@ screen music_room3(mr):
                             spacing 4
                             ## Track info
                             if song.locked:
-                                label " "
-                                text " "
+                                label _("Locked Track")
+                                text _(music_track_hint(song.path))
                             else:
                                 label song.name
                                 text song.artist
@@ -956,7 +966,7 @@ screen music_room4(mr):
                         add Solid("#efe3a7") xsize 790 ysize 88
                         add Solid("#000742") xpos 6 ypos 6 xsize 778 ysize 76
                         if song.locked:
-                            text " " xalign 0.5 yalign 0.5 size 42 color "#868aaa"
+                            text _(music_track_hint(song.path)) xalign 0.5 yalign 0.5 size 26 color "#868aaa"
                         else:
                             text song.name xalign 0.5 yalign 0.5 size 42 color ("#d9def2" if song is current_track else "#868aaa")
                         text "*" xpos 22 yalign 0.5 size 32 color "#efe3a7"
@@ -1067,10 +1077,10 @@ screen music_room5(mr):
 
                             add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
                             if song.locked:
-                                text " ":
+                                text _(music_track_hint(song.path)):
                                     xalign 0.5
                                     yalign 0.5
-                                    size 32
+                                    size 18
                                     color "#9096c0"
                             else:
                                 text song.name:
