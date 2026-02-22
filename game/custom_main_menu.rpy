@@ -10,6 +10,12 @@ init -2 python:
 
     TOGGLE_ZOOM = 0.35
 
+    # Social links shown on main menu (left of mode toggle).
+    SOCIAL_URL_ITCH = "https://enderfall.itch.io/"
+    SOCIAL_URL_DISCORD = "https://discord.gg/YxXJpZK7nv"
+    SOCIAL_URL_PATREON = "https://www.patreon.com/c/EnderFall/home"
+    SOCIAL_URL_WEBSITE = "https://www.enderfall.co.uk/"
+
     # Compatibility alias in case cached bytecode references MatrixColor.
     MatrixColor = im.MatrixColor
 
@@ -133,6 +139,12 @@ init -2 python:
 
 default main_menu_last_announced_track = None
 default main_menu_force_announce_track = None
+
+style main_menu_social_caption is text:
+    font "fonts/trotes/Trotes.ttf"
+    size 14
+    color "#f4eaff"
+    outlines [(2, "#2a1a44", 0, 0)]
 
 
 transform logo_bob:
@@ -277,3 +289,33 @@ screen main_menu():
                     left_icon_size=30,
                     left_icon_xpad=5
                 )
+
+        # Social buttons: placed to the left of the mode toggle.
+        fixed:
+            xalign 0.87
+            yalign 0.97
+            xsize 420
+            ysize 78
+
+            hbox:
+                spacing 10
+
+                vbox:
+                    spacing 2
+                    use ui_rect_icon_button("gui/logos/itch_logo.png", OpenURL(SOCIAL_URL_ITCH), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="itch.io")
+                    text "ITCH.IO" style "main_menu_social_caption" xalign 0.5
+
+                vbox:
+                    spacing 2
+                    use ui_rect_icon_button("gui/logos/discord_logo.jpg", OpenURL(SOCIAL_URL_DISCORD), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="discord")
+                    text "DISCORD" style "main_menu_social_caption" xalign 0.5
+
+                vbox:
+                    spacing 2
+                    use ui_rect_icon_button("gui/logos/patreon_logo.png", OpenURL(SOCIAL_URL_PATREON), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="patreon")
+                    text "PATREON" style "main_menu_social_caption" xalign 0.5
+
+                vbox:
+                    spacing 2
+                    use ui_rect_icon_button("gui/logos/enderfall_logo.png", OpenURL(SOCIAL_URL_WEBSITE), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="website")
+                    text "WEBSITE" style "main_menu_social_caption" xalign 0.5

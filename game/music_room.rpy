@@ -152,18 +152,7 @@ init python:
         f = chosen_by_base[base_key]
         base = os.path.splitext(os.path.basename(f))[0]
         pretty = base.replace("_", " ")
-        artist_name = "Alex Coldfire Music"
-        if base in (
-            "Magical_Hallways",
-            "Shattered_Remains",
-            "academy_window",
-            "Academy_Window",
-            "rooftop_universe",
-            "Rooftop_Universe",
-            "unspoken_language",
-            "Unspoken_Language",
-        ):
-            artist_name = "Ellrijord OST"
+        artist_name = music_track_artist(base, "Alex Coldfire Music")
 
         # Locked until manually unlocked by script via unlock_music_track(...).
         unlock_condition = "music_track_unlocked({})".format(repr(base_key))
