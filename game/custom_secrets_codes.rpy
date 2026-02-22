@@ -14,11 +14,13 @@ init -2 python:
             "title": "Secret Images Unlocked",
             "desc": "Unlocks all images from the Secret gallery tab.",
             "type": "secret_gallery",
+            "repeatable": True,
         },
         "MELODYKEY": {
             "title": "Music Vault Unlocked",
             "desc": "Unlocks all music room tracks.",
             "type": "all_music",
+            "repeatable": True,
         },
         "VOIDMODE": {
             "title": "Cheats Unlocked",

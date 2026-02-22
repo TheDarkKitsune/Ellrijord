@@ -5,6 +5,9 @@
 #   gui/btn_idle.png
 #   gui/btn_hover.png
 
+default persistent.mm_mode = "light"
+default persistent.mm_alt = False
+
 init -2 python:
     BTN_ZOOM = 1
 
