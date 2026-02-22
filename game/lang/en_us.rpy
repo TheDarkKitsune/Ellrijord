@@ -151,6 +151,7 @@ init -1 python:
         "mm_extra": "EXTRA",
         "mm_light_mode": "LightMode",
         "mm_dark_mode": "DarkMode",
+        "mm_twilight_mode": "TwilightMode",
         "mm_tip_new_game": "Start a new game.",
         "mm_tip_continue": "Continue from your latest save.",
         "mm_tip_settings": "Open preferences.",
@@ -159,6 +160,7 @@ init -1 python:
         "mm_tip_extra": "Open extra menu.",
         "mm_tip_light_mode": "Switch to light mode.",
         "mm_tip_dark_mode": "Switch to dark mode.",
+        "mm_tip_twilight_mode": "Switch to twilight mode.",
 
         # Extra menu.
         "extra_menu_title": "EXTRA MENU",

@@ -29,9 +29,9 @@ init -2 python:
         items = _gallery_items(folder_prefix)
         if items:
             return items
-        ph = "gui/mainmenu_bg.png"
+        ph = get_main_menu_bg_path() if "get_main_menu_bg_path" in globals() else "gui/mainmenu_bg.png"
         if not renpy.loadable(ph):
-            ph = "gui/mainmenu_bg2.png" if renpy.loadable("gui/mainmenu_bg2.png") else "gui/window_icon.png"
+            ph = "gui/mainmenu_bg.png" if renpy.loadable("gui/mainmenu_bg.png") else "gui/window_icon.png"
         return [{"name": "{} {}".format(label_prefix, i + 1), "path": ph} for i in range(count)]
 
     def _gallery_items_from_list(paths):
@@ -355,10 +355,7 @@ screen extra_image_gallery():
     $ gameplay_preview = (gameplay_cfg_items[0]["path"] if gameplay_cfg_items else _gallery_with_placeholders("gui/gallery/gameplay", "Gameplay", 1)[0]["path"])
     $ secret_preview = (secret_cfg_items[0]["path"] if secret_cfg_items else _gallery_with_placeholders("gui/gallery/secret", "Secret", 1)[0]["path"])
     $ extra_preview = (extra_cfg_items[0]["path"] if extra_cfg_items else _gallery_with_placeholders("gui/gallery/extra", "Extra", 1)[0]["path"])
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
 
     frame:
         background Solid("#2b2440d8")
@@ -438,10 +435,7 @@ screen extra_character_gallery():
     default cg_page = 0
     default cg_hover_name = ""
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
     add Solid("#0f1830d6")
 
     if cg_selected not in char_names:
@@ -625,10 +619,7 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
     $ left_slots = list(active_items)
     $ left_slots.extend([None] * max(0, 12 - len(left_slots)))
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
     add Solid("#0f1830d6")
 
     # Left list panel (same style as character gallery).
@@ -841,10 +832,7 @@ screen extra_music_gallery():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
     text L("extra_music_gallery") style "extra_title":
@@ -875,10 +863,7 @@ screen extra_achievements():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
     text L("extra_achievements") style "extra_title":
@@ -909,10 +894,7 @@ screen extra_credits():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
     add Solid("#120d20bb")
 
     text L("extra_credits") style "extra_title":

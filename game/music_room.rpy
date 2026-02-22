@@ -32,13 +32,28 @@ init python:
 
     # Per-track unlock hints shown while a track is still locked.
     MUSIC_TRACK_HINTS = {
-        "magical_hallways": "Hint: Main Menu (Light mode).",
-        "shattered_remains": "Hint: Main Menu (Dark mode).",
+        "academy_window": "Hint: Main Menu (Light mode).",
+        "rooftop_universe": "Hint: Main Menu (Dark mode).",
+        "unspoken_language": "Hint: Main Menu (Twilight mode).",
     }
 
     def music_track_hint(path_or_name):
         key = music_track_key(path_or_name)
         return MUSIC_TRACK_HINTS.get(key, "Hint: Discover this track during story/events.")
+
+    def music_track_artist(path_or_name, fallback_artist=None):
+        key = music_track_key(path_or_name)
+        if key in (
+            "magical_hallways",
+            "shattered_remains",
+            "academy_window",
+            "rooftop_universe",
+            "unspoken_language",
+        ):
+            return "Ellrijord OST"
+        if fallback_artist == "Aelx Coldfire Music":
+            return "Alex Coldfire Music"
+        return fallback_artist or "Unknown Artist"
 
     def music_track_unlocked(key):
         """
@@ -137,8 +152,17 @@ init python:
         f = chosen_by_base[base_key]
         base = os.path.splitext(os.path.basename(f))[0]
         pretty = base.replace("_", " ")
-        artist_name = "Aelx Coldfire Music"
-        if base in ("Magical_Hallways", "Shattered_Remains"):
+        artist_name = "Alex Coldfire Music"
+        if base in (
+            "Magical_Hallways",
+            "Shattered_Remains",
+            "academy_window",
+            "Academy_Window",
+            "rooftop_universe",
+            "Rooftop_Universe",
+            "unspoken_language",
+            "Unspoken_Language",
+        ):
             artist_name = "Ellrijord OST"
 
         # Locked until manually unlocked by script via unlock_music_track(...).
@@ -370,7 +394,7 @@ screen music_room(mr):
                             text _(music_track_hint(song.path))
                         else:
                             label song.name
-                            text song.artist
+                            text music_track_artist(song.path, song.artist)
 
     ## This holds the album art, song title, artist, music bar, and music
     ## controls. You may adjust this however you wish! The important part
@@ -383,7 +407,7 @@ screen music_room(mr):
         if current_track:
             add current_track.art xalign 0.5 ysize 440 fit "contain"
             text current_track.name
-            text current_track.artist
+            text music_track_artist(current_track.path, current_track.artist)
             ## Include more fields if you like e.g.
             # text current_track.description
         else:
@@ -587,13 +611,13 @@ screen music_room2(mr):
                                     text _(music_track_hint(song.path))
                                 else:
                                     label song.name
-                                    text song.artist
+                                    text music_track_artist(song.path, song.artist)
             vbox:
                 yalign 0.0
                 if current_track:
                     add current_track.art xalign 0.5 xsize 550 fit "contain"
                     label current_track.name
-                    text current_track.artist
+                    text music_track_artist(current_track.path, current_track.artist)
                 else:
                     add mr.default_art xalign 0.5 xsize 550 fit "contain"
                     label _("No song playing")
@@ -779,7 +803,7 @@ screen music_room3(mr):
                                 text _(music_track_hint(song.path))
                             else:
                                 label song.name
-                                text song.artist
+                                text music_track_artist(song.path, song.artist)
 
         ## This holds the album art, song title, artist, music bar, and music
         ## controls. You may adjust this however you wish! The important part
@@ -797,7 +821,7 @@ screen music_room3(mr):
                 xsize 250
                 if current_track:
                     text current_track.name
-                    text current_track.artist color "#bfbfb9"
+                    text music_track_artist(current_track.path, current_track.artist) color "#bfbfb9"
                 else:
                     text _("No song playing")
 
@@ -1107,7 +1131,7 @@ screen music_room5(mr):
                 vbox:
                     spacing 8
                     text (current_track.name if current_track else _("Track Title")) size 48 color "#ffd1f2"
-                    text (current_track.artist if current_track else _("Unknown Artist")) size 30 color "#a6b2e2"
+                    text (music_track_artist(current_track.path, current_track.artist) if current_track else _("Unknown Artist")) size 30 color "#a6b2e2"
                     if current_track and current_track.description:
                         text current_track.description size 24 color "#a8aedd"
 

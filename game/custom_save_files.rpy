@@ -81,10 +81,7 @@ screen custom_file_slots(mode="save"):
     $ action_label = L("save_action_overwrite") if mode == "save" else L("save_action_load")
     $ can_open = (mode == "save") or FileLoadable(selected_slot)
 
-    if mm_alt and renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    add im.Scale(get_main_menu_bg_path(), config.screen_width, config.screen_height)
 
     add Solid("#120d20bb")
 

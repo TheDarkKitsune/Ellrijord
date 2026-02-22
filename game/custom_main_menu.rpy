@@ -13,13 +13,126 @@ init -2 python:
     # Compatibility alias in case cached bytecode references MatrixColor.
     MatrixColor = im.MatrixColor
 
-    if not hasattr(persistent, "mm_alt"):
-        persistent.mm_alt = False
+    if not hasattr(persistent, "mm_mode"):
+        persistent.mm_mode = "dark" if bool(getattr(persistent, "mm_alt", False)) else "light"
 
-    def toggle_mm_alt():
-        persistent.mm_alt = not bool(getattr(persistent, "mm_alt", False))
+    if getattr(persistent, "mm_mode", "light") not in ("light", "dark", "twilight"):
+        persistent.mm_mode = "light"
+
+    persistent.mm_alt = (persistent.mm_mode != "light")
+
+    def get_main_menu_mode():
+        mode = getattr(persistent, "mm_mode", "light")
+        if mode not in ("light", "dark", "twilight"):
+            mode = "dark" if bool(getattr(persistent, "mm_alt", False)) else "light"
+            persistent.mm_mode = mode
+        persistent.mm_alt = (mode != "light")
+        return mode
+
+    def is_main_menu_alt():
+        return get_main_menu_mode() != "light"
+
+    def get_track_for_mode(mode):
+        if mode == "twilight":
+            if renpy.loadable("audio/unspoken_language.wav"):
+                return "audio/unspoken_language.wav"
+            if renpy.loadable("audio/rooftop_universe.wav"):
+                return "audio/rooftop_universe.wav"
+            return "audio/academy_window.wav"
+        if mode == "dark":
+            if renpy.loadable("audio/rooftop_universe.wav"):
+                return "audio/rooftop_universe.wav"
+            return "audio/academy_window.wav"
+        if renpy.loadable("audio/academy_window.wav"):
+            return "audio/academy_window.wav"
+        return "audio/rooftop_universe.wav"
+
+    def get_main_menu_track():
+        return get_track_for_mode(get_main_menu_mode())
+
+    def get_main_menu_bg_path():
+        mode = get_main_menu_mode()
+        if mode == "dark":
+            preferred = "gui/mainmenu_bg2.png"
+        elif mode == "twilight":
+            preferred = "gui/mainmenu_bg3.png"
+        else:
+            preferred = "gui/mainmenu_bg.png"
+
+        if renpy.loadable(preferred):
+            return preferred
+        return "gui/window_icon.png"
+
+    def get_main_menu_toggle_label():
+        mode = get_main_menu_mode()
+        if mode == "light":
+            return L("mm_light_mode")
+        if mode == "dark":
+            return L("mm_dark_mode")
+        return L("mm_twilight_mode")
+
+    def get_main_menu_toggle_tooltip():
+        mode = get_main_menu_mode()
+        if mode == "light":
+            return L("mm_tip_dark_mode")
+        if mode == "dark":
+            return L("mm_tip_twilight_mode")
+        return L("mm_tip_light_mode")
+
+    def get_main_menu_current_mode_label():
+        mode = get_main_menu_mode()
+        if mode == "dark":
+            return L("mm_dark_mode")
+        if mode == "twilight":
+            return L("mm_twilight_mode")
+        return L("mm_light_mode")
+
+    def get_main_menu_current_track_label():
+        mode = get_main_menu_mode()
+        if mode == "dark":
+            return "Shattered Remains"
+        if mode == "twilight":
+            return "Unspoken Language"
+        return "Magical Hallways"
+
+    def get_track_label_from_path(path):
+        if path == "audio/unspoken_language.wav":
+            return "Unspoken Language"
+        if path == "audio/rooftop_universe.wav":
+            return "Rooftop Universe"
+        if path == "audio/academy_window.wav":
+            return "Academy Window"
+        return str(path)
+
+    def get_main_menu_now_playing_text(path):
+        return "Now Playing: {0}".format(get_track_label_from_path(path))
+
+    def get_main_menu_toggle_icon():
+        mode = get_main_menu_mode()
+        if mode == "light":
+            return "gui/lightmode_icon.png"
+        return "gui/darkmode_icon.png"
+
+    def cycle_main_menu_mode():
+        modes = ("light", "dark", "twilight")
+        current = get_main_menu_mode()
+        idx = modes.index(current)
+        next_mode = modes[(idx + 1) % len(modes)]
+        next_track = get_track_for_mode(next_mode)
+        persistent.mm_mode = next_mode
+        persistent.mm_alt = (next_mode != "light")
+        renpy.music.play(next_track, channel="music", loop=True, if_changed=True, fadeout=0.0, fadein=0.0)
+        store.main_menu_force_announce_track = next_track
+        store.main_menu_last_announced_track = None
         renpy.save_persistent()
         renpy.restart_interaction()
+
+    # Backward-compat alias.
+    def toggle_mm_alt():
+        cycle_main_menu_mode()
+
+default main_menu_last_announced_track = None
+default main_menu_force_announce_track = None
 
 
 transform logo_bob:
@@ -27,6 +140,12 @@ transform logo_bob:
     linear 1.6 yoffset -70
     linear 1.6 yoffset -60
     repeat
+
+transform main_menu_now_playing_fade:
+    alpha 0.0
+    linear 0.25 alpha 1.0
+    pause 3.0
+    linear 0.7 alpha 0.0
 
 # ------------------------------------------------------------
 # Falling petals/leaves (put image at: gui/petal.png)
@@ -71,29 +190,43 @@ screen menu_petals():
     add "gui/petal.png" at petal_fall(xstart=0.92, t=14.5, s=0.052, r=-250, drift=0.07, delay=4.0)
 
 
+screen main_menu_now_playing(text):
+    zorder 150
+    text text at main_menu_now_playing_fade:
+        style "ui_tooltip_text"
+        xpos 30
+        ypos 24
+    timer 4.0 action Hide("main_menu_now_playing")
+
+
 # --- CLIPPED button that cannot overlap others, even if hover PNG is bigger ---
 screen main_menu():
 
     tag menu
 
-    $ mm_alt = bool(getattr(persistent, "mm_alt", False))
+    $ mm_mode = get_main_menu_mode()
+    $ mm_alt = is_main_menu_alt()
 
     python:
-        desired = "audio/Shattered_Remains.mp3" if mm_alt else "audio/Magical_Hallways.mp3"
+        desired = get_main_menu_track()
         # This block can be evaluated many times during UI interactions.
         # if_changed=True prevents music from restarting on hover/scroll/etc.
-        renpy.music.play(desired, channel="music", loop=True, if_changed=True)
+        renpy.music.play(desired, channel="music", loop=True, if_changed=True, fadeout=0.0, fadein=0.0)
+        announce_track = main_menu_force_announce_track if main_menu_force_announce_track is not None else desired
+        if main_menu_last_announced_track != announce_track:
+            renpy.hide_screen("main_menu_now_playing")
+            renpy.show_screen("main_menu_now_playing", text=get_main_menu_now_playing_text(announce_track))
+            main_menu_last_announced_track = announce_track
+            main_menu_force_announce_track = None
         # Mark currently playing main-menu track as discovered for the music room.
         if "unlock_music_track" in globals():
             unlock_music_track(desired)
 
-    if mm_alt:
-        add im.Scale("gui/mainmenu_bg2.png", 1920, 1080)
-    else:
-        add im.Scale("gui/mainmenu_bg.png", 1920, 1080)
+    add im.Scale(get_main_menu_bg_path(), 1920, 1080)
 
-    # Petals behind logo/buttons
-    use menu_petals
+    # Petals behind logo/buttons (light mode only).
+    if mm_mode == "light":
+        use menu_petals
 
     fixed:
 
@@ -134,17 +267,13 @@ screen main_menu():
             hbox:
                 spacing 12
                 use ui_png_button(
-                    (L("mm_light_mode") if mm_alt else L("mm_dark_mode")),
-                    Function(toggle_mm_alt),
+                    get_main_menu_toggle_label(),
+                    Function(cycle_main_menu_mode),
                     xsize=220,
                     ysize=48,
                     text_style="ui_btn_text_small",
                     use_alt=mm_alt,
-                    left_icon=("gui/lightmode_icon.png" if mm_alt else "gui/darkmode_icon.png"),
+                    left_icon=get_main_menu_toggle_icon(),
                     left_icon_size=30,
-                    left_icon_xpad=5,
-                    tooltip=(L("mm_tip_light_mode") if mm_alt else L("mm_tip_dark_mode"))
+                    left_icon_xpad=5
                 )
-
-                    
-            
