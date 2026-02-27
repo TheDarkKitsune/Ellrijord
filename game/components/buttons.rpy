@@ -22,7 +22,7 @@ transform btn_hover_fx(z=1.0, y=0, bounce=BTN_HOVER_BOUNCE):
 
 
 style ui_btn_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 34
     color "#ffffff"
     outlines [(3, "#6b3aa8", 0, 0)]
@@ -108,13 +108,13 @@ screen ui_rect_icon_button(icon, action, size=68, bg="#2a2836", hover_overlay="#
 
         idle Fixed(
             Solid(bg),
-            Transform(icon, xysize=(size, size)),
+            Transform(icon, fit="contain", xsize=size, ysize=size, xalign=0.5, yalign=0.5),
             xsize=size,
             ysize=size
         )
         hover Fixed(
             Solid(bg),
-            Transform(icon, xysize=(size, size)),
+            Transform(icon, fit="contain", xsize=size, ysize=size, xalign=0.5, yalign=0.5),
             Solid(hover_overlay),
             xsize=size,
             ysize=size
@@ -163,3 +163,4 @@ screen ui_news_tile_button(label, action, image=None, width=300, height=180, sel
             add Solid("#ffffff18") xsize (width - 40) ysize (height - 60) xalign 0.5 yalign 0.35
 
         text label style text_style
+

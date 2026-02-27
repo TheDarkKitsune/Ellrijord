@@ -56,20 +56,20 @@ init -2 python:
 
 
 style news_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 34
     color "#f7e9ff"
     outlines [(3, "#6b3aa8", 0, 0)]
 
 style news_body is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 22
     color "#e8d9ff"
     outlines [(2, "#3a274f", 0, 0)]
     line_spacing 4
 
 style news_tile_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 22
     color "#ffffff"
     outlines [(3, "#6b3aa8", 0, 0)]
@@ -77,7 +77,7 @@ style news_tile_text is text:
     yalign 0.85
 
 style news_cloud_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 18
     color "#ffffff"
     outlines [(2, "#6b3aa8", 0, 0)]
@@ -194,3 +194,4 @@ screen news_updates_detail(news_id):
             hbox:
                 xalign 1.0
                 use ui_png_button(L("news_close"), Hide("news_updates_detail"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
+

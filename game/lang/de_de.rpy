@@ -71,10 +71,14 @@ init -1 python:
         "pref_label_font_override": "SCHRIFTART UBERSCHREIBEN",
         "pref_button_default_font": "STANDARD",
         "pref_button_dejavu_sans": "DEJAVU SANS",
+        "pref_button_cinzel": "CINZEL",
         "pref_button_opendyslexic": "OPENDYSLEXIC",
+        "pref_button_water_lemon": "WATER LEMON",
         "pref_tip_default_font": "Verwenden Sie die Standard-Spielschriftart.",
         "pref_tip_dejavu_sans": "Verwenden Sie die Schriftart DejaVu Sans.",
+        "pref_tip_cinzel": "Verwenden Sie die Schriftart Cinzel.",
         "pref_tip_opendyslexic": "Verwenden Sie die Schriftart OpenDyslexic.",
+        "pref_tip_water_lemon": "Verwenden Sie die Schriftart WATER LEMON.",
         "pref_label_text_size_scaling": "SKALIERUNG DER TEXTGROSSE",
         "pref_label_line_space_scaling": "SKALIERUNG DES ZEILENRAUMS",
         "pref_label_high_contrast_text": "TEXT MIT HOHEM KONTRAST",
@@ -201,3 +205,4 @@ init -1 python:
         "save_time_label": "Sparen Sie Zeit",
         "play_time_label": "Spielzeit",
     })
+

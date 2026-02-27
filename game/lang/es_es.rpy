@@ -1,4 +1,4 @@
-﻿# lang/es_es.rpy
+# lang/es_es.rpy
 # Spanish (ES) UI strings.
 
 init -1 python:
@@ -71,10 +71,14 @@ init -1 python:
         "pref_label_font_override": "FUENTE",
         "pref_button_default_font": "PREDETERMINADA",
         "pref_button_dejavu_sans": "DEJAVU SANS",
+        "pref_button_cinzel": "CINZEL",
         "pref_button_opendyslexic": "OPENDYSLEXIC",
+        "pref_button_water_lemon": "WATER LEMON",
         "pref_tip_default_font": "Usar la fuente predeterminada del juego.",
         "pref_tip_dejavu_sans": "Usar fuente DejaVu Sans.",
+        "pref_tip_cinzel": "Usar fuente Cinzel.",
         "pref_tip_opendyslexic": "Usar fuente OpenDyslexic.",
+        "pref_tip_water_lemon": "Usar fuente WATER LEMON.",
         "pref_label_text_size_scaling": "ESCALA DE TAMANO DE TEXTO",
         "pref_label_line_space_scaling": "ESCALA DE ESPACIADO DE LINEA",
         "pref_label_high_contrast_text": "TEXTO DE ALTO CONTRASTE",
@@ -201,3 +205,4 @@ init -1 python:
         "save_time_label": "Hora de Guardado",
         "play_time_label": "Tiempo Jugado",
     })
+

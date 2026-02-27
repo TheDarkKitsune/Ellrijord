@@ -71,10 +71,14 @@ init -1 python:
         "pref_label_font_override": "SUBSTITUICAO DE FONTE",
         "pref_button_default_font": "PADRAO",
         "pref_button_dejavu_sans": "DEJAVU SANS",
+        "pref_button_cinzel": "CINZEL",
         "pref_button_opendyslexic": "OPENDYSLEXIC",
+        "pref_button_water_lemon": "WATER LEMON",
         "pref_tip_default_font": "Use a fonte padrao do jogo.",
         "pref_tip_dejavu_sans": "Use a fonte DejaVu Sans.",
+        "pref_tip_cinzel": "Use a fonte Cinzel.",
         "pref_tip_opendyslexic": "Use fonte OpenDyslexic.",
+        "pref_tip_water_lemon": "Use a fonte WATER LEMON.",
         "pref_label_text_size_scaling": "ESCALA DE TAMANHO DE TEXTO",
         "pref_label_line_space_scaling": "ESCALA DE ESPACO DE LINHA",
         "pref_label_high_contrast_text": "TEXTO DE ALTO CONTRASTE",
@@ -201,3 +205,4 @@ init -1 python:
         "save_time_label": "Economize tempo",
         "play_time_label": "Tempo de jogo",
     })
+

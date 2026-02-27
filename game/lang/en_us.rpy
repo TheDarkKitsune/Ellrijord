@@ -71,10 +71,14 @@ init -1 python:
         "pref_label_font_override": "FONT OVERRIDE",
         "pref_button_default_font": "DEFAULT",
         "pref_button_dejavu_sans": "DEJAVU SANS",
+        "pref_button_cinzel": "CINZEL",
         "pref_button_opendyslexic": "OPENDYSLEXIC",
+        "pref_button_water_lemon": "WATER LEMON",
         "pref_tip_default_font": "Use the default game font.",
         "pref_tip_dejavu_sans": "Use DejaVu Sans font.",
+        "pref_tip_cinzel": "Use Cinzel font.",
         "pref_tip_opendyslexic": "Use OpenDyslexic font.",
+        "pref_tip_water_lemon": "Use WATER LEMON font.",
         "pref_label_text_size_scaling": "TEXT SIZE SCALING",
         "pref_label_line_space_scaling": "LINE SPACE SCALING",
         "pref_label_high_contrast_text": "HIGH CONTRAST TEXT",
@@ -203,3 +207,4 @@ init -1 python:
         "save_time_label": "Save Time",
         "play_time_label": "Play Time",
     })
+

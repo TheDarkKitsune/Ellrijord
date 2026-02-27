@@ -4,7 +4,7 @@
 #   gui/logo.png
 #   gui/btn_idle.png
 #   gui/btn_hover.png
-#   fonts/trotes/Trotes.ttf
+#   fonts/cinzel_decorative/CinzelDecorative-Bold.otf
 
 init -2 python:
     PREF_TAB_ZOOM = 0.6
@@ -12,6 +12,22 @@ init -2 python:
     PREF_SM_ZOOM = 0.45
     PREF_TINY_ZOOM = 0.32
     PREF_TABS = ["display", "audio", "controls", "access"]
+
+    def water_lemon_font_transform(f):
+        p_otf = "fonts/water_lemon/Water Lemon.otf"
+        p_ttf = "fonts/water_lemon/Water Lemon.ttf"
+        if renpy.loadable(p_otf):
+            return p_otf
+        if renpy.loadable(p_ttf):
+            return p_ttf
+        return f
+
+    def cinzel_font_transform(f):
+        p_otf = "fonts/cinzel/Cinzel-Bold.otf"
+        return p_otf if renpy.loadable(p_otf) else f
+
+    config.font_transforms["cinzel"] = cinzel_font_transform
+    config.font_transforms["water_lemon"] = water_lemon_font_transform
 
     def _fix_mute_pref_type():
         prefdata = getattr(persistent, "_preferences", None)
@@ -194,7 +210,7 @@ init -2 python:
         return PREF_TABS[(idx + step) % len(PREF_TABS)]
 
 style pref_label is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 20
     color "#f7e9ff"
     outlines [(3, "#6b3aa8", 0, 0)]
@@ -352,3 +368,4 @@ screen preferences():
         use pref_small_button("pref_button_default", Function(reset_preferences), tooltip_key="pref_tip_default", text_style="ui_btn_text_small")
 
     use ui_tooltip_from_rect(store.pref_tooltip, store.pref_tooltip_rect)
+

@@ -6,7 +6,7 @@ style ui_tooltip_frame is frame:
     padding (16, 10)
 
 style ui_tooltip_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 13
     color "#ffffff"
     outlines [(2, "#6b3aa8", 0, 0)]
@@ -81,3 +81,4 @@ screen ui_tooltip_from_rect(text, rect, ypad=10, min_width=200):
             clipping True
             if text:
                 text text style "ui_tooltip_text" xmaximum (tw - 48) xalign 0.5 yalign 0.5 text_align 0.5
+

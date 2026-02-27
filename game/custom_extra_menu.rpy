@@ -122,25 +122,25 @@ init -2 python:
 
 
 style extra_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 72
     color "#ffffff"
     outlines [(4, "#6b3aa8", 0, 0)]
 
 style extra_subtitle is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 30
     color "#efe5ff"
     outlines [(3, "#5a3192", 0, 0)]
 
 style extra_card_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 38
     color "#ffffff"
     outlines [(3, "#5a3192", 0, 0)]
 
 style extra_body is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 28
     color "#f3ecff"
     outlines [(2, "#47286f", 0, 0)]
@@ -153,7 +153,7 @@ style extra_tab_button is button:
     ypadding 10
 
 style extra_tab_button_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 34
     color "#f3ecff"
     outlines [(2, "#47286f", 0, 0)]
@@ -167,13 +167,13 @@ style extra_gallery_card is button:
     ypadding 10
 
 style extra_gallery_name is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 26
     color "#f3ecff"
     outlines [(2, "#47286f", 0, 0)]
 
 style extra_page_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 28
     color "#efe5ff"
     outlines [(2, "#47286f", 0, 0)]
@@ -191,19 +191,19 @@ style extra_gallery_hub_card is button:
     ypadding 0
 
 style extra_gallery_hub_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 32
     color "#2c2c32"
     outlines []
 
 style char_gallery_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 42
     color "#d6ebff"
     outlines [(2, "#1a3159", 0, 0)]
 
 style char_gallery_name is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 26
     color "#eaf3ff"
     outlines [(2, "#27406d", 0, 0)]
@@ -216,7 +216,7 @@ style char_gallery_btn is button:
     ypadding 8
 
 style char_gallery_btn_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 24
     color "#e9f0ff"
     outlines [(1, "#162845", 0, 0)]
@@ -239,13 +239,13 @@ style char_gallery_list_card is button:
     ypadding 4
 
 style char_gallery_list_name is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 20
     color "#e9f0ff"
     outlines [(1, "#162845", 0, 0)]
 
 style char_gallery_hover_name is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 36
     color "#e9f5ff"
     outlines [(2, "#142745", 0, 0)]
@@ -259,7 +259,7 @@ style extra_hub_chip_card is button:
     ypadding 0
 
 style extra_hub_chip_card_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 30
     color "#ffffff"
     outlines [(3, "#5a3192", 0, 0)]
@@ -335,7 +335,7 @@ screen extra_menu():
             use ui_news_tile_button("Image Gallery", ShowMenu("extra_image_gallery"), image=tile_bg, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
             use ui_news_tile_button("Music Gallery", ShowMenu("music_room", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
             use ui_news_tile_button("Achievements", ShowMenu("achievement_gallery"), image=tile_ach, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
-            use ui_news_tile_button("Credits", ShowMenu("extra_credits"), image=tile_credits, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
+            use ui_news_tile_button("Credits", If(renpy.has_screen("extra_credits_board"), ShowMenu("extra_credits_board"), ShowMenu("extra_credits_legacy")), image=tile_credits, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text")
 
     hbox:
         xalign 0.5
@@ -890,7 +890,7 @@ screen extra_achievements():
         use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
-screen extra_credits():
+screen extra_credits_legacy():
     tag menu
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
 
@@ -911,11 +911,14 @@ screen extra_credits():
 
         vbox:
             spacing 18
-            text L("extra_credits_subtitle") style "extra_subtitle"
-            text L("extra_credits_body") style "extra_body"
+            text "Credits screen fallback loaded." style "extra_subtitle"
+            text "If this appears, custom_credits_menu.rpy did not compile or load.\nCheck launcher Errors and reload scripts (Shift+R)." style "extra_body"
 
     hbox:
         xalign 0.5
         yalign 0.93
         spacing 22
         use ui_png_button(L("pref_button_back"), ShowMenu("extra_menu"), zoom=0.60, text_style="ui_btn_text_small", use_alt=mm_alt)
+
+
+

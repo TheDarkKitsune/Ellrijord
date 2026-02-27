@@ -262,7 +262,7 @@ screen secret_codes():
 
 
 style secret_code_input_text is input:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 34
     color "#ffffff"
     selected_color "#ffffff"
@@ -270,3 +270,4 @@ style secret_code_input_text is input:
     selected_hover_color "#ffffff"
     hover_color "#ffffff"
     outlines [ (1, "#00000055", 0, 0) ]
+

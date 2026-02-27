@@ -44,6 +44,7 @@ screen preferences_tab_access(pref_access_yadj):
                                 spacing 12
                                 use pref_small_button("pref_button_default_font", Preference("font transform", None), selected=(getattr(preferences, "font_transform", None) is None), tooltip_key="pref_tip_default_font")
                                 use pref_small_button("pref_button_dejavu_sans", Preference("font transform", "dejavusans"), selected=(getattr(preferences, "font_transform", None) == "dejavusans"), tooltip_key="pref_tip_dejavu_sans")
+                                use pref_small_button("pref_button_cinzel", Preference("font transform", "cinzel"), selected=(getattr(preferences, "font_transform", None) == "cinzel"), tooltip_key="pref_tip_cinzel")
 
                     hbox:
                         spacing 28
@@ -57,6 +58,7 @@ screen preferences_tab_access(pref_access_yadj):
                                 xalign 1.0
                                 spacing 12
                                 use pref_small_button("pref_button_opendyslexic", Preference("font transform", "opendyslexic"), selected=(getattr(preferences, "font_transform", None) == "opendyslexic"), tooltip_key="pref_tip_opendyslexic")
+                                use pref_small_button("pref_button_water_lemon", Preference("font transform", "water_lemon"), selected=(getattr(preferences, "font_transform", None) == "water_lemon"), tooltip_key="pref_tip_water_lemon")
 
                     hbox:
                         spacing 28

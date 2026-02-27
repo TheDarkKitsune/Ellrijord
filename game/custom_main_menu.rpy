@@ -144,7 +144,7 @@ default main_menu_last_announced_track = None
 default main_menu_force_announce_track = None
 
 style main_menu_social_caption is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 14
     color "#f4eaff"
     outlines [(2, "#2a1a44", 0, 0)]
@@ -255,7 +255,7 @@ screen main_menu():
         vbox:
             xalign 0.5
             yalign 0.96
-            spacing 16
+            spacing 8
 
             use ui_png_button(L("mm_new_game"), Start(), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"))
             use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"))
@@ -269,7 +269,7 @@ screen main_menu():
             ysize 48
 
             hbox:
-                spacing 12
+                spacing 8
                 use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
                 use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
 
@@ -310,7 +310,7 @@ screen main_menu():
 
                 vbox:
                     spacing 2
-                    use ui_rect_icon_button("gui/logos/discord_logo.jpg", OpenURL(SOCIAL_URL_DISCORD), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="discord")
+                    use ui_rect_icon_button("gui/logos/discord_logo.png", OpenURL(SOCIAL_URL_DISCORD), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="discord")
                     text "DISCORD" style "main_menu_social_caption" xalign 0.5
 
                 vbox:
@@ -322,3 +322,4 @@ screen main_menu():
                     spacing 2
                     use ui_rect_icon_button("gui/logos/enderfall_logo.png", OpenURL(SOCIAL_URL_WEBSITE), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="website")
                     text "WEBSITE" style "main_menu_social_caption" xalign 0.5
+

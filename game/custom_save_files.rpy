@@ -6,7 +6,7 @@ init -2 python:
 
 
 style save_title is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 46
     color "#c9aa83"
     outlines [(1, "#2a1d14", 0, 0)]
@@ -19,14 +19,14 @@ style save_nav_button is button:
     ypadding 6
 
 style save_nav_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 54
     color "#c9aa83"
     outlines [(2, "#2a1d14", 0, 0)]
     hover_color "#e4c79f"
 
 style save_slot_text is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 34
     color "#ddd4c7"
     outlines [(1, "#2a1d14", 0, 0)]
@@ -35,13 +35,13 @@ style save_slot_text_selected is save_slot_text:
     color "#f1e7d8"
 
 style save_meta_label is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 30
     color "#efe5ff"
     outlines [(3, "#5a3192", 0, 0)]
 
 style save_meta_value is text:
-    font "fonts/trotes/Trotes.ttf"
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
     size 28
     color "#f3ecff"
     outlines [(2, "#47286f", 0, 0)]
@@ -192,3 +192,4 @@ screen custom_file_slots(mode="save"):
         yalign 0.95
         spacing 16
         use ui_png_button(L("pref_button_back"), Return(), xsize=260, ysize=56, text_style="ui_btn_text_small", use_alt=mm_alt)
+

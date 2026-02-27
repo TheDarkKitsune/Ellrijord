@@ -151,7 +151,7 @@ screen mc_profile_setup():
                     length 20
                     xalign 0.5
                     yalign 0.5
-                    font "fonts/trotes/Trotes.ttf"
+                    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
                     size 56
                     color "#e7f4ff"
                     outlines [ (2, "#1b3458", 0, 0) ]
@@ -273,3 +273,4 @@ label ui_test_demo:
     test_char "Open the game menu here to test settings styling as well."
 
     return
+

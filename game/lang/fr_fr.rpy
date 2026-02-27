@@ -71,10 +71,14 @@ init -1 python:
         "pref_label_font_override": "REMPLACEMENT DE POLICE",
         "pref_button_default_font": "DEFAUT",
         "pref_button_dejavu_sans": "DEJAVU SANS",
+        "pref_button_cinzel": "CINZEL",
         "pref_button_opendyslexic": "OPENDYSLEXIC",
+        "pref_button_water_lemon": "WATER LEMON",
         "pref_tip_default_font": "Utilisez la police de jeu par defaut.",
         "pref_tip_dejavu_sans": "Utilisez la police DejaVu Sans.",
+        "pref_tip_cinzel": "Utilisez la police Cinzel.",
         "pref_tip_opendyslexic": "Utilisez la police OpenDyslexic.",
+        "pref_tip_water_lemon": "Utilisez la police WATER LEMON.",
         "pref_label_text_size_scaling": "MISE A L'ECHELLE DE LA TAILLE DU TEXTE",
         "pref_label_line_space_scaling": "MISE A L'ECHELLE DE L'ESPACE LIGNE",
         "pref_label_high_contrast_text": "TEXTE A CONTRASTE ELEVE",
@@ -201,3 +205,4 @@ init -1 python:
         "save_time_label": "Gagnez du temps",
         "play_time_label": "Temps de jeu",
     })
+
