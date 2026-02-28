@@ -281,7 +281,15 @@ screen extra_menu():
     $ panel_h = NEWS_PANEL_H
     $ hero_w = NEWS_HERO_W
     $ hero_h = NEWS_HERO_H
+    $ hero_image_x = (NEWS_HERO_IMAGE_X if "NEWS_HERO_IMAGE_X" in globals() else 0)
+    $ hero_image_y = (NEWS_HERO_IMAGE_Y if "NEWS_HERO_IMAGE_Y" in globals() else 0)
+    $ hero_image_zoom = (NEWS_HERO_IMAGE_ZOOM if "NEWS_HERO_IMAGE_ZOOM" in globals() else 1.0)
+    $ hero_image_xalign = (NEWS_HERO_IMAGE_XALIGN if "NEWS_HERO_IMAGE_XALIGN" in globals() else 0.5)
+    $ hero_image_yalign = (NEWS_HERO_IMAGE_YALIGN if "NEWS_HERO_IMAGE_YALIGN" in globals() else 0.5)
+    $ hero_render_mode = (NEWS_HERO_RENDER_MODE if "NEWS_HERO_RENDER_MODE" in globals() else "full")
     $ hero_img = "gui/news/update_image.png" if renpy.loadable("gui/news/update_image.png") else secret_preview
+    $ hero_base_zoom = (_image_cover_zoom(hero_img, hero_w, hero_h) if ("_image_cover_zoom" in globals() and hero_img and renpy.loadable(hero_img)) else 1.0)
+    $ hero_draw_zoom = hero_base_zoom * hero_image_zoom
     $ tile_bg = "gui/news/main_story.png" if renpy.loadable("gui/news/main_story.png") else char_preview
     $ tile_music = "gui/news/side_story.png" if renpy.loadable("gui/news/side_story.png") else music_preview
     $ tile_ach = "gui/news/bug_fixes.png" if renpy.loadable("gui/news/bug_fixes.png") else gameplay_preview
@@ -320,8 +328,31 @@ screen extra_menu():
             ysize hero_h
             fixed:
                 xysize (hero_w, hero_h)
+                clipping True
                 add Solid("#ffffff20") xsize hero_w ysize hero_h
-                add Transform(hero_img, fit="contain", xsize=hero_w, ysize=hero_h, xalign=0.5, yalign=0.5)
+                if hero_render_mode == "full":
+                    add Transform(hero_img, fit="cover", xsize=hero_w, ysize=hero_h, xalign=0.5, yalign=0.5, alpha=0.30)
+                    add Solid("#00000033") xsize hero_w ysize hero_h
+                    add Transform(
+                        hero_img,
+                        fit="contain",
+                        xsize=hero_w,
+                        ysize=hero_h,
+                        xoffset=hero_image_x,
+                        yoffset=hero_image_y,
+                        zoom=hero_image_zoom,
+                        xalign=hero_image_xalign,
+                        yalign=hero_image_yalign
+                    )
+                else:
+                    add Transform(
+                        hero_img,
+                        xoffset=hero_image_x,
+                        yoffset=hero_image_y,
+                        zoom=hero_draw_zoom,
+                        xalign=hero_image_xalign,
+                        yalign=hero_image_yalign
+                    )
                 text "Secrets":
                     style "news_tile_text"
                     xalign 0.5

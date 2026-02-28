@@ -148,7 +148,37 @@ screen ui_rect_text_button(label, action, width=68, height=68, bg="#2a2836", hov
         )
 
 
-screen ui_news_tile_button(label, action, image=None, width=300, height=180, selected=False, bg="#3a3152", hover_bg="#4a3a6a", text_style="news_tile_text"):
+screen ui_news_tile_button(
+    label,
+    action,
+    image=None,
+    width=300,
+    height=180,
+    selected=False,
+    bg="#3a3152",
+    hover_bg="#4a3a6a",
+    text_style="news_tile_text",
+    image_xpad=0,
+    image_ypad=0,
+    image_mode="fit",
+    image_x=0,
+    image_y=0,
+    image_zoom=1.0,
+    image_width=None,
+    image_height=None,
+    image_fit="cover",
+    image_xalign=0.5,
+    image_yalign=0.5,
+    label_band_h=48,
+    label_bg="#00000022"
+):
+    $ _label_band_h = max(0, int(label_band_h))
+    $ _image_xpad = max(0, int(image_xpad))
+    $ _image_ypad = max(0, int(image_ypad))
+    $ _image_w = (max(1, int(image_width)) if image_width is not None else max(1, int(width - (_image_xpad * 2))))
+    $ _default_image_h = max(1, int(height - _label_band_h - _image_ypad))
+    $ _image_h = (max(1, int(image_height)) if image_height is not None else _default_image_h)
+    $ _label_y = max(0, int(height - _label_band_h))
     button:
         xsize width
         ysize height
@@ -157,10 +187,28 @@ screen ui_news_tile_button(label, action, image=None, width=300, height=180, sel
         background Solid(bg)
         hover_background Solid(hover_bg)
 
-        if image and renpy.loadable(image):
-            add Transform(image, xsize=(width - 16), ysize=(height - 50), fit="cover", xalign=0.5, yalign=0.15)
-        else:
-            add Solid("#ffffff18") xsize (width - 40) ysize (height - 60) xalign 0.5 yalign 0.35
+        fixed:
+            xpos _image_xpad
+            ypos _image_ypad
+            xsize _image_w
+            ysize _image_h
+            clipping True
+            if image and renpy.loadable(image):
+                if image_mode == "manual":
+                    add Transform(
+                        image,
+                        xoffset=int(image_x),
+                        yoffset=int(image_y),
+                        zoom=float(image_zoom),
+                        xalign=image_xalign,
+                        yalign=image_yalign
+                    )
+                else:
+                    add Transform(image, xsize=_image_w, ysize=_image_h, fit=image_fit, xalign=image_xalign, yalign=image_yalign)
+            else:
+                add Solid("#ffffff18") xsize _image_w ysize _image_h
 
+        if _label_band_h > 0:
+            add Solid(label_bg) xpos 0 ypos _label_y xsize width ysize _label_band_h
         text label style text_style
 
