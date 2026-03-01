@@ -80,8 +80,8 @@ init -2 python:
             "id": "roadmap",
             "title": "Roadmap",
             "body": "Roadmap updates and future plans go here.\nAdd more detail for this entry.",
-            "image": "gui/news/main_story.png",
-            "update_image": "gui/news/update_image.png",
+            "image": "gui/news/roadmap.png",
+            "update_image": "gui/news/roadmap.png",
         },
     ]
 

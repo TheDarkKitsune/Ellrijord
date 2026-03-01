@@ -184,7 +184,7 @@ init -1 python:
 
         # News.
         "news_title": "News",
-        "news_summary": "The Version 1.0 release is available now!\nMain Story, AU Story, and new content have been added.\nLimited-time updates will be listed here.",
+        "news_summary": "The Version 1.0 release is available now!\nMain Story, Side Story, and new content have been added.\nLimited-time updates will be listed here.",
         "news_hero_placeholder": "HERO IMAGE",
         "news_close": "CLOSE",
         "news_main_story_title": "Main Story",

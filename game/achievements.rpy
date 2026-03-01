@@ -265,6 +265,98 @@ define -2 all_achievements = Achievement(
     hide_description=_("Get all other achievements."),
 )
 
+## Additional placeholders so the gallery total is 25.
+define extra_achievement_01 = Achievement(
+    name=_("Extra Achievement 01"), id="extra_achievement_01",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_02 = Achievement(
+    name=_("Extra Achievement 02"), id="extra_achievement_02",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_03 = Achievement(
+    name=_("Extra Achievement 03"), id="extra_achievement_03",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_04 = Achievement(
+    name=_("Extra Achievement 04"), id="extra_achievement_04",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_05 = Achievement(
+    name=_("Extra Achievement 05"), id="extra_achievement_05",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_06 = Achievement(
+    name=_("Extra Achievement 06"), id="extra_achievement_06",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_07 = Achievement(
+    name=_("Extra Achievement 07"), id="extra_achievement_07",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_08 = Achievement(
+    name=_("Extra Achievement 08"), id="extra_achievement_08",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_09 = Achievement(
+    name=_("Extra Achievement 09"), id="extra_achievement_09",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_10 = Achievement(
+    name=_("Extra Achievement 10"), id="extra_achievement_10",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_11 = Achievement(
+    name=_("Extra Achievement 11"), id="extra_achievement_11",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_12 = Achievement(
+    name=_("Extra Achievement 12"), id="extra_achievement_12",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_13 = Achievement(
+    name=_("Extra Achievement 13"), id="extra_achievement_13",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_14 = Achievement(
+    name=_("Extra Achievement 14"), id="extra_achievement_14",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_15 = Achievement(
+    name=_("Extra Achievement 15"), id="extra_achievement_15",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_16 = Achievement(
+    name=_("Extra Achievement 16"), id="extra_achievement_16",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_17 = Achievement(
+    name=_("Extra Achievement 17"), id="extra_achievement_17",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+define extra_achievement_18 = Achievement(
+    name=_("Extra Achievement 18"), id="extra_achievement_18",
+    description=_("Placeholder achievement."), unlocked_image="gui/window_icon.png",
+    hide_name=True, hide_description=True,
+)
+
 ## This is an example of what granting achievements and recording progress
 ## will look like in-script. You can remove this label if you don't need it.
 label achievement_examples():
@@ -440,25 +532,23 @@ screen achievement_gallery():
     add Solid("#080d20bb")
 
     text _("Achievements") style "achv_header":
-        xpos 70
-        ypos 52
+        xalign 0.5
+        ypos 70
 
-    # Top progress summary.
     hbox:
-        xpos 340
-        ypos 240
-        spacing 8
+        xpos 620
+        ypos 244
+        spacing 6
         text _("Got") style "achv_summary_text"
-        text "* [earned]/[total]" style "achv_summary_star_text"
+        text u"\u2605 [earned]/[total]" style "achv_summary_star_text"
         text _("Achievements!") style "achv_summary_text"
         text "[remaining]" style "achv_summary_remaining_text"
         text _("more to go!") style "achv_summary_text"
 
-    # Achievement cards + scrollbar.
     side "c r":
-        xpos 250
-        ypos 300
-        xysize (1600, 700)
+        xpos 420
+        ypos 332
+        xysize (1420, 690)
 
         vpgrid:
             id "achv_grid"
@@ -466,10 +556,8 @@ screen achievement_gallery():
             mousewheel True
             draggable True
             pagekeys True
-            xspacing 18
-            yspacing 16
-            xfill True
-            yfill True
+            xspacing 12
+            yspacing 12
 
             for idx, a in enumerate(Achievement.all_achievements, start=1):
                 button:
@@ -480,33 +568,35 @@ screen achievement_gallery():
                         action NullAction()
 
                     if a.has():
-                        background Frame(Solid("#40105fdd"), 14, 14)
-                        hover_background Frame(Solid("#5b1588ee"), 14, 14)
+                        background Frame(Solid("#250024ec"), 14, 14)
+                        hover_background Frame(Solid("#3a0038f0"), 14, 14)
                     else:
-                        background Frame(Solid("#272b35dd"), 14, 14)
-                        hover_background Frame(Solid("#353b47ee"), 14, 14)
+                        background Frame(Solid("#26272be8"), 14, 14)
+                        hover_background Frame(Solid("#34363be8"), 14, 14)
 
                     fixed:
                         xsize 680
-                        ysize 155
+                        ysize 154
 
                         if a.has():
-                            add Solid("#5d0cd2ff") xpos 0 ypos 0 xsize 680 ysize 6
-                            add Solid("#5d0cd2ff") xpos 0 ypos 149 xsize 680 ysize 6
+                            add Solid("#5900cf") xpos 0 ypos 0 xsize 680 ysize 4
+                            add Solid("#5900cf") xpos 0 ypos 150 xsize 680 ysize 4
+                            add Solid("#5900cf") xpos 0 ypos 0 xsize 4 ysize 154
+                            add Solid("#5900cf") xpos 676 ypos 0 xsize 4 ysize 154
 
                         fixed:
-                            xpos 20
-                            ypos 20
-                            xysize (112, 112)
+                            xpos 16
+                            ypos 15
+                            xysize (98, 98)
                             if a.idle_img:
-                                add a.idle_img fit "contain" xysize (112, 112)
+                                add a.idle_img fit "contain" xysize (98, 98)
                             else:
-                                text "?" xalign 0.5 yalign 0.5 size 86 color "#f2f2f2"
+                                text "?" xalign 0.5 yalign 0.5 size 80 color "#f2f2f2"
 
                         vbox:
-                            xpos 150
-                            ypos 24
-                            spacing 8
+                            xpos 132
+                            ypos 18
+                            spacing 5
                             if a.has():
                                 text "#[idx] | [a.name]" style "achv_card_title"
                                 text a.description style "achv_card_desc"
@@ -527,50 +617,53 @@ screen achievement_gallery():
     textbutton _("Close"):
         action Return()
         style "achv_close_button"
-        xpos 90
-        yalign 0.96
+        xpos 120
+        yalign 0.97
 
 style achv_header is text:
-    size 86
-    color "#ef3cf3"
-    outlines [(3, "#1b1232", 0, 0)]
+    size 88
+    color "#ffffff"
+    outlines [(4, "#6b3aa8", 0, 0)]
 
 style achv_summary_text is text:
-    size 56
+    size 26
     color "#f1f2f7"
     outlines [(3, "#0c1020", 0, 0)]
 
 style achv_summary_star_text is text:
-    size 62
+    size 34
     color "#d6cf09"
     outlines [(3, "#0c1020", 0, 0)]
 
 style achv_summary_remaining_text is text:
-    size 60
+    size 30
     color "#ef3cf3"
     outlines [(3, "#0c1020", 0, 0)]
 
 style achv_card_button is button:
     xsize 680
-    ysize 155
+    ysize 154
 
 style achv_card_title is text:
-    size 48
+    size 24
+    xmaximum 530
     color "#f1f1f2"
     outlines [(2, "#11131a", 0, 0)]
 
 style achv_card_desc is text:
-    size 40
+    size 20
+    xmaximum 530
     color "#f0eef5"
     outlines [(2, "#11131a", 0, 0)]
 
 style achv_card_desc_locked is text:
-    size 40
+    size 20
+    xmaximum 530
     color "#c3c5cc"
     outlines [(2, "#11131a", 0, 0)]
 
 style achv_card_stamp is text:
-    size 24
+    size 14
     color "#c9cbda"
 
 style achv_card_bar is bar:
@@ -580,23 +673,23 @@ style achv_card_bar is bar:
     right_bar "#4a5468"
 
 style achv_card_bar_text is text:
-    size 22
+    size 16
     color "#e9eaf5"
     xalign 1.0
-    xpos 392
+    xpos 350
     ypos -2
 
 style achv_vscrollbar is vscrollbar:
-    xsize 18
-    base_bar "#3a2462"
-    thumb "#9829f1"
-    hover_thumb "#bf55ff"
+    xsize 12
+    base_bar "#2b0a52"
+    thumb "#9b2fff"
+    hover_thumb "#c55dff"
 
 style achv_close_button is button:
     background None
 
 style achv_close_button_text is text:
-    size 56
+    size 32
     color "#d0d2dc"
     outlines [(3, "#0c1020", 0, 0)]
     hover_color "#ef3cf3"
