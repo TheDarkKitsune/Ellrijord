@@ -1,6 +1,8 @@
 # custom_dlc_menu.rpy
 # DLC menu with sidebar tabs and ownership display.
 
+default persistent.dlc_owned_ids = set()
+
 init -2 python:
     DLC_TABS = [
         ("free", "Free DLC"),
@@ -14,6 +16,12 @@ init -2 python:
             "name": "Summer Festival DLC",
             "type": "free",
             "desc": "Theme: romance-heavy. Adds 1 extra date per heroine, a fireworks confession variant, and yukata outfits.",
+        },
+        {
+            "id": "starlit_paws_dlc",
+            "name": "Starlit Paws",
+            "type": "free",
+            "desc": "Wholesome, bittersweet Aria route focused on grief, healing, and remembrance.",
         },
         {
             "id": "spring_festival_story",
@@ -66,6 +74,17 @@ init -2 python:
         "summer_festival_dlc": ["academy_window_pack"],
     }
 
+    DLC_PLAY_CONFIG = {
+        "summer_festival_dlc": {
+            "prompt": "Play Summer Festival DLC now?",
+            "router": "dlc_summer_festival_router",
+        },
+        "starlit_paws_dlc": {
+            "prompt": "Play Starlit Paws DLC now?",
+            "router": "dlc_starlit_paws_router",
+        },
+    }
+
     def _dlc_owned_set():
         raw = getattr(persistent, "dlc_owned_ids", None)
         if raw is None:
@@ -97,6 +116,18 @@ init -2 python:
             s.discard(key)
         persistent.dlc_owned_ids = s
         renpy.save_persistent()
+
+    def dlc_item_action(item_id, item_owned):
+        cfg = DLC_PLAY_CONFIG.get(str(item_id))
+        if not cfg:
+            return NullAction()
+        if not item_owned:
+            return Notify("You do not own this DLC.")
+        return Confirm(
+            cfg.get("prompt", "Play this DLC now?"),
+            yes=[Hide("extra_dlc_menu"), Start(cfg.get("router", "start"))],
+            no=NullAction(),
+        )
 
 
 style dlc_header_title is text:
@@ -246,15 +277,7 @@ screen extra_dlc_menu():
                             for item in tab_items:
                                 $ item_id = item.get("id", "")
                                 $ item_owned = dlc_is_owned(item_id)
-                                $ item_action = (
-                                    Confirm(
-                                        "Play Summer Festival DLC now?",
-                                        yes=[Hide("extra_dlc_menu"), Jump("dlc_summer_festival_router")],
-                                        no=NullAction()
-                                    )
-                                    if (item_id == "summer_festival_dlc" and item_owned) else
-                                    (Notify("You do not own this DLC.") if (item_id == "summer_festival_dlc" and not item_owned) else NullAction())
-                                )
+                                $ item_action = dlc_item_action(item_id, item_owned)
 
                                 button:
                                     background Solid("#3b2d58cc")
@@ -356,5 +379,14 @@ label dlc_summer_festival_router:
         jump dlc_summer_festival_start
 
     "Summer Festival DLC script could not be loaded."
+    "Try restarting the game once so Ren'Py recompiles new script files."
+    jump _main_menu
+
+
+label dlc_starlit_paws_router:
+    if renpy.has_label("dlc_starlit_paws_start"):
+        jump dlc_starlit_paws_start
+
+    "Starlit Paws DLC script could not be loaded."
     "Try restarting the game once so Ren'Py recompiles new script files."
     jump _main_menu

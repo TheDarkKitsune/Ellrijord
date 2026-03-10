@@ -439,12 +439,38 @@ transform back_btn_interact:
         linear 0.04 zoom 0.98
         linear 0.08 zoom 1.03
 
+# Secrets hero card: stronger hover and tempting sparkle.
+transform secret_card_interact:
+    on hover:
+        linear 0.16 zoom 1.05 yoffset -8
+    on idle:
+        linear 0.16 zoom 1.0 yoffset 0
+    on activate:
+        linear 0.05 zoom 0.99 yoffset -2
+        linear 0.10 zoom 1.05 yoffset -8
+
+transform secret_sparkle_sweep(travel=900):
+    alpha 0.0
+    xoffset (-travel)
+    pause 0.45
+    linear 0.20 alpha 0.30
+    linear 2.35 xoffset travel alpha 0.0
+    pause 1.15
+    repeat
+
+transform secret_hover_shimmer:
+    alpha 0.08
+    linear 0.65 alpha 0.18
+    linear 0.65 alpha 0.08
+    repeat
+
 
 # -------------------------
 # Extra Menu Hub (unchanged)
 # -------------------------
 screen extra_menu():
     tag menu
+    default secrets_hovered = False
     $ mm_alt = bool(getattr(persistent, "mm_alt", False))
     $ char_cfg_items = _gallery_items_from_list(gallery_character_images)
     $ gameplay_cfg_items = _gallery_items_from_list(gallery_gameplay_images)
@@ -505,6 +531,9 @@ screen extra_menu():
             action ShowMenu("secret_codes")
             background None
             hover_background None
+            at secret_card_interact
+            hovered SetScreenVariable("secrets_hovered", True)
+            unhovered SetScreenVariable("secrets_hovered", False)
             xpos 1020
             ypos 40
             xsize hero_w
@@ -513,6 +542,7 @@ screen extra_menu():
                 xysize (hero_w, hero_h)
                 clipping True
                 add Solid("#ffffff20") xsize hero_w ysize hero_h
+                add Frame(Solid("#a877ff8a"), 22, 22) xsize hero_w ysize hero_h
                 if hero_render_mode == "full":
                     add Transform(hero_img, fit="cover", xsize=hero_w, ysize=hero_h, xalign=0.5, yalign=0.5, alpha=0.30)
                     add Solid("#00000033") xsize hero_w ysize hero_h
@@ -536,6 +566,10 @@ screen extra_menu():
                         xalign=hero_image_xalign,
                         yalign=hero_image_yalign
                     )
+                add Transform(Solid("#ffffff55"), xsize=210, ysize=(hero_h + 120), rotate=-18, yoffset=-60) at secret_sparkle_sweep(travel=(hero_w + 360))
+                if secrets_hovered:
+                    add Solid("#ffffff10") xsize hero_w ysize hero_h
+                    add Transform(Solid("#ffffff30"), xsize=170, ysize=(hero_h + 90), rotate=-16, yoffset=-45) at secret_hover_shimmer
 
         text "Secrets":
             style "news_tile_text"
@@ -548,29 +582,29 @@ screen extra_menu():
             ypos 388
             spacing 24
 
-            vbox:
+            vbox at gentle_float(0.00, amp=4):
                 spacing 10
-                use ui_news_tile_button("", ShowMenu("extra_image_gallery"), image=tile_bg, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000")
+                use ui_news_tile_button("", ShowMenu("extra_image_gallery"), image=tile_bg, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "Image Gallery" style "news_tile_text" xalign 0.5
 
-            vbox:
+            vbox at gentle_float(0.12, amp=4):
                 spacing 10
-                use ui_news_tile_button("", ShowMenu("music_room", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000")
+                use ui_news_tile_button("", ShowMenu("music_room", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "Music Gallery" style "news_tile_text" xalign 0.5
 
-            vbox:
+            vbox at gentle_float(0.24, amp=4):
                 spacing 10
-                use ui_news_tile_button("", ShowMenu("achievement_gallery"), image=tile_ach, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000")
+                use ui_news_tile_button("", ShowMenu("achievement_gallery"), image=tile_ach, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "Achievements" style "news_tile_text" xalign 0.5
 
-            vbox:
+            vbox at gentle_float(0.36, amp=4):
                 spacing 10
-                use ui_news_tile_button("", ShowMenu("extra_dlc_menu"), image=tile_dlc, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000")
+                use ui_news_tile_button("", ShowMenu("extra_dlc_menu"), image=tile_dlc, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "DLC" style "news_tile_text" xalign 0.5
 
-            vbox:
+            vbox at gentle_float(0.48, amp=4):
                 spacing 10
-                use ui_news_tile_button("", If(renpy.has_screen("extra_credits_board"), ShowMenu("extra_credits_board"), ShowMenu("extra_credits_legacy")), image=tile_credits, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000")
+                use ui_news_tile_button("", If(renpy.has_screen("extra_credits_board"), ShowMenu("extra_credits_board"), ShowMenu("extra_credits_legacy")), image=tile_credits, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "Credits" style "news_tile_text" xalign 0.5
 
     hbox:

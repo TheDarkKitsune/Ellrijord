@@ -554,7 +554,8 @@ init -50 python:
             Plays the previous file in the playlist.
             """
             pos = renpy.music.get_pos(channel=self.channel)
-            if pos > 2 or self.single_track:
+            safe_pos = pos if isinstance(pos, (int, float)) else 0.0
+            if safe_pos > 2 or self.single_track:
                 ## This starts the current song over again if it's been
                 ## playing for more than 2 seconds.
                 return self.play(None, 0, strip=True)

@@ -66,6 +66,10 @@ default preferences.afm_time = 15
 
 define config.save_directory = "Ellrijord-1768855811"
 
+# Higher-res save thumbnails so large preview panels stay sharp.
+define config.thumbnail_width = 960
+define config.thumbnail_height = 540
+
 
 ## Icon ########################################################################
 

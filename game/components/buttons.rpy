@@ -37,18 +37,19 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None, left_icon=None, left_icon_size=None, left_icon_xpad=12):
+screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None, left_icon=None, left_icon_size=None, left_icon_xpad=12, use_hover_asset=True, use_hover_bounce=True, disabled_uses_idle=False):
     $ scale = zoom * BTN_VISUAL_SCALE
     $ btn_w = int(BTN_SRC_W * scale) if xsize is None else int(xsize)
     $ btn_h = int(BTN_SRC_H * scale) if ysize is None else int(ysize)
     $ idle_disp = "gui/btn_idle.png"
     $ hover_disp = "gui/btn_hover.png"
     $ disabled_disp = "gui/btn_disabled.png"
-    $ idle_render = disabled_disp if (selected or disabled) else idle_disp
-    $ hover_render = disabled_disp if (selected or disabled) else hover_disp
+    $ _disabled_render = (idle_disp if disabled_uses_idle else disabled_disp)
+    $ idle_render = _disabled_render if (selected or disabled) else idle_disp
+    $ hover_render = _disabled_render if (selected or disabled) else (hover_disp if use_hover_asset else idle_disp)
     $ idle_img = Transform(Frame(idle_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
     $ hover_img = Transform(Frame(hover_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
-    $ disabled_img = Transform(Frame(disabled_disp, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ disabled_img = Transform(Frame(_disabled_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
     $ hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
     $ icon_sz = int(left_icon_size) if left_icon_size is not None else int(btn_h * 0.62)
@@ -77,13 +78,22 @@ screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="
             xsize=btn_w,
             ysize=btn_h
         )
-        hover Fixed(
-            At(hover_img, btn_hover_fx(1.0, yoffset)),
-            At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_hover_fx(1.0, yoffset)),
-            At(icon_disp, btn_hover_fx(1.0, yoffset)),
-            xsize=btn_w,
-            ysize=btn_h
-        )
+        if use_hover_bounce:
+            hover Fixed(
+                At(hover_img, btn_hover_fx(1.0, yoffset)),
+                At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_hover_fx(1.0, yoffset)),
+                At(icon_disp, btn_hover_fx(1.0, yoffset)),
+                xsize=btn_w,
+                ysize=btn_h
+            )
+        else:
+            hover Fixed(
+                At(hover_img, btn_idle_fx(1.0, yoffset)),
+                At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
+                At(icon_disp, btn_idle_fx(1.0, yoffset)),
+                xsize=btn_w,
+                ysize=btn_h
+            )
         insensitive Fixed(
             At(disabled_img, btn_idle_fx(1.0, yoffset)),
             At(Text(label, style=text_style, xsize=btn_w, ysize=btn_h, xalign=0.5, yalign=0.5, text_align=0.5), btn_idle_fx(1.0, yoffset)),
@@ -170,7 +180,8 @@ screen ui_news_tile_button(
     image_xalign=0.5,
     image_yalign=0.5,
     label_band_h=48,
-    label_bg="#00000022"
+    label_bg="#00000022",
+    use_hover_anim=False
 ):
     $ _label_band_h = max(0, int(label_band_h))
     $ _image_xpad = max(0, int(image_xpad))
@@ -184,6 +195,8 @@ screen ui_news_tile_button(
         ysize height
         action action
         selected selected
+        if use_hover_anim:
+            at card_interact_enabled
         background Solid(bg)
         hover_background Solid(hover_bg)
 

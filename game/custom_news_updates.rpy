@@ -219,8 +219,8 @@ screen news_updates():
             ypos 372
             spacing 24
 
-            for item in NEWS_ITEMS:
-                use news_tile(item, news_selected)
+            for item_i, item in enumerate(NEWS_ITEMS):
+                use news_tile(item, news_selected, item_i)
 
     # Back button
     hbox:
@@ -230,8 +230,8 @@ screen news_updates():
         use ui_png_button(L("pref_button_back"), ShowMenu("main_menu"), zoom=0.55, text_style="ui_btn_text_small", use_alt=mm_alt)
 
 
-screen news_tile(item, news_selected):
-    vbox:
+screen news_tile(item, news_selected, tile_index=0):
+    vbox at gentle_float(tile_index * 0.12, amp=4):
         spacing 8
         use ui_news_tile_button(
             "",
@@ -255,7 +255,8 @@ screen news_tile(item, news_selected):
             image_xalign=item.get("tile_image_xalign", NEWS_TILE_IMAGE_XALIGN),
             image_yalign=item.get("tile_image_yalign", NEWS_TILE_IMAGE_YALIGN),
             label_band_h=0,
-            label_bg="#00000000"
+            label_bg="#00000000",
+            use_hover_anim=True
         )
 
         text _news_item_text(item, "title") style "news_tile_text" xalign 0.5

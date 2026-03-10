@@ -1,4 +1,4 @@
-﻿################################################################################
+################################################################################
 ## MUSIC ROOM DECLARATION
 ################################################################################
 init python:
@@ -43,6 +43,9 @@ init python:
 
     def music_track_artist(path_or_name, fallback_artist=None):
         key = music_track_key(path_or_name)
+        normalized = str(path_or_name).replace("\\", "/").lower()
+        if normalized.startswith("audio/dlc_tracks/"):
+            return "Ellrijord OST"
         if key in (
             "magical_hallways",
             "shattered_remains",
@@ -54,6 +57,40 @@ init python:
         if fallback_artist == "Aelx Coldfire Music":
             return "Alex Coldfire Music"
         return fallback_artist or "Unknown Artist"
+
+    def music_track_category(song_or_path):
+        try:
+            path = song_or_path.path
+        except Exception:
+            path = str(song_or_path)
+
+        normalized = path.replace("\\", "/").lower()
+        key = music_track_key(path)
+
+        if key in (
+            "magical_hallways",
+            "shattered_remains",
+            "academy_window",
+            "rooftop_universe",
+            "unspoken_language",
+        ):
+            return "menu"
+
+        if normalized.startswith("audio/dlc_tracks/"):
+            return "dlc"
+
+        return "story"
+
+    def music_track_category_label(category):
+        if category == "menu":
+            return "Menu"
+        if category == "dlc":
+            return "DLC"
+        return "Story"
+
+    def music_room_filtered_tracklist(mr, category):
+        tracks = mr.get_tracklist(all_tracks=True)
+        return [song for song in tracks if music_track_category(song) == category]
 
     def music_track_unlocked(key):
         """
@@ -152,7 +189,7 @@ init python:
         f = chosen_by_base[base_key]
         base = os.path.splitext(os.path.basename(f))[0]
         pretty = base.replace("_", " ")
-        artist_name = music_track_artist(base, "Alex Coldfire Music")
+        artist_name = music_track_artist(f, "Alex Coldfire Music")
 
         # Locked until manually unlocked by script via unlock_music_track(...).
         unlock_condition = "music_track_unlocked({})".format(repr(base_key))
@@ -332,6 +369,8 @@ screen music_room(mr):
     ## Setting current_track to mr.get_current_song() as seen here will make it
     ## pick out whichever song is currently playing (e.g. the main menu track).
     default current_track = mr.get_current_song()
+    default category_filter = "menu"
+    default category_open = False
 
     style_prefix "music_room"
 
@@ -352,38 +391,60 @@ screen music_room(mr):
     frame:
         style_prefix 'track_list'
         xsize 750 left_margin 25 top_margin 25
-        viewport:
-            mousewheel True scrollbars "vertical" draggable True
-            has vbox
-            label _("Track List") style "music_room_title"
-            ## get_tracklist takes one argument, all_tracks. If all_tracks is
-            ## True, it shows all tracks, including locked ones (which will be
-            ## shown grayed out). If all_tracks is False, it only shows unlocked
-            ## tracks.
-            for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
-                button:
-                    action mr.Play(song.path)
-                    sensitive (not song.locked)
-                    has hbox
-                    fixed:
-                        if song is current_track:
-                            ## If the song is currently playing, add a bit of
-                            ## flair with some audio bars.
-                            add Transform('audio_bars', ysize=30, xalign=0.5,
-                                yzoom=-1.0, yalign=0.55)
-                        else:
-                            ## The track number. +1 is because enumerate starts
-                            ## at 0 instead of 1.
-                            text str(num+1) align (0.5, 0.55)
-                    vbox:
-                        spacing 4
-                        ## Track info
-                        if song.locked:
-                            label _("Locked Track")
-                            text _(music_track_hint(song.path))
-                        else:
-                            label song.name
-                            text music_track_artist(song.path, song.artist)
+        vbox:
+            spacing 8
+            hbox:
+                spacing 10
+                text _("Category") style "track_list_text" yalign 0.5
+                textbutton music_track_category_label(category_filter):
+                    style "track_list_category_button"
+                    action ToggleScreenVariable("category_open")
+            if category_open:
+                frame:
+                    style "track_list_category_dropdown_frame"
+                    has vbox
+                    spacing 2
+                    textbutton _("Menu"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                    textbutton _("Story"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                    textbutton _("DLC"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+            viewport:
+                mousewheel True scrollbars "vertical" draggable True
+                has vbox
+                label _("Track List") style "music_room_title"
+                ## get_tracklist takes one argument, all_tracks. If all_tracks is
+                ## True, it shows all tracks, including locked ones (which will be
+                ## shown grayed out). If all_tracks is False, it only shows unlocked
+                ## tracks.
+                for num, song in enumerate(music_room_filtered_tracklist(mr, category_filter)):
+                    button:
+                        action mr.Play(song.path)
+                        sensitive (not song.locked)
+                        has hbox
+                        fixed:
+                            if song is current_track:
+                                ## If the song is currently playing, add a bit of
+                                ## flair with some audio bars.
+                                add Transform('audio_bars', ysize=30, xalign=0.5,
+                                    yzoom=-1.0, yalign=0.55)
+                            else:
+                                ## The track number. +1 is because enumerate starts
+                                ## at 0 instead of 1.
+                                text str(num+1) align (0.5, 0.55)
+                        vbox:
+                            spacing 4
+                            ## Track info
+                            if song.locked:
+                                label _("Locked Track")
+                                text _(music_track_hint(song.path))
+                            else:
+                                label song.name
+                                text music_track_artist(song.path, song.artist)
 
     ## This holds the album art, song title, artist, music bar, and music
     ## controls. You may adjust this however you wish! The important part
@@ -534,6 +595,30 @@ style track_list_label_text:
     insensitive_color "#666"
 style track_list_vscrollbar:
     thumb "#fc5f39" base_bar "#292835"
+style track_list_category_button is button:
+    background "#2f2f45"
+    hover_background "#3e3e63"
+    selected_background "#45456d"
+    xpadding 12
+    ypadding 6
+style track_list_category_button_text is text:
+    color "#f7f7ed"
+    hover_color "#f93c3e"
+    size 22
+style track_list_category_dropdown_frame is frame:
+    background "#141422dd"
+    xpadding 6
+    ypadding 6
+style track_list_category_option_button is button:
+    background "#2f2f45"
+    hover_background "#3e3e63"
+    selected_background "#45456d"
+    xpadding 12
+    ypadding 6
+style track_list_category_option_button_text is text:
+    color "#f7f7ed"
+    hover_color "#f93c3e"
+    size 22
 
 ################################################################################
 ## SCREENS - VERSION 2
@@ -542,6 +627,8 @@ screen music_room2(mr):
     tag menu
 
     default current_track = mr.get_current_song()
+    default category_filter = "menu"
+    default category_open = False
 
     add "#292835" ## The background image
 
@@ -574,33 +661,55 @@ screen music_room2(mr):
                 ## smaller e.g. xsize config.screen_width-1050
                 xsize config.screen_width-700
                 ysize config.screen_height-250
-                viewport:
-                    mousewheel True scrollbars "vertical" draggable True
-                    has vbox
-                    label _("Track List") style "music_room_title" xalign 0.5
-                    for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
-                        button:
-                            action mr.Play(song.path)
-                            sensitive (not song.locked)
-                            has hbox
-                            fixed:
-                                if song is current_track:
-                                    ## If the song is currently playing, add a
-                                    ## bit of flair with some audio bars.
-                                    add Transform('audio_bars', ysize=30,
-                                        xalign=0.5, yzoom=-1.0, yalign=0.55)
-                                else:
-                                    ## The track number
-                                    text str(num+1) align (0.5, 0.55)
-                            vbox:
-                                spacing 4
-                                ## Track info
-                                if song.locked:
-                                    label _("Locked Track")
-                                    text _(music_track_hint(song.path))
-                                else:
-                                    label song.name
-                                    text music_track_artist(song.path, song.artist)
+                vbox:
+                    spacing 8
+                    hbox:
+                        spacing 10
+                        text _("Category") style "track_list_text" yalign 0.5
+                        textbutton music_track_category_label(category_filter):
+                            style "track_list_category_button"
+                            action ToggleScreenVariable("category_open")
+                    if category_open:
+                        frame:
+                            style "track_list_category_dropdown_frame"
+                            has vbox
+                            spacing 2
+                            textbutton _("Menu"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                            textbutton _("Story"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                            textbutton _("DLC"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+                    viewport:
+                        mousewheel True scrollbars "vertical" draggable True
+                        has vbox
+                        label _("Track List") style "music_room_title" xalign 0.5
+                        for num, song in enumerate(music_room_filtered_tracklist(mr, category_filter)):
+                            button:
+                                action mr.Play(song.path)
+                                sensitive (not song.locked)
+                                has hbox
+                                fixed:
+                                    if song is current_track:
+                                        ## If the song is currently playing, add a
+                                        ## bit of flair with some audio bars.
+                                        add Transform('audio_bars', ysize=30,
+                                            xalign=0.5, yzoom=-1.0, yalign=0.55)
+                                    else:
+                                        ## The track number
+                                        text str(num+1) align (0.5, 0.55)
+                                vbox:
+                                    spacing 4
+                                    ## Track info
+                                    if song.locked:
+                                        label _("Locked Track")
+                                        text _(music_track_hint(song.path))
+                                    else:
+                                        label song.name
+                                        text music_track_artist(song.path, song.artist)
             vbox:
                 yalign 0.0
                 if current_track:
@@ -736,6 +845,8 @@ screen music_room3(mr):
     ## Needed to have easy access to information on the currently playing song.
     ## Required for ALL music rooms!
     default current_track = mr.get_current_song()
+    default category_filter = "menu"
+    default category_open = False
 
     style_prefix "music_room3"
 
@@ -760,39 +871,61 @@ screen music_room3(mr):
         frame:
             style_prefix 'track_list'
             xfill True top_margin 25 yfill True bottom_margin 220
-            viewport:
-                mousewheel True scrollbars "vertical" draggable True
-                has vbox
-                label _("Track List") style "music_room_title"
-                ## get_tracklist takes one argument, all_tracks. If all_tracks is
-                ## True, it shows all tracks, including locked ones (which will be
-                ## shown grayed out). If all_tracks is False, it only shows unlocked
-                ## tracks.
-                for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
-                    button:
-                        action mr.Play(song.path)
-                        sensitive (not song.locked)
-                        has hbox
-                        fixed:
-                            if song is current_track:
-                                ## If the song is currently playing, add a bit of
-                                ## flair with some audio bars.
-                                add Transform('audio_bars', ysize=30, xalign=0.5,
-                                    yzoom=-1.0, yalign=0.55)
-                            else:
-                                ## The track number. +1 is because enumerate starts
-                                ## at 0 instead of 1.
-                                text str(num+1) align (0.5, 0.55)
-                        add song.art ysize 100 fit "contain"
-                        vbox:
-                            spacing 4
-                            ## Track info
-                            if song.locked:
-                                label _("Locked Track")
-                                text _(music_track_hint(song.path))
-                            else:
-                                label song.name
-                                text music_track_artist(song.path, song.artist)
+            vbox:
+                spacing 8
+                hbox:
+                    spacing 10
+                    text _("Category") style "track_list_text" yalign 0.5
+                    textbutton music_track_category_label(category_filter):
+                        style "track_list_category_button"
+                        action ToggleScreenVariable("category_open")
+                if category_open:
+                    frame:
+                        style "track_list_category_dropdown_frame"
+                        has vbox
+                        spacing 2
+                        textbutton _("Menu"):
+                            style "track_list_category_option_button"
+                            action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                        textbutton _("Story"):
+                            style "track_list_category_option_button"
+                            action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                        textbutton _("DLC"):
+                            style "track_list_category_option_button"
+                            action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+                viewport:
+                    mousewheel True scrollbars "vertical" draggable True
+                    has vbox
+                    label _("Track List") style "music_room_title"
+                    ## get_tracklist takes one argument, all_tracks. If all_tracks is
+                    ## True, it shows all tracks, including locked ones (which will be
+                    ## shown grayed out). If all_tracks is False, it only shows unlocked
+                    ## tracks.
+                    for num, song in enumerate(music_room_filtered_tracklist(mr, category_filter)):
+                        button:
+                            action mr.Play(song.path)
+                            sensitive (not song.locked)
+                            has hbox
+                            fixed:
+                                if song is current_track:
+                                    ## If the song is currently playing, add a bit of
+                                    ## flair with some audio bars.
+                                    add Transform('audio_bars', ysize=30, xalign=0.5,
+                                        yzoom=-1.0, yalign=0.55)
+                                else:
+                                    ## The track number. +1 is because enumerate starts
+                                    ## at 0 instead of 1.
+                                    text str(num+1) align (0.5, 0.55)
+                            add song.art ysize 100 fit "contain"
+                            vbox:
+                                spacing 4
+                                ## Track info
+                                if song.locked:
+                                    label _("Locked Track")
+                                    text _(music_track_hint(song.path))
+                                else:
+                                    label song.name
+                                    text music_track_artist(song.path, song.artist)
 
         ## This holds the album art, song title, artist, music bar, and music
         ## controls. You may adjust this however you wish! The important part
@@ -903,6 +1036,8 @@ screen music_room4(mr):
     tag menu
 
     default current_track = mr.get_current_song()
+    default category_filter = "menu"
+    default category_open = False
 
     add Solid("#090b2acc")
     add Solid("#2a31581c")
@@ -943,7 +1078,7 @@ screen music_room4(mr):
             if current_track:
                 add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 420 ysize 260
             else:
-                text "â™ª" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
+                text "♪" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
 
     text (current_track.name if current_track else _("Track Title")):
         xpos 280
@@ -957,33 +1092,58 @@ screen music_room4(mr):
         ypos 205
         xysize (860, 620)
 
-        viewport:
-            id "music_room4_vp"
-            mousewheel True
-            draggable True
-            scrollbars "vertical"
-            has vbox
-            spacing 16
+        vbox:
+            spacing 10
 
-            for num, song in enumerate(mr.get_tracklist(all_tracks=True)):
-                button:
-                    action mr.Play(song.path)
-                    sensitive (not song.locked)
-                    xsize 790
-                    ysize 88
-                    background Frame(Solid("#000742"), 22, 22)
-                    hover_background Frame(Solid("#0f1460"), 22, 22)
-                    selected_background Frame(Solid("#101873"), 22, 22)
+            hbox:
+                spacing 10
+                text "Category" size 26 color "#bfc1d7" yalign 0.5
+                textbutton music_track_category_label(category_filter):
+                    style "track_list_category_button"
+                    action ToggleScreenVariable("category_open")
 
-                    fixed:
-                        add Solid("#efe3a7") xsize 790 ysize 88
-                        add Solid("#000742") xpos 6 ypos 6 xsize 778 ysize 76
-                        if song.locked:
-                            text _(music_track_hint(song.path)) xalign 0.5 yalign 0.5 size 26 color "#868aaa"
-                        else:
-                            text song.name xalign 0.5 yalign 0.5 size 42 color ("#d9def2" if song is current_track else "#868aaa")
-                        text "*" xpos 22 yalign 0.5 size 32 color "#efe3a7"
-                        text "*" xalign 0.97 yalign 0.5 size 32 color "#efe3a7"
+            if category_open:
+                frame:
+                    style "track_list_category_dropdown_frame"
+                    has vbox
+                    spacing 2
+                    textbutton _("Menu"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                    textbutton _("Story"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                    textbutton _("DLC"):
+                        style "track_list_category_option_button"
+                        action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+
+            viewport:
+                id "music_room4_vp"
+                mousewheel True
+                draggable True
+                scrollbars "vertical"
+                has vbox
+                spacing 16
+
+                for num, song in enumerate(music_room_filtered_tracklist(mr, category_filter)):
+                    button:
+                        action mr.Play(song.path)
+                        sensitive (not song.locked)
+                        xsize 790
+                        ysize 88
+                        background Frame(Solid("#000742"), 22, 22)
+                        hover_background Frame(Solid("#0f1460"), 22, 22)
+                        selected_background Frame(Solid("#101873"), 22, 22)
+
+                        fixed:
+                            add Solid("#efe3a7") xsize 790 ysize 88
+                            add Solid("#000742") xpos 6 ypos 6 xsize 778 ysize 76
+                            if song.locked:
+                                text _(music_track_hint(song.path)) xalign 0.5 yalign 0.5 size 26 color "#868aaa"
+                            else:
+                                text song.name xalign 0.5 yalign 0.5 size 42 color ("#d9def2" if song is current_track else "#868aaa")
+                            text "*" xpos 22 yalign 0.5 size 32 color "#efe3a7"
+                            text "*" xalign 0.97 yalign 0.5 size 32 color "#efe3a7"
 
         vbar value YScrollValue("music_room4_vp") style "track_list_vscrollbar"
 
@@ -1017,6 +1177,8 @@ screen music_room4(mr):
 screen music_room5(mr):
     tag menu
     default current_track = mr.get_current_song()
+    default category_filter = "menu"
+    default category_open = False
 
     # Neon cyan background.
     add Solid("#39c8ef")
@@ -1071,36 +1233,60 @@ screen music_room5(mr):
                 xsize 614
                 ysize 322
 
-                viewport:
-                    id "music_room5_vp"
-                    mousewheel True
-                    draggable True
-                    has vbox
-                    spacing 12
+                vbox:
+                    spacing 8
+                    hbox:
+                        spacing 8
+                        text "Category" size 20 color "#ffd5f3" yalign 0.5
+                        textbutton music_track_category_label(category_filter):
+                            style "track_list_category_button"
+                            action ToggleScreenVariable("category_open")
 
-                    for song in mr.get_tracklist(all_tracks=True):
-                        button:
-                            action mr.Play(song.path)
-                            sensitive (not song.locked)
-                            xsize 560
-                            ysize 56
-                            background Frame(Solid("#ff4fbd"), 20, 20)
-                            hover_background Frame(Solid("#ff88db"), 20, 20)
-                            selected_background Frame(Solid("#ffcf70"), 20, 20)
+                    if category_open:
+                        frame:
+                            style "track_list_category_dropdown_frame"
+                            has vbox
+                            spacing 2
+                            textbutton _("Menu"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                            textbutton _("Story"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                            textbutton _("DLC"):
+                                style "track_list_category_option_button"
+                                action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
 
-                            add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
-                            if song.locked:
-                                text _(music_track_hint(song.path)):
-                                    xalign 0.5
-                                    yalign 0.5
-                                    size 18
-                                    color "#9096c0"
-                            else:
-                                text song.name:
-                                    xalign 0.5
-                                    yalign 0.5
-                                    size 32
-                                    color ("#ffe1f8" if song is current_track else "#9096c0")
+                    viewport:
+                        id "music_room5_vp"
+                        mousewheel True
+                        draggable True
+                        has vbox
+                        spacing 12
+
+                        for song in music_room_filtered_tracklist(mr, category_filter):
+                            button:
+                                action mr.Play(song.path)
+                                sensitive (not song.locked)
+                                xsize 560
+                                ysize 56
+                                background Frame(Solid("#ff4fbd"), 20, 20)
+                                hover_background Frame(Solid("#ff88db"), 20, 20)
+                                selected_background Frame(Solid("#ffcf70"), 20, 20)
+
+                                add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
+                                if song.locked:
+                                    text _(music_track_hint(song.path)):
+                                        xalign 0.5
+                                        yalign 0.5
+                                        size 18
+                                        color "#9096c0"
+                                else:
+                                    text song.name:
+                                        xalign 0.5
+                                        yalign 0.5
+                                        size 32
+                                        color ("#ffe1f8" if song is current_track else "#9096c0")
 
                 vbar value YScrollValue("music_room5_vp") style "track_list_vscrollbar"
 
@@ -1187,3 +1373,4 @@ screen music_room5(mr):
         background None
 
     use select_music_room_layout(mr, align=(0.5, 1.0), bottom_margin=16)
+

@@ -7,6 +7,8 @@
 
 default persistent.mm_mode = "light"
 default persistent.mm_alt = False
+default main_menu_last_announced_track = None
+default main_menu_force_announce_track = None
 
 init -2 python:
     BTN_ZOOM = 1
@@ -131,17 +133,14 @@ init -2 python:
         persistent.mm_mode = next_mode
         persistent.mm_alt = (next_mode != "light")
         renpy.music.play(next_track, channel="music", loop=True, if_changed=True, fadeout=0.0, fadein=0.0)
-        store.main_menu_force_announce_track = next_track
-        store.main_menu_last_announced_track = None
+        main_menu_force_announce_track = next_track
+        main_menu_last_announced_track = None
         renpy.save_persistent()
         renpy.restart_interaction()
 
-    # Backward-compat alias.
+# Backward-compat alias.
     def toggle_mm_alt():
         cycle_main_menu_mode()
-
-default main_menu_last_announced_track = None
-default main_menu_force_announce_track = None
 
 style main_menu_social_caption is text:
     font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
@@ -322,4 +321,3 @@ screen main_menu():
                     spacing 2
                     use ui_rect_icon_button("gui/logos/enderfall_logo.png", OpenURL(SOCIAL_URL_WEBSITE), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="website")
                     text "WEBSITE" style "main_menu_social_caption" xalign 0.5
-

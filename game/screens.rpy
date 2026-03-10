@@ -78,6 +78,9 @@ style frame:
 ################################################################################
 
 screen say(who, what):
+    default can_dismiss_line = False
+    timer 0.24 action SetScreenVariable("can_dismiss_line", True)
+    key "dismiss" action If(can_dismiss_line, Return(), NullAction())
 
     window:
         id "window"
@@ -90,6 +93,89 @@ screen say(who, what):
                 text who id "who"
 
         text what id "what"
+
+    $ _msgbox_btn_idle = "gui/msgbox_btn.png"
+    $ _msgbox_btn_hover = "gui/msgbox_btn_hover.png" if renpy.loadable("gui/msgbox_btn_hover.png") else ("gui/msgbox_btn hover.png" if renpy.loadable("gui/msgbox_btn hover.png") else _msgbox_btn_idle)
+    $ _back_btn_idle = "gui/back_btn.png"
+    $ _back_btn_hover = "gui/back_btn_hover.png" if renpy.loadable("gui/back_btn_hover.png") else _back_btn_idle
+    $ _setting_btn_idle = "gui/setting_btn.png"
+    $ _setting_btn_hover = "gui/setting_btn_hover.png" if renpy.loadable("gui/setting_btn_hover.png") else _setting_btn_idle
+
+    fixed:
+        xfill True
+        yfill True
+
+        imagebutton:
+            xpos 1768
+            ypos 24
+            idle Transform(_setting_btn_idle, size=(101, 101))
+            hover Transform(_setting_btn_hover, size=(101, 101))
+            action ShowMenu("showmenu")
+
+        imagebutton:
+            xpos 1020
+            ypos 1020
+            idle Transform(_back_btn_idle, size=(27, 27))
+            hover Transform(_back_btn_hover, size=(27, 27))
+            insensitive Transform(_back_btn_idle, size=(27, 27))
+            action If(renpy.can_rollback(), Rollback(), NullAction())
+
+        button:
+            style "msgbox_btn_button"
+            xpos 1060
+            ypos 1020
+            xsize 98
+            ysize 28
+            background Transform(_msgbox_btn_idle, size=(98, 28))
+            hover_background Transform(_msgbox_btn_hover, size=(98, 28))
+            action Preference("auto-forward", "toggle")
+            selected preferences.afm_enable
+            text _("Auto") style "msgbox_btn_button_text"
+
+        button:
+            style "msgbox_btn_button"
+            xpos 1170
+            ypos 1020
+            xsize 98
+            ysize 28
+            background Transform(_msgbox_btn_idle, size=(98, 28))
+            hover_background Transform(_msgbox_btn_hover, size=(98, 28))
+            action Skip() alternate Skip(fast=True, confirm=True)
+            selected renpy.is_skipping()
+            text _("Skip") style "msgbox_btn_button_text"
+
+        button:
+            style "msgbox_btn_button"
+            xpos 1280
+            ypos 1020
+            xsize 98
+            ysize 28
+            background Transform(_msgbox_btn_idle, size=(98, 28))
+            hover_background Transform(_msgbox_btn_hover, size=(98, 28))
+            action ShowMenu('save')
+            text _("Save") style "msgbox_btn_button_text"
+
+        button:
+            style "msgbox_btn_button"
+            xpos 1390
+            ypos 1020
+            xsize 98
+            ysize 28
+            background Transform(_msgbox_btn_idle, size=(98, 28))
+            hover_background Transform(_msgbox_btn_hover, size=(98, 28))
+            action ShowMenu('load')
+            text _("Load") style "msgbox_btn_button_text"
+
+        button:
+            style "msgbox_btn_button"
+            xpos 1500
+            ypos 1020
+            xsize 98
+            ysize 28
+            background Transform(_msgbox_btn_idle, size=(98, 28))
+            hover_background Transform(_msgbox_btn_hover, size=(98, 28))
+            action HideInterface()
+            text _("Hide") style "msgbox_btn_button_text"
 
     if not renpy.variant("small"):
         add SideImage() xalign 0.0 yalign 1.0
@@ -111,7 +197,7 @@ style window:
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
-    background Image("gui/textboxx.png", xalign=0.5, yalign=0.0)
+    background Transform("gui/msgbox_720p.png", size=(1526, 251), xalign=0.5, yalign=0.0)
 
 style namebox:
     xpos gui.name_xpos
@@ -119,12 +205,18 @@ style namebox:
     xsize gui.namebox_width
     ypos gui.name_ypos
     ysize gui.namebox_height
-    background Frame("gui/namebox.png", gui.namebox_borders, tile=gui.namebox_tile, xalign=gui.name_xalign)
+    background Transform("gui/msgbox_name_header_720p.png", size=(380, 78))
     padding gui.namebox_borders.padding
 
 style say_label:
     properties gui.text_properties("name", accent=True)
-    xalign gui.name_xalign
+    xalign 0.5
+    yalign 0.5
+    text_align 0.5
+    color "#ffffff"
+
+style namebox_label:
+    xalign 0.5
     yalign 0.5
 
 style say_dialogue:
@@ -133,6 +225,7 @@ style say_dialogue:
     xsize gui.dialogue_width
     ypos gui.dialogue_ypos
     adjust_spacing False
+    color "#5f515a"
 
 
 screen input(prompt):
@@ -181,38 +274,23 @@ style choice_button is default:
     xalign 0.5
     xminimum 1185
     yminimum 80
-    background Frame("gui/button/choice_idle_background.png", 32, 16, 32, 16)
-    hover_background Frame("gui/button/choice_hover_background.png", 32, 16, 32, 16)
-    insensitive_background Frame("gui/button/choice_idle_background.png", 32, 16, 32, 16)
+    background Transform("gui/choice_label_720p.png", size=(1185, 80))
+    hover_background Transform("gui/choice_label_hover_720p.png", size=(1185, 80))
+    insensitive_background Transform("gui/choice_label_720p.png", size=(1185, 80))
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
     xalign 0.5
     yalign 0.5
-    idle_color "#ffffff"
-    hover_color "#ffffff"
-    selected_idle_color "#ffffff"
-    selected_hover_color "#ffffff"
-    outlines [ (2, "#00000088", 0, 0) ]
+    idle_color "#5f515a"
+    hover_color "#5f515a"
+    selected_idle_color "#5f515a"
+    selected_hover_color "#5f515a"
+    outlines [ ]
 
 
 screen quick_menu():
-    zorder 100
-
-    if quick_menu:
-
-        hbox:
-            style_prefix "quick"
-            style "quick_menu"
-
-            textbutton _("Back") action Rollback()
-            textbutton _("History") action ShowMenu('history')
-            textbutton _("Skip") action Skip() alternate Skip(fast=True, confirm=True)
-            textbutton _("Auto") action Preference("auto-forward", "toggle")
-            textbutton _("Save") action ShowMenu('save')
-            textbutton _("Q.Save") action QuickSave()
-            textbutton _("Q.Load") action QuickLoad()
-            textbutton _("Prefs") action ShowMenu('preferences')
+    pass
 
 init python:
     config.overlay_screens.append("quick_menu")
@@ -222,10 +300,18 @@ default quick_menu = True
 style quick_menu is hbox
 style quick_button is default
 style quick_button_text is button_text
+style msgbox_quick_menu is default
+style msgbox_btn_button is button
+style msgbox_btn_button_text is button_text
 
 style quick_menu:
     xalign 0.5
     yalign 1.0
+
+style msgbox_quick_menu:
+    xpos 848
+    ypos 188
+    spacing 13
 
 style quick_button:
     properties gui.button_properties("quick_button")
@@ -233,6 +319,26 @@ style quick_button:
 style quick_button_text:
     properties gui.text_properties("quick_button")
 
+style msgbox_btn_button:
+    background None
+    hover_background None
+    selected_background None
+    insensitive_background None
+    xpadding 0
+    ypadding 0
+
+style msgbox_btn_button_text:
+    properties gui.text_properties("quick_button")
+    xalign 0.5
+    yalign 0.5
+    size 28
+    idle_color "#ffffff"
+    hover_color "#ffffff"
+    selected_idle_color "#f2df57"
+    selected_hover_color "#f2df57"
+    insensitive_color "#ffffff"
+    outlines [ ]
+    text_align 0.5
 
 ## Auto indicator screen #######################################################
 ##
@@ -353,7 +459,7 @@ style main_menu_version is main_menu_text
 
 
 
-screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
+screen game_menu(title="", scroll=None, yinitial=0.0, spacing=0, can_focus=True, show_footer=True):
 
     style_prefix "game_menu"
 
@@ -404,11 +510,12 @@ screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
 
     use navigation
 
-    textbutton _("Return"):
-        style "return_button"
-        action Return()
+    if show_footer:
+        textbutton _("Return"):
+            style "return_button"
+            action Return()
 
-    label title
+        label title
 
     if main_menu:
         key "game_menu" action ShowMenu("main_menu")
@@ -532,6 +639,91 @@ screen file_slots(title):
                             action DownloadSync()
                             xalign 0.5
 
+
+
+################################################################################
+## Confirm Screen
+################################################################################
+
+transform confirm_panel_enter:
+    alpha 0.0
+    yoffset 24
+    ease 0.25 alpha 1.0 yoffset 0
+
+style confirm_frame:
+    background None
+    xpadding 90
+    ypadding 62
+
+style confirm_vbox:
+    spacing 34
+
+style confirm_prompt:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 56
+    color "#f7f1d6"
+    outlines [(2, "#00000088", 0, 0)]
+    text_align 0.5
+    xalign 0.5
+
+style confirm_hbox:
+    spacing 28
+    xalign 0.5
+
+style confirm_button:
+    background "#1f1a12cc"
+    hover_background "#6b5520dd"
+    insensitive_background "#3b3428aa"
+    xpadding 34
+    ypadding 14
+    xminimum 260
+
+style confirm_button_text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 44
+    color "#f6ebc8"
+    hover_color "#fff7da"
+    insensitive_color "#b7ad93"
+    outlines [(1, "#00000099", 0, 0)]
+    xalign 0.5
+    text_align 0.5
+
+screen confirm(message, yes_action, no_action=None):
+    modal True
+    zorder 200
+    style_prefix "confirm"
+
+    $ _confirm_msg = (message or "")
+    $ _confirm_bg = "gui/starlit_paws.png" if "starlit paws" in _confirm_msg.lower() else "gui/exit.jpg"
+    add Transform(_confirm_bg, xalign=0.5, yalign=0.5, fit="contain")
+    add Solid("#00000066")
+
+    frame at confirm_panel_enter:
+        style "confirm_frame"
+        xalign 0.5
+        yalign 0.82
+        xmaximum 1500
+
+        vbox:
+            style "confirm_vbox"
+
+            text message style "confirm_prompt"
+
+            if no_action is None:
+                textbutton _("Confirm"):
+                    action yes_action
+                    xalign 0.5
+            else:
+                hbox:
+                    style "confirm_hbox"
+
+                    textbutton _("Yes"):
+                        action yes_action
+
+                    textbutton _("No"):
+                        action no_action
+
+    key "game_menu" action (no_action if no_action is not None else yes_action)
 
 
 ################################################################################
