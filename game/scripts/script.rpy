@@ -98,7 +98,7 @@ screen mc_profile_setup():
         xalign 0.5
         ypos 38
         size 72
-        color "#f7f1da"
+        color "#ffffff"
         outlines [(2, "#1f2635cc", 0, 0)]
 
     text "Select your protagonist":
@@ -135,7 +135,7 @@ screen mc_profile_setup():
                         add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
 
                     add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.72)
+                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.62)
                         zoom (1.00 if female_hovered else 0.96)
 
                     if mc_gender == "female":
@@ -151,7 +151,7 @@ screen mc_profile_setup():
                         add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
 
                     add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.72)
+                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.62)
                         zoom (1.03 if female_hovered else 1.0)
 
                     if mc_gender == "female":
@@ -179,7 +179,7 @@ screen mc_profile_setup():
                     size 52
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "female" else 0.72))
-                    color ("#ffd77f" if mc_gender == "female" else "#dbe5f2")
+                    color ("#ffd77f" if (mc_gender == "female" or female_hovered) else "#dbe5f2")
                     outlines [(2, "#11161fbb", 0, 0)]
 
                 text "She / Her":
@@ -187,7 +187,7 @@ screen mc_profile_setup():
                     size 42
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "female" else 0.66))
-                    color ("#ffe59a" if mc_gender == "female" else "#cbd5e3")
+                    color ("#ffe59a" if (mc_gender == "female" or female_hovered) else "#cbd5e3")
                     outlines [(1, "#11161fbb", 0, 0)]
 
         vbox:
@@ -200,9 +200,9 @@ screen mc_profile_setup():
                 xsize 560
                 ysize 420
 
-                add Solid("#cfa55cbb") xsize 560 ysize 420
-                add Solid("#111b2acc") xpos 3 ypos 3 xsize 554 ysize 414
-                add Solid("#ffffff12") xpos 22 ypos 20 xsize 516 ysize 372
+                add Solid("#7ea9e0cc") xsize 560 ysize 420
+                add Solid("#102447d8") xpos 3 ypos 3 xsize 554 ysize 414
+                add Solid("#c9dcff14") xpos 22 ypos 20 xsize 516 ysize 372
 
                 vbox:
                     xalign 0.5
@@ -214,8 +214,8 @@ screen mc_profile_setup():
                         xalign 0.5
                         xsize 500
                         ysize 96
-                        add Solid("#d8b26fdd") xsize 500 ysize 96
-                        add Solid("#152238dd") xpos 3 ypos 3 xsize 494 ysize 90
+                        add Solid("#7ea9e0dd") xsize 500 ysize 96
+                        add Solid("#122a51ee") xpos 3 ypos 3 xsize 494 ysize 90
 
                         input:
                             value VariableInputValue("mc_first_name", returnable=False)
@@ -224,7 +224,7 @@ screen mc_profile_setup():
                             yalign 0.5
                             font "fonts/cinzel/Cinzel-Bold.otf"
                             size 68
-                            color "#f8f0da"
+                            color "#ffffff"
                             outlines [(2, "#1f2635cc", 0, 0)]
 
                     text "Family Name":
@@ -238,7 +238,7 @@ screen mc_profile_setup():
                         font "fonts/cinzel/Cinzel-Bold.otf"
                         xalign 0.5
                         size 60
-                        color "#f8f0da"
+                        color "#ffffff"
                         outlines [(2, "#1f2635cc", 0, 0)]
 
             textbutton "Confirm":
@@ -247,10 +247,10 @@ screen mc_profile_setup():
                 ysize 92
                 action [Function(finalize_mc_profile), SetVariable("mc_profile_done", True), Return(True)]
                 text_style "ui_btn_text"
-                background "#cfa55cdd"
-                hover_background "#e4bc74"
-                text_color "#1b2130"
-                text_outlines [ (1, "#ffefc5", 0, 0) ]
+                background "#7ea9e0dd"
+                hover_background "#95bdf0f0"
+                text_color "#0f2445"
+                text_outlines [ (1, "#d5e8ff", 0, 0) ]
                 text_xalign 0.5
 
         fixed:
@@ -274,7 +274,7 @@ screen mc_profile_setup():
                         add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
 
                     add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.72)
+                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.62)
                         zoom (1.00 if male_hovered else 0.96)
                 elif renpy.loadable("gui/mc_male.png"):
                     if mc_gender == "male":
@@ -284,7 +284,7 @@ screen mc_profile_setup():
                         add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
 
                     add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730):
-                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.72)
+                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.62)
                         zoom (1.03 if male_hovered else 1.0)
                 else:
                     text "MALE" at Transform(alpha=(1.0 if (mc_gender == "male" or male_hovered) else 0.45)):
@@ -306,7 +306,7 @@ screen mc_profile_setup():
                     size 52
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "male" else 0.72))
-                    color ("#ffd77f" if mc_gender == "male" else "#ced8e6")
+                    color ("#ffd77f" if (mc_gender == "male" or male_hovered) else "#ced8e6")
                     outlines [(2, "#11161fbb", 0, 0)]
 
                 text "He / Him":
@@ -314,14 +314,14 @@ screen mc_profile_setup():
                     size 42
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "male" else 0.66))
-                    color ("#ffe59a" if mc_gender == "male" else "#cbd5e3")
+                    color ("#ffe59a" if (mc_gender == "male" or male_hovered) else "#cbd5e3")
                     outlines [(1, "#11161fbb", 0, 0)]
 
 
 transform profile_glow_pulse:
-    alpha 0.08
-    linear 0.9 alpha 0.24
-    linear 0.9 alpha 0.08
+    alpha 0.14
+    linear 0.9 alpha 0.34
+    linear 0.9 alpha 0.14
     repeat
 
 transform profile_sparkle_rise_a:
@@ -363,7 +363,7 @@ label start:
     call screen intro_press_any_to_continue
     if not mc_profile_done:
         call screen mc_profile_setup
-    if run_ui_test_demo:
+    if run_ui_test_demo and renpy.has_label("ui_test_demo"):
         call ui_test_demo
 
     if mc_gender == "female":

@@ -157,7 +157,9 @@ init python:
     track_exts = (".mp3", ".ogg", ".opus", ".wav", ".flac", ".m4a")
     all_audio_files = [
         f for f in renpy.list_files()
-        if f.startswith("audio/") and os.path.splitext(f)[1].lower() in track_exts
+        if f.startswith("audio/")
+        and "/ambience/" not in f.lower()
+        and os.path.splitext(f)[1].lower() in track_exts
     ]
 
     # Keep one file per track name, preferring converted assets when present.

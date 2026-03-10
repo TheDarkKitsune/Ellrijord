@@ -1,0 +1,18 @@
+game/audio/Aurora.wav
+game/audio/Broken Reality.wav
+game/audio/Cherry Blossom.wav
+game/audio/City Bipolarity.wav
+game/audio/Cold Times, Warm Memories.wav
+game/audio/Deep In The Forest.wav
+game/audio/Devil Riding Hood.wav
+game/audio/Fight For Freedom.wav
+game/audio/Find the Way Out.wav
+game/audio/Garden Street.wav
+game/audio/Ghost In A Box.wav
+game/audio/Jackpot!.wav
+game/audio/Lost in Asylum.wav
+game/audio/Lost In Endless Space.wav
+game/audio/Safe Place.wav
+game/audio/The Last Star.wav
+game/audio/The Way Of Destiny.wav
+game/audio/Dragon`s Inn.wav
