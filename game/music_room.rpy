@@ -309,46 +309,55 @@ screen select_music_room_layout(mr, **properties):
         properties properties
         has vbox
         xalign 0.5
-        spacing 8
+        spacing 6
 
-        if mr_layout_open:
-            frame:
-                style "mr_layout_dropdown_frame"
-                has vbox
-                spacing 2
-                xminimum 240
+        text "LAYOUT SELECT":
+            style "mr_layout_title_text"
+            xalign 0.5
 
-                textbutton "Layout 1":
-                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room", mr=mr)]
-                textbutton "Layout 2":
-                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room2", mr=mr)]
-                textbutton "Layout 3":
-                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room3", mr=mr)]
-                textbutton "Layout 4":
-                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room4", mr=mr)]
-                textbutton "Layout 5":
-                    action [SetVariable("mr_layout_open", False), ShowMenu("music_room5", mr=mr)]
+        add Solid("#9e87dc") xalign 0.5 xsize 300 ysize 2
 
-        textbutton "Layout Select  v":
-            action ToggleVariable("mr_layout_open")
-            xminimum 240
-            text_xalign 0.5
+        null height 6
+
+        textbutton "Layout 1":
+            action ShowMenu("music_room3", mr=mr)
+            xminimum 300
+        textbutton "Layout 2":
+            action ShowMenu("music_room2", mr=mr)
+            xminimum 300
+        textbutton "Layout 3":
+            action ShowMenu("music_room", mr=mr)
+            xminimum 300
+        textbutton "Layout 4":
+            action ShowMenu("music_room4", mr=mr)
+            xminimum 300
+        textbutton "Layout 5":
+            action ShowMenu("music_room5", mr=mr)
+            xminimum 300
 style mr_layout_frame:
-    background "#21212d" xpadding 12 ypadding 10
+    background "#1a1730"
+    xpadding 12
+    ypadding 10
 style mr_layout_dropdown_frame:
-    background "#141422dd"
+    background "#120f24f0"
     xpadding 6
     ypadding 6
 style mr_layout_button:
-    background "#2f2f45"
-    hover_background "#3e3e63"
-    selected_background "#45456d"
+    background "#2a2540"
+    hover_background "#39305a"
+    selected_background "#5a4489"
     xpadding 12
     ypadding 8
 style mr_layout_button_text:
-    hover_color "#f93c3e" selected_color "#ff8335"
-    idle_color "#f7f7ed" insensitive_color "#666"
+    hover_color "#d9ccff"
+    selected_color "#f0c676"
+    idle_color "#f1effa"
+    insensitive_color "#666"
     size 22
+style mr_layout_title_text is text:
+    color "#e4d6ff"
+    size 44
+    font "fonts/cinzel/Cinzel-Bold.otf"
 
 ################################################################################
 ## SCREENS - VERSION 1
@@ -406,13 +415,13 @@ screen music_room(mr):
                     style "track_list_category_dropdown_frame"
                     has vbox
                     spacing 2
-                    textbutton _("Menu"):
+                    textbutton _("MENU   *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
-                    textbutton _("Story"):
+                    textbutton _("STORY  *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
-                    textbutton _("DLC"):
+                    textbutton _("DLC    *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
             viewport:
@@ -676,13 +685,13 @@ screen music_room2(mr):
                             style "track_list_category_dropdown_frame"
                             has vbox
                             spacing 2
-                            textbutton _("Menu"):
+                            textbutton _("MENU   *"):
                                 style "track_list_category_option_button"
                                 action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
-                            textbutton _("Story"):
+                            textbutton _("STORY  *"):
                                 style "track_list_category_option_button"
                                 action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
-                            textbutton _("DLC"):
+                            textbutton _("DLC    *"):
                                 style "track_list_category_option_button"
                                 action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
                     viewport:
@@ -852,7 +861,89 @@ screen music_room3(mr):
 
     style_prefix "music_room3"
 
-    add HBox(Transform("#292835", xsize=350), "#21212db2") # Background
+    add HBox(Transform("#1a1730", xsize=350), "#1a1630b2") # Background
+
+    # Left sidebar category controls.
+    fixed:
+        xpos 0
+        ypos 0
+        xsize 350
+        ysize config.screen_height
+
+        frame:
+            style "music_room3_sidebar_panel"
+            xfill True
+            yfill True
+
+            vbox:
+                xfill True
+                spacing 14
+                text _("CATEGORY"):
+                    style "music_room3_sidebar_title"
+                    xalign 0.5
+
+                add Solid("#9e87dc") xalign 0.5 xsize 300 ysize 2
+
+                null height 8
+
+                button:
+                    style "music_room3_category_row"
+                    selected (category_filter == "menu")
+                    action SetScreenVariable("category_filter", "menu")
+                    fixed:
+                        xfill True
+                        ysize 52
+                        text _("MENU"):
+                            style "music_room3_category_row_text"
+                            xalign 0.0
+                            yalign 0.5
+                        text "*":
+                            style "music_room3_category_row_star"
+                            xalign 0.97
+                            yalign 0.5
+
+                button:
+                    style "music_room3_category_row"
+                    selected (category_filter == "story")
+                    action SetScreenVariable("category_filter", "story")
+                    fixed:
+                        xfill True
+                        ysize 52
+                        text _("STORY"):
+                            style "music_room3_category_row_text"
+                            xalign 0.0
+                            yalign 0.5
+                        text "*":
+                            style "music_room3_category_row_star"
+                            xalign 0.97
+                            yalign 0.5
+
+                button:
+                    style "music_room3_category_row"
+                    selected (category_filter == "dlc")
+                    action SetScreenVariable("category_filter", "dlc")
+                    fixed:
+                        xfill True
+                        ysize 52
+                        text _("DLC"):
+                            style "music_room3_category_row_text"
+                            xalign 0.0
+                            yalign 0.5
+                        text "*":
+                            style "music_room3_category_row_star"
+                            xalign 0.97
+                            yalign 0.5
+
+                null height 10
+                add Solid("#9e87dc") xalign 0.5 xsize 300 ysize 2
+                null height 10
+                use select_music_room_layout(mr)
+                null height 10
+                add Solid("#9e87dc") xalign 0.5 xsize 300 ysize 2
+                null yfill True
+                textbutton _("RETURN"):
+                    style "music_room3_sidebar_return_button"
+                    action ShowMenu("extra_menu")
 
     ############################################################################
     ## If you have a standard Ren'Py UI sidebar, you can use this:
@@ -862,7 +953,6 @@ screen music_room3(mr):
     ## Otherwise, if you're using my Easy Ren'Py GUI (https://feniksdev.itch.io/easy-renpy-gui)
     ## you can use this:
     ##
-    use game_menu(_("Music Room"))
     fixed:
         yfill True
         xsize config.screen_width-420
@@ -871,34 +961,18 @@ screen music_room3(mr):
     ############################################################################
 
         frame:
-            style_prefix 'track_list'
+            style_prefix 'music_room3_list'
             xfill True top_margin 25 yfill True bottom_margin 220
             vbox:
                 spacing 8
-                hbox:
-                    spacing 10
-                    text _("Category") style "track_list_text" yalign 0.5
-                    textbutton music_track_category_label(category_filter):
-                        style "track_list_category_button"
-                        action ToggleScreenVariable("category_open")
-                if category_open:
-                    frame:
-                        style "track_list_category_dropdown_frame"
-                        has vbox
-                        spacing 2
-                        textbutton _("Menu"):
-                            style "track_list_category_option_button"
-                            action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
-                        textbutton _("Story"):
-                            style "track_list_category_option_button"
-                            action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
-                        textbutton _("DLC"):
-                            style "track_list_category_option_button"
-                            action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+                text _("TRACK LIST"):
+                    style "music_room3_list_label_text"
+                    color "#ffffff"
+                    xalign 0.5
+                    text_align 0.5
                 viewport:
                     mousewheel True scrollbars "vertical" draggable True
                     has vbox
-                    label _("Track List") style "music_room_title"
                     ## get_tracklist takes one argument, all_tracks. If all_tracks is
                     ## True, it shows all tracks, including locked ones (which will be
                     ## shown grayed out). If all_tracks is False, it only shows unlocked
@@ -945,7 +1019,7 @@ screen music_room3(mr):
                 xsize 250
                 if current_track:
                     text current_track.name
-                    text music_track_artist(current_track.path, current_track.artist) color "#bfbfb9"
+                    text music_track_artist(current_track.path, current_track.artist) color "#c9c3dc"
                 else:
                     text _("No song playing")
 
@@ -958,27 +1032,50 @@ screen music_room3(mr):
                     ################## Shuffle button ##################
                     imagebutton:
                         idle "shuffle_button"
-                        at colorize_button(MUSIC_ROOM_INSENSITIVE_COLOR,
-                            MUSIC_ROOM_IDLE_COLOR), zoom_button(0.6)
+                        at colorize_button(
+                            idle="#6b657a",
+                            hover="#b39df0",
+                            selected_idle="#8c78c9",
+                            selected_hover="#b39df0",
+                            insensitive="#6b657a"), zoom_button(0.6)
                         action mr.ToggleShuffle()
                     ############ Previous, play/pause, next buttons ############
                     imagebutton:
                         idle "prev_button"
-                        at colorize_button(), zoom_button(0.4)
+                        at colorize_button(
+                            idle="#8c78c9",
+                            hover="#b39df0",
+                            selected_idle="#8c78c9",
+                            selected_hover="#b39df0",
+                            insensitive="#6b657a"), zoom_button(0.4)
                         action mr.Previous()
                     imagebutton:
-                        at colorize_button(), zoom_button(0.25)
+                        at colorize_button(
+                            idle="#8c78c9",
+                            hover="#b39df0",
+                            selected_idle="#8c78c9",
+                            selected_hover="#b39df0",
+                            insensitive="#6b657a"), zoom_button(0.25)
                         idle "pause_button" hover "pause_button"
                         selected_idle "play_button" selected_hover "play_button"
                         action mr.PlayAction()
                     imagebutton:
                         idle "next_button"
-                        at colorize_button(), zoom_button(0.4)
+                        at colorize_button(
+                            idle="#8c78c9",
+                            hover="#b39df0",
+                            selected_idle="#8c78c9",
+                            selected_hover="#b39df0",
+                            insensitive="#6b657a"), zoom_button(0.4)
                         action mr.Next()
                     ################## Repeat all, repeat one buttons ##################
                     imagebutton:
-                        at colorize_button(idle=MUSIC_ROOM_INSENSITIVE_COLOR,
-                            hover=MUSIC_ROOM_IDLE_COLOR), zoom_button(0.6)
+                        at colorize_button(
+                            idle="#6b657a",
+                            hover="#b39df0",
+                            selected_idle="#8c78c9",
+                            selected_hover="#b39df0",
+                            insensitive="#6b657a"), zoom_button(0.6)
                         idle "repeat_all_button"
                         if mr.single_track:
                             foreground "repeat_one_button"
@@ -996,23 +1093,22 @@ screen music_room3(mr):
                         add mr.get_duration(style="music_room_duration")
 
             add "gui/music_room/volume.webp" zoom 0.45 yalign 0.5:
-                matrixcolor ColorizeMatrix(MUSIC_ROOM_HOVER_COLOR, "#fff")
+                matrixcolor ColorizeMatrix("#b39df0", "#fff")
 
             bar value MixerValue(mr.channel) xysize (150, 25):
-                xalign 0.5 right_bar "#21212d" thumb None yalign 0.5
-                left_bar "#fc5f39"
+                xalign 0.5 right_bar "#221b35" thumb None yalign 0.5
+                left_bar "#8c78c9"
 
 
     ## Buttons to go to the different layouts. Remove once you've decided
     ## on which layout to use.
-    use select_music_room_layout(mr, align=(1.0, 0.0))
 
 style musicroom3_frame:
     yalign 1.0 xalign 0.5 xfill True ysize 200
     background Frame(
         Fixed(
-            Transform("#f93c3e", xysize=(100, 100)),
-            Transform("#292835", xysize=(90, 90), align=(0.5, 0.5)),
+            Transform("#8c78c9", xysize=(100, 100)),
+            Transform("#2a2540", xysize=(90, 90), align=(0.5, 0.5)),
             xysize=(100, 100)
         ), 10, 10
     )
@@ -1024,12 +1120,121 @@ style musicroom3_image_button:
 style musicroom3_bar:
     ysize 25 xsize 480
     yalign 0.5
-    right_bar "#21212d" thumb None
-    left_bar "#fc5f39"
+    right_bar "#221b35" thumb None
+    left_bar "#8c78c9"
 style musicroom3_text:
-    yalign 0.5 size 25 color "#f7f7ed"
+    yalign 0.5 size 25 color "#f1effa"
 style musicroom3_vbox:
     yalign 0.5
+
+style music_room3_list_frame is track_list_frame:
+    background "#1a1730d6"
+style music_room3_list_viewport is track_list_viewport
+style music_room3_list_viewport:
+    ymaximum config.screen_height-300
+style music_room3_list_side is track_list_side
+style music_room3_list_vbox is track_list_vbox
+style music_room3_list_button is track_list_button:
+    background Transform("#8c78c9", ysize=2, yalign=1.0)
+    hover_foreground "#b39df022"
+style music_room3_list_hbox is track_list_hbox
+style music_room3_list_fixed is track_list_fixed
+style music_room3_list_text is track_list_text:
+    color "#ffffff"
+style music_room3_list_label is track_list_label:
+    background None
+style music_room3_list_label_text is track_list_label_text:
+    color "#ffffff"
+    hover_color "#b39df0"
+    selected_color "#8c78c9"
+    insensitive_color "#666"
+style music_room3_list_vscrollbar is track_list_vscrollbar:
+    thumb "#8c78c9"
+    base_bar "#2a2540"
+style music_room3_category_button is button:
+    background "#2a2540"
+    hover_background "#39305a"
+    selected_background "#4a3a74"
+    xpadding 12
+    ypadding 6
+style music_room3_category_button_text is text:
+    color "#f1effa"
+    hover_color "#b39df0"
+    size 22
+style music_room3_category_dropdown_frame is frame:
+    background "#17142bdc"
+    xpadding 6
+    ypadding 6
+style music_room3_category_option_button is button:
+    background Frame(Solid("#231c3a"), 10, 10)
+    hover_background Frame(Solid("#31264d"), 10, 10)
+    selected_background Frame(Solid("#4f3b79"), 10, 10)
+    xpadding 22
+    ypadding 12
+    xfill True
+    top_margin 6
+style music_room3_category_option_button_text is text:
+    color "#ffffff"
+    hover_color "#ffffff"
+    selected_color "#ffffff"
+    size 34
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    xalign 0.0
+
+style music_room3_sidebar_panel is frame:
+    background Solid("#1a1730")
+    xpadding 16
+    ypadding 18
+
+style music_room3_sidebar_title is text:
+    color "#e4d6ff"
+    size 52
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    text_align 0.5
+
+style music_room3_sidebar_divider is text:
+    color "#d6a76f"
+    size 24
+    font "fonts/cinzel/Cinzel-Bold.otf"
+
+style music_room3_category_row is button:
+    background Frame(Solid("#231c3a"), 10, 10)
+    hover_background Frame(Solid("#31264d"), 10, 10)
+    selected_background Frame(Solid("#5a4489"), 10, 10)
+    xfill True
+    xpadding 22
+    ypadding 8
+    top_margin 6
+
+style music_room3_category_row_text is text:
+    color "#ffffff"
+    hover_color "#ffffff"
+    selected_color "#ffffff"
+    size 34
+    font "fonts/cinzel/Cinzel-Bold.otf"
+
+style music_room3_category_row_star is text:
+    color "#f2e6cf"
+    hover_color "#ffd9a0"
+    selected_color "#ffffff"
+    size 30
+    font "fonts/cinzel/Cinzel-Bold.otf"
+
+style music_room3_sidebar_return_button is button:
+    background Frame(Solid("#231c3a"), 10, 10)
+    hover_background Frame(Solid("#31264d"), 10, 10)
+    selected_background Frame(Solid("#5a4489"), 10, 10)
+    xfill True
+    xpadding 22
+    ypadding 10
+    bottom_margin 8
+
+style music_room3_sidebar_return_button_text is text:
+    color "#ffffff"
+    hover_color "#ffd9a0"
+    size 32
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    xalign 0.5
 
 ################################################################################
 ## SCREENS - VERSION 4
@@ -1109,13 +1314,13 @@ screen music_room4(mr):
                     style "track_list_category_dropdown_frame"
                     has vbox
                     spacing 2
-                    textbutton _("Menu"):
+                    textbutton _("MENU   *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
-                    textbutton _("Story"):
+                    textbutton _("STORY  *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
-                    textbutton _("DLC"):
+                    textbutton _("DLC    *"):
                         style "track_list_category_option_button"
                         action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
 
@@ -1181,198 +1386,379 @@ screen music_room5(mr):
     default current_track = mr.get_current_song()
     default category_filter = "menu"
     default category_open = False
+    default hovered_track_path = None
 
-    # Neon cyan background.
-    add Solid("#39c8ef")
-    add Solid("#1f3fa355")
-    add Solid("#10143f22")
+    if renpy.loadable("gui/mainmenu_bg3.png"):
+        add im.Scale("gui/mainmenu_bg3.png", config.screen_width, config.screen_height)
+    elif renpy.loadable("gui/mainmenu_bg2.png"):
+        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    elif renpy.loadable("gui/mainmenu_bg.png"):
+        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    else:
+        add Solid("#120f22")
 
-    # Decorative accents (ASCII-safe).
-    text "*" xpos 126 ypos 92 size 80 color "#ff4dbf"
-    text "*" xpos 300 ypos 58 size 64 color "#ff78d1"
-    text "*" xpos 1600 ypos 96 size 72 color "#ffd7f5"
-    text "*" xpos 1710 ypos 220 size 62 color "#ff70ca"
-    text "*" xpos 1456 ypos 62 size 58 color "#ff4dbf"
+    add Solid("#07060c99")
+    add Solid("#2b1d3a36")
 
-    # Main neon shell.
     fixed:
         xalign 0.5
-        yalign 0.53
-        xsize 1480
-        ysize 880
+        yalign 0.5
+        xsize 1580
+        ysize 990
 
-        # Glow stack.
-        add Frame(Solid("#ff4cbf55"), 52, 52) xysize (1480, 880)
-        add Frame(Solid("#ff8ecf55"), 48, 48) xpos 6 ypos 6 xysize (1468, 868)
-        add Frame(Solid("#ff4cbf"), 44, 44) xpos 14 ypos 14 xysize (1452, 852)
-        add Frame(Solid("#ffa55f"), 40, 40) xpos 24 ypos 24 xysize (1432, 832)
-        add Frame(Solid("#ef1d95"), 34, 34) xpos 36 ypos 36 xysize (1408, 808)
-        add Frame(Solid("#3d1b6f"), 28, 28) xpos 50 ypos 50 xysize (1380, 780)
-        add Solid("#16173f") xpos 66 ypos 66 xsize 1348 ysize 748
+        add Frame(Solid("#291f40d8"), 18, 18) xysize (1580, 990)
+        add Frame(Solid("#8f5f2f4a"), 16, 16) xpos 8 ypos 8 xysize (1564, 974)
+        add Frame(Solid("#100d1fd8"), 14, 14) xpos 16 ypos 16 xysize (1548, 958)
+        add Solid("#0b0918ad") xpos 28 ypos 28 xsize 1524 ysize 934
 
-        # Top row: cover + track list.
+        # Header row.
         fixed:
-            xpos 102
-            ypos 98
-            xsize 1220
-            ysize 322
-
-            frame:
-                background Frame(Solid("#26135a"), 18, 18)
-                xsize 578
-                ysize 322
-                padding (16, 16)
-
-                fixed:
-                    add Solid("#0d0d39") xysize (546, 290)
-                    if current_track:
-                        add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 540 ysize 284
-                    else:
-                        text _("No Cover") xalign 0.5 yalign 0.5 size 58 color "#ffd5f3"
-
-            side "c r":
-                xpos 606
-                xsize 614
-                ysize 322
-
-                vbox:
-                    spacing 8
-                    hbox:
-                        spacing 8
-                        text "Category" size 20 color "#ffd5f3" yalign 0.5
-                        textbutton music_track_category_label(category_filter):
-                            style "track_list_category_button"
-                            action ToggleScreenVariable("category_open")
-
-                    if category_open:
-                        frame:
-                            style "track_list_category_dropdown_frame"
-                            has vbox
-                            spacing 2
-                            textbutton _("Menu"):
-                                style "track_list_category_option_button"
-                                action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
-                            textbutton _("Story"):
-                                style "track_list_category_option_button"
-                                action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
-                            textbutton _("DLC"):
-                                style "track_list_category_option_button"
-                                action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
-
-                    viewport:
-                        id "music_room5_vp"
-                        mousewheel True
-                        draggable True
-                        has vbox
-                        spacing 12
-
-                        for song in music_room_filtered_tracklist(mr, category_filter):
-                            button:
-                                action mr.Play(song.path)
-                                sensitive (not song.locked)
-                                xsize 560
-                                ysize 56
-                                background Frame(Solid("#ff4fbd"), 20, 20)
-                                hover_background Frame(Solid("#ff88db"), 20, 20)
-                                selected_background Frame(Solid("#ffcf70"), 20, 20)
-
-                                add Solid("#090d44") xpos 3 ypos 3 xsize 554 ysize 50
-                                if song.locked:
-                                    text _(music_track_hint(song.path)):
-                                        xalign 0.5
-                                        yalign 0.5
-                                        size 18
-                                        color "#9096c0"
-                                else:
-                                    text song.name:
-                                        xalign 0.5
-                                        yalign 0.5
-                                        size 32
-                                        color ("#ffe1f8" if song is current_track else "#9096c0")
-
-                vbar value YScrollValue("music_room5_vp") style "track_list_vscrollbar"
-
-        # Info row.
-        fixed:
-            xpos 102
-            ypos 440
-            xsize 1220
-            ysize 186
-
-            frame:
-                background Frame(Solid("#231753"), 18, 18)
-                xsize 760
-                ysize 186
-                padding (24, 18)
-
-                vbox:
-                    spacing 8
-                    text (current_track.name if current_track else _("Track Title")) size 48 color "#ffd1f2"
-                    text (music_track_artist(current_track.path, current_track.artist) if current_track else _("Unknown Artist")) size 30 color "#a6b2e2"
-                    if current_track and current_track.description:
-                        text current_track.description size 24 color "#a8aedd"
-
-            frame:
-                background Frame(Solid("#231753"), 18, 18)
-                xpos 776
-                xsize 444
-                ysize 186
-                padding (20, 16)
-
-                vbox:
-                    spacing 8
-                    text _("Now Playing") size 30 color "#ff91db"
-                    add mr.get_pos(style="music_room_pos")
-                    add mr.get_duration(style="music_room_duration")
-
-        # Bottom transport and seek bar.
-        fixed:
-            xpos 102
-            ypos 646
-            xsize 1220
-            ysize 134
+            xpos 40
+            ypos 42
+            xsize 1500
+            ysize 72
 
             hbox:
-                spacing 38
+                spacing 14
                 yalign 0.5
+                text _("CATEGORY"):
+                    color "#a8a0b9"
+                    size 40
+                    font "fonts/cinzel/Cinzel-Bold.otf"
+                    yalign 0.5
+                textbutton music_track_category_label(category_filter):
+                    action ToggleScreenVariable("category_open")
+                    background Frame(Solid("#2a1c33f0"), 6, 6)
+                    hover_background Frame(Solid("#3b2948f0"), 6, 6)
+                    xpadding 16
+                    ypadding 7
+                    text_color "#f4d8aa"
+                    text_hover_color "#ffd78a"
+                    text_size 34
+                    text_font "fonts/cinzel/Cinzel-Bold.otf"
+                    yalign 0.5
+
+        if category_open:
+            frame:
+                xpos 220
+                ypos 118
+                background Frame(Solid("#120d1bf2"), 8, 8)
+                xpadding 8
+                ypadding 8
+
+                has vbox
+                spacing 4
+
+                textbutton _("MENU   *"):
+                    action [SetScreenVariable("category_filter", "menu"), SetScreenVariable("category_open", False)]
+                    background Frame(Solid("#2f2438"), 6, 6)
+                    hover_background Frame(Solid("#4a3658"), 6, 6)
+                    xpadding 14
+                    ypadding 6
+                    text_color "#f4d8aa"
+                    text_hover_color "#ffd78a"
+                    text_size 30
+                    text_font "fonts/cinzel/Cinzel-Bold.otf"
+                textbutton _("STORY  *"):
+                    action [SetScreenVariable("category_filter", "story"), SetScreenVariable("category_open", False)]
+                    background Frame(Solid("#2f2438"), 6, 6)
+                    hover_background Frame(Solid("#4a3658"), 6, 6)
+                    xpadding 14
+                    ypadding 6
+                    text_color "#f4d8aa"
+                    text_hover_color "#ffd78a"
+                    text_size 30
+                    text_font "fonts/cinzel/Cinzel-Bold.otf"
+                textbutton _("DLC    *"):
+                    action [SetScreenVariable("category_filter", "dlc"), SetScreenVariable("category_open", False)]
+                    background Frame(Solid("#2f2438"), 6, 6)
+                    hover_background Frame(Solid("#4a3658"), 6, 6)
+                    xpadding 14
+                    ypadding 6
+                    text_color "#f4d8aa"
+                    text_hover_color "#ffd78a"
+                    text_size 30
+                    text_font "fonts/cinzel/Cinzel-Bold.otf"
+
+        # Main track table.
+        fixed:
+            xpos 40
+            ypos 128
+            xsize 1500
+            ysize 590
+
+            add Frame(Solid("#211a32d6"), 10, 10) xysize (1500, 590)
+            add Frame(Solid("#915d2e3d"), 8, 8) xpos 2 ypos 2 xysize (1496, 586)
+            add Solid("#0f0d1d88") xpos 10 ypos 10 xsize 1478 ysize 568
+
+            side "c r":
+                xfill True
+                yfill True
+
+                viewport:
+                    id "music_room5_vp"
+                    xysize (1460, 568)
+                    mousewheel True
+                    draggable True
+                    scrollbars None
+                    has vbox
+                    spacing 2
+
+                    for num, song in enumerate(music_room_filtered_tracklist(mr, category_filter), start=1):
+                        $ row_active = (song is current_track and not song.locked)
+                        $ row_hovered = (hovered_track_path == song.path)
+                        $ row_title_color = "#ffd7a0" if row_active else ("#f9f1e4" if row_hovered else "#f3eadb")
+                        $ row_sub_color = "#f4c884" if row_active else ("#cfc0a8" if row_hovered else "#b9b0c7")
+                        $ is_placeholder_art = (song.art == mr.default_art)
+
+                        button:
+                            action mr.Play(song.path)
+                            hovered SetScreenVariable("hovered_track_path", song.path)
+                            unhovered SetScreenVariable("hovered_track_path", None)
+                            sensitive (not song.locked)
+                            xsize 1460
+                            ysize 112
+                            background (Frame(Solid("#85532640"), 8, 8) if row_active else Frame(Solid("#00000020"), 8, 8))
+                            hover_background Frame(Solid("#ffb45a0d"), 8, 8)
+                            selected_background Frame(Solid("#8553264e"), 8, 8)
+
+                            fixed:
+                                if row_active:
+                                    add Solid("#ffd08b12") xsize 1460 ysize 112
+                                    add Solid("#ffb45a40") xsize 1460 ysize 1
+                                    add Solid("#ffb45a40") ypos 111 xsize 1460 ysize 1
+                                    add Solid("#ffb45a40") xsize 1 ysize 112
+                                    add Solid("#ffb45a40") xpos 1459 xsize 1 ysize 112
+                                    add Solid("#ffad44") xsize 5 ysize 112
+                                    add Solid("#ff9f2f") xsize 1460 ysize 2
+                                    add Solid("#ff9f2f") ypos 110 xsize 1460 ysize 2
+                                elif row_hovered:
+                                    add Solid("#ffb45a0d") xsize 1460 ysize 112
+                                    add Solid("#d2a35c88") xsize 2 ysize 112
+                                    add Solid("#71563466") ypos 111 xsize 1460 ysize 1
+                                else:
+                                    add Solid("#5f4a301e") ypos 111 xsize 1460 ysize 1
+
+                                text str(num):
+                                    xpos 14
+                                    yalign 0.5
+                                    color "#e2c4a0"
+                                    size 48
+                                    font "fonts/cinzel/Cinzel-Bold.otf"
+
+                                fixed:
+                                    xpos 52
+                                    yalign 0.5
+                                    xsize 148
+                                    ysize 90
+                                    add Frame(Solid("#b88a3d88"), 6, 6) xysize (148, 90)
+                                    add Solid("#100d1fd8") xpos 1 ypos 1 xsize 146 ysize 88
+                                    if song.locked:
+                                        text _("LOCKED"):
+                                            xalign 0.5
+                                            yalign 0.5
+                                            color "#877f9d"
+                                            size 24
+                                            font "fonts/cinzel/Cinzel-Bold.otf"
+                                    else:
+                                        if is_placeholder_art:
+                                            add song.art xalign 0.5 yalign 0.5 fit "contain" xsize 122 ysize 74 alpha 0.78
+                                            text "*" xalign 0.92 yalign 0.12 color "#f4c884" size 16
+                                        else:
+                                            add song.art xalign 0.5 yalign 0.5 fit "contain" xsize 138 ysize 82
+
+                                if song.locked:
+                                    text _("Locked Track"):
+                                        xpos 224
+                                        ypos 18
+                                        color "#a9a0bc"
+                                        size 52
+                                        font "fonts/cinzel/Cinzel-Bold.otf"
+                                    text _(music_track_hint(song.path)):
+                                        xpos 224
+                                        ypos 64
+                                        color "#857e96"
+                                        size 34
+                                        font "fonts/cinzel/Cinzel-Bold.otf"
+                                else:
+                                    text song.name:
+                                        xpos 224
+                                        ypos 18
+                                        color row_title_color
+                                        size 58
+                                        font "fonts/cinzel/Cinzel-Bold.otf"
+                                    text music_track_artist(song.path, song.artist):
+                                        xpos 224
+                                        ypos 64
+                                        color row_sub_color
+                                        size 42
+                                        font "fonts/cinzel/Cinzel-Bold.otf"
+                                    if row_active:
+                                        text _("* currently playing *"):
+                                            xpos 224
+                                            ypos 94
+                                            color "#f2bc6a"
+                                            size 28
+                                            font "fonts/cinzel/Cinzel-Bold.otf"
+
+                vbar:
+                    value YScrollValue("music_room5_vp")
+                    style "music_room5_vscrollbar"
+                    yfill True
+
+        # Divider ornament.
+        text "──────── ✦ ────────":
+            xalign 0.5
+            ypos 724
+            color "#d9a85f"
+            size 40
+            font "fonts/cinzel/Cinzel-Bold.otf"
+
+        # Bottom player panel.
+        fixed:
+            xpos 40
+            ypos 760
+            xsize 1500
+            ysize 188
+
+            add Frame(Solid("#211a32be"), 12, 12) xysize (1500, 188)
+            add Frame(Solid("#9e67343e"), 10, 10) xpos 2 ypos 2 xysize (1496, 184)
+            add Solid("#0e0c1b7d") xpos 10 ypos 10 xsize 1480 ysize 168
+            add Solid("#f4ca8f0f") xpos 18 ypos 18 xsize 1464 ysize 1
+
+            frame:
+                background Frame(Solid("#b88a3d66"), 6, 6)
+                xpos 22
+                ypos 20
+                xsize 140
+                ysize 140
+                add Solid("#100d1fcc") xpos 1 ypos 1 xsize 138 ysize 138
+                if current_track:
+                    add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 126 ysize 126
+                else:
+                    add music_room.default_art xalign 0.5 yalign 0.5 fit "contain" xsize 126 ysize 126
+
+            vbox:
+                xpos 182
+                ypos 36
+                spacing 6
+                text (current_track.name if current_track else _("No Song Playing")):
+                    color "#f0c676"
+                    size 58
+                    font "fonts/cinzel/Cinzel-Bold.otf"
+                text (music_track_artist(current_track.path, current_track.artist) if current_track else _("Unknown Artist")):
+                    color "#c4b7a1"
+                    size 44
+                    font "fonts/cinzel/Cinzel-Bold.otf"
+
+            hbox:
+                xpos 920
+                ypos 50
+                spacing 26
+                imagebutton:
+                    idle "shuffle_button"
+                    at colorize_button(idle="#f2b86a", hover="#ff922d"), zoom_button(0.5)
+                    action mr.ToggleShuffle()
                 imagebutton:
                     idle "prev_button"
-                    hover "prev_button"
-                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.9)
+                    at colorize_button(idle="#f2b86a", hover="#ff922d"), zoom_button(0.38)
                     action mr.Previous()
-                imagebutton:
-                    idle "pause_button"
-                    hover "pause_button"
-                    selected_idle "play_button"
-                    selected_hover "play_button"
-                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.55)
-                    action mr.PlayAction()
+                fixed:
+                    xsize 86
+                    ysize 72
+                    text "●":
+                        xalign 0.5
+                        yalign 0.5
+                        color "#ff963c33"
+                        size 92
+                        font "DejaVuSans.ttf"
+                    text "●":
+                        xalign 0.5
+                        yalign 0.5
+                        color "#ff963c66"
+                        size 68
+                        font "DejaVuSans.ttf"
+                    imagebutton:
+                        idle "pause_button"
+                        hover "pause_button"
+                        selected_idle "play_button"
+                        selected_hover "play_button"
+                        at colorize_button(idle="#f2b86a", hover="#ff922d"), zoom_button(0.34)
+                        align (0.5, 0.5)
+                        action mr.PlayAction()
                 imagebutton:
                     idle "next_button"
-                    hover "next_button"
-                    at colorize_button(idle="#d6d6ec", hover="#ff9fe2"), zoom_button(0.9)
+                    at colorize_button(idle="#f2b86a", hover="#ff922d"), zoom_button(0.38)
                     action mr.Next()
+                imagebutton:
+                    idle "repeat_all_button"
+                    if mr.single_track:
+                        foreground "repeat_one_button"
+                    at colorize_button(idle="#f2b86a", hover="#ff922d"), zoom_button(0.5)
+                    action mr.CycleLoop()
 
             fixed:
-                xpos 300
-                yalign 0.5
-                xsize 920
-                ysize 36
+                style_prefix "music_room5"
+                xpos 760
+                ypos 112
+                xsize 560
+                ysize 34
                 music_bar room mr
 
-    text _("Music Room"):
-        xalign 0.5
-        ypos 20
-        size 56
-        color "#ffe3f9"
+            fixed:
+                xpos 670
+                ypos 108
+                xsize 80
+                ysize 34
+                add mr.get_pos(style="music_room5_pos")
+
+            fixed:
+                xpos 1328
+                ypos 108
+                xsize 80
+                ysize 34
+                add mr.get_duration(style="music_room5_duration")
+
+            add "gui/music_room/volume.webp" xpos 1365 ypos 58 zoom 0.4:
+                matrixcolor ColorizeMatrix("#f2b86a", "#fff")
+
+            bar value MixerValue(mr.channel) xpos 1420 ypos 76 xysize (66, 26):
+                right_bar "#261e34"
+                left_bar "#ff9f3a"
+                thumb None
 
     textbutton _("Return"):
         action Return()
-        xalign 0.96
+        xalign 0.035
         ypos 24
-        text_size 34
-        text_color "#ffe4fa"
         background None
+        text_color "#e8d8c0"
+        text_hover_color "#ffca79"
+        text_size 36
+        text_font "fonts/cinzel/Cinzel-Bold.otf"
 
-    use select_music_room_layout(mr, align=(0.5, 1.0), bottom_margin=16)
+    use select_music_room_layout(mr, xpos=1550, ypos=24)
+
+style music_room5_bar is music_room_bar:
+    xsize 560
+    ysize 24
+    right_bar "#2a1f2d"
+    left_bar Fixed(
+        Transform("#e6b35a", alpha=0.96),
+        Transform("#ff9a2f", alpha=0.34),
+    )
+    thumb None
+
+style music_room5_pos is music_room_pos:
+    color "#e8d7be"
+
+style music_room5_duration is music_room_duration:
+    color "#e8d7be"
+
+style music_room5_vscrollbar is vscrollbar:
+    xsize 12
+    base_bar Frame(Solid("#2a1f2d"), 6, 6)
+    thumb Frame(Solid("#d89b3c"), 6, 6)
+    hover_thumb Frame(Solid("#eab35a"), 6, 6)
+
 

@@ -589,7 +589,7 @@ screen extra_menu():
 
             vbox at gentle_float(0.12, amp=4):
                 spacing 10
-                use ui_news_tile_button("", ShowMenu("music_room", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
+                use ui_news_tile_button("", ShowMenu("music_room3", mr=music_room), image=tile_music, width=NEWS_TILE_W, height=NEWS_TILE_H, bg="#00000000", hover_bg="#00000000", text_style="news_tile_text", label_band_h=0, label_bg="#00000000", use_hover_anim=True)
                 text "Music Gallery" style "news_tile_text" xalign 0.5
 
             vbox at gentle_float(0.24, amp=4):
