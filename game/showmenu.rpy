@@ -94,6 +94,12 @@ screen showmenu():
                     at showmenu_button_hover
                     action ShowMenu("codex")
 
+            textbutton _("Inventory"):
+                style "showmenu_button"
+                text_style "showmenu_button_text"
+                at showmenu_button_hover
+                action ShowMenu("inventory_menu")
+
             textbutton _("Settings"):
                 style "showmenu_button"
                 text_style "showmenu_button_text"

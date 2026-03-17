@@ -98,12 +98,21 @@ screen say(who, what):
     $ _msgbox_btn_hover = "gui/msgbox_btn_hover.png" if renpy.loadable("gui/msgbox_btn_hover.png") else ("gui/msgbox_btn hover.png" if renpy.loadable("gui/msgbox_btn hover.png") else _msgbox_btn_idle)
     $ _back_btn_idle = "gui/back_btn.png"
     $ _back_btn_hover = "gui/back_btn_hover.png" if renpy.loadable("gui/back_btn_hover.png") else _back_btn_idle
+    $ _bag_btn_idle = "gui/Bag btn_720p.png"
+    $ _bag_btn_hover = "gui/Bag btn hover_720p.png" if renpy.loadable("gui/Bag btn hover_720p.png") else _bag_btn_idle
     $ _setting_btn_idle = "gui/setting_btn.png"
     $ _setting_btn_hover = "gui/setting_btn_hover.png" if renpy.loadable("gui/setting_btn_hover.png") else _setting_btn_idle
 
     fixed:
         xfill True
         yfill True
+
+        imagebutton:
+            xpos 1652
+            ypos 24
+            idle Transform(_bag_btn_idle, size=(101, 101))
+            hover Transform(_bag_btn_hover, size=(101, 101))
+            action ShowMenu("inventory_menu")
 
         imagebutton:
             xpos 1768

@@ -28,8 +28,8 @@ init -2 python:
             "type": "cheats",
         },
         "FOGRESET": {
-            "title": "Image Discoveries Reset",
-            "desc": "Relocks all discovered gallery images.",
+            "title": "Collectibles Reset",
+            "desc": "Relocks hidden image and plushie discoveries so they can be found again.",
             "type": "reset_gallery",
             "repeatable": True,
         },
@@ -97,9 +97,11 @@ init -2 python:
         reset_gallery = getattr(renpy.store, "reset_gallery_unlocks", None)
         if callable(reset_gallery):
             reset_gallery()
-            return
-
-        persistent.gallery_unlocked_images = set()
+        else:
+            persistent.gallery_unlocked_images = set()
+        persistent.picture_frames_found = set()
+        persistent.plushies_found = set()
+        persistent.secret_unlocked = False
         renpy.save_persistent()
 
     def _reset_all_music_unlocks():
@@ -145,7 +147,7 @@ init -2 python:
             renpy.store.secrets_feedback = "{}: Cheats flag enabled.".format(data["title"])
         elif unlock_type == "reset_gallery":
             _reset_all_gallery_unlocks()
-            renpy.store.secrets_feedback = "{}: all gallery images relocked.".format(data["title"])
+            renpy.store.secrets_feedback = "{}: hidden images and plushies relocked.".format(data["title"])
         elif unlock_type == "reset_music":
             _reset_all_music_unlocks()
             renpy.store.secrets_feedback = "{}: all music tracks relocked.".format(data["title"])
@@ -255,7 +257,7 @@ screen secret_codes():
                             text "STARFALL - unlock secret gallery images" style "news_body"
                             text "MELODYKEY - unlock all music tracks" style "news_body"
                             text "VOIDMODE - unlock cheats flag" style "news_body"
-                            text "FOGRESET - relock all discovered gallery images" style "news_body"
+                            text "FOGRESET - reset hidden image and plushie discoveries" style "news_body"
                             text "MUTEVAULT - relock all discovered music tracks" style "news_body"
 
                     use ui_vscrollbar_for("secret_codes_vp")

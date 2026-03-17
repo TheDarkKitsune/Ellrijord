@@ -50,10 +50,29 @@ init -2 python:
 
     def _gallery_items_from_list(paths):
         items = []
-        for p in paths:
-            if renpy.loadable(p):
-                name = os.path.splitext(os.path.basename(p))[0].replace("_", " ")
-                items.append({"name": name, "path": p})
+        for entry in paths:
+            if isinstance(entry, dict):
+                p = entry.get("path")
+                if not p or not renpy.loadable(p):
+                    continue
+                name = entry.get("name") or os.path.splitext(os.path.basename(p))[0].replace("_", " ")
+                unlock_key = entry.get("unlock_key", p)
+                unlocked = entry.get("unlocked")
+                if unlocked is None:
+                    unlocked = gallery_image_unlocked(unlock_key)
+                elif callable(unlocked):
+                    try:
+                        unlocked = bool(unlocked())
+                    except Exception:
+                        unlocked = False
+                else:
+                    unlocked = bool(unlocked)
+                items.append({"name": name, "path": p, "unlocked": unlocked})
+            else:
+                p = entry
+                if renpy.loadable(p):
+                    name = os.path.splitext(os.path.basename(p))[0].replace("_", " ")
+                    items.append({"name": name, "path": p, "unlocked": True})
         return items
 
     def _gallery_unlock_key(path):
@@ -1096,7 +1115,11 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                                 xysize (98, 124)
                                 add Solid("#8cb5ff") xysize (98, 124)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (94, 120)
-                                add item["path"] fit "cover" xpos 4 ypos 4 xysize (90, 116)
+                                if item.get("unlocked", True):
+                                    add item["path"] fit "cover" xpos 4 ypos 4 xysize (90, 116)
+                                else:
+                                    add Solid("#0d162b") xpos 4 ypos 4 xysize (90, 116)
+                                    text "LOCKED" style "char_gallery_name" size 16 xalign 0.5 yalign 0.5
                     else:
                         button style "char_gallery_list_card" action NullAction():
                             hovered SetScreenVariable("ig_hover_name", "Empty Slot")
@@ -1135,15 +1158,22 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                 yalign 0.5
 
                 for item_i, item in enumerate(page_items):
-                    button style "char_gallery_card" action Show("extra_gallery_lightbox", image_path=item["path"], image_list=[x["path"] for x in active_items], image_index=page_start + item_i):
+                    button style "char_gallery_card" action If(item.get("unlocked", True), Show("extra_gallery_lightbox", image_path=item["path"], image_list=[x["path"] for x in active_items if x.get("unlocked", True)], image_index=([x["path"] for x in active_items if x.get("unlocked", True)].index(item["path"]) if item["path"] in [x["path"] for x in active_items if x.get("unlocked", True)] else 0)), NullAction()):
                         vbox:
                             spacing 8
                             fixed:
                                 xysize (400, 272)
                                 add Solid("#8cb5ff") xysize (400, 272)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (396, 268)
-                                add item["path"] fit "contain" xpos 6 ypos 6 xysize (388, 240)
-                            text item["name"] style "char_gallery_name" xalign 0.5
+                                if item.get("unlocked", True):
+                                    add item["path"] fit "contain" xpos 6 ypos 6 xysize (388, 240)
+                                else:
+                                    add Solid("#0d162b") xpos 6 ypos 6 xysize (388, 240)
+                                    text "LOCKED" style "char_gallery_title" size 34 xalign 0.5 yalign 0.5
+                            if item.get("unlocked", True):
+                                text item["name"] style "char_gallery_name" xalign 0.5
+                            else:
+                                text "Locked Slot" style "char_gallery_name" xalign 0.5
 
                 for _i in range(items_per_page - len(page_items)):
                     fixed:

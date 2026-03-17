@@ -295,6 +295,7 @@ screen main_menu():
         # Social buttons: placed to the left of the mode toggle.
         fixed:
             xalign 0.87
+            xoffset -25
             yalign 0.97
             xsize 420
             ysize 78

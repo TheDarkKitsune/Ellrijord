@@ -94,6 +94,16 @@ define achievement.steam_position = None
 ## for a locked achievement.
 image locked_achievement = Text("?")
 
+## Hidden picture frame collection achievement.
+define picture_frame_hunter_25 = Achievement(
+    name=_("Frame Hunter"),
+    id="picture_frame_hunter_25",
+    description=_("Discover 25 hidden picture frames."),
+    unlocked_image="gui/window_icon.png",
+    stat_max=25,
+    show_progress_bar=True,
+)
+
 ################################################################################
 ## Start of example achievement declarations and in-game examples.
 ## You may remove this code down to the "End of example achievement declarations"
