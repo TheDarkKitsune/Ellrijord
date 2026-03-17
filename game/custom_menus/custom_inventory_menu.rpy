@@ -530,19 +530,42 @@ screen inventory_menu():
                                                 xfill True
                                                 background tab_colors["accent_soft"]
 
-                                                hbox:
+                                                fixed:
                                                     xfill True
-                                                    spacing 18
+                                                    ysize 96
 
-                                                    add Transform("gui/window_icon.png", xsize=64, ysize=64)
+                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 1190 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 93 xsize 1190 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 3 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 1195 ypos 0 xsize 3 ysize 96
+
+                                                    frame:
+                                                        background tab_colors["accent_soft"]
+                                                        xpos 22
+                                                        ypos 10
+                                                        xsize 82
+                                                        ysize 76
+                                                        xpadding 9
+                                                        ypadding 6
+
+                                                        add Transform("gui/window_icon.png", xsize=64, ysize=64)
 
                                                     vbox:
+                                                        xpos 126
+                                                        ypos 8
                                                         spacing 6
+                                                        xsize 760
+
                                                         text c["title"] style "inv_section_title"
                                                         text c["desc"] style "inv_muted_text"
                                                         text c["type"] style "inv_label_text"
 
-                                                    text c["status"] style "inv_body_text" color tab_colors["accent"] xalign 1.0
+                                                    text c["status"] style "inv_body_text" color tab_colors["accent"]:
+                                                        xpos 930
+                                                        ypos 28
+                                                        xsize 220
+                                                        text_align 0.5
 
                                     elif inv_tab == "characters":
                                         for ch in tab_items:
@@ -551,21 +574,43 @@ screen inventory_menu():
                                                 xfill True
                                                 background tab_colors["accent_soft"]
 
-                                                hbox:
+                                                fixed:
                                                     xfill True
-                                                    spacing 18
+                                                    ysize 96
 
-                                                    add Transform("gui/window_icon.png", xsize=64, ysize=64)
+                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 1190 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 93 xsize 1190 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 3 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 1195 ypos 0 xsize 3 ysize 96
+
+                                                    frame:
+                                                        background tab_colors["accent_soft"]
+                                                        xpos 22
+                                                        ypos 10
+                                                        xsize 82
+                                                        ysize 76
+                                                        xpadding 9
+                                                        ypadding 6
+
+                                                        add Transform("gui/window_icon.png", xsize=64, ysize=64)
 
                                                     vbox:
+                                                        xpos 126
+                                                        ypos 8
                                                         spacing 6
+                                                        xsize 760
+
                                                         text ch["name"] style "inv_section_title"
                                                         text ch["desc"] style "inv_muted_text"
 
                                                     vbox:
+                                                        xpos 930
+                                                        ypos 18
                                                         spacing 6
-                                                        text ch["role"] style "inv_body_text" color tab_colors["accent"]
-                                                        text ch["affinity"] style "inv_label_text" color tab_colors["accent"]
+                                                        xsize 220
+                                                        text ch["role"] style "inv_body_text" color tab_colors["accent"] xalign 0.5
+                                                        text ch["affinity"] style "inv_label_text" color tab_colors["accent"] xalign 0.5
 
                                     else:
                                         for item in tab_items:
