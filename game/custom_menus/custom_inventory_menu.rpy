@@ -282,6 +282,11 @@ style inv_card_frame:
     xpadding 22
     ypadding 18
 
+style inv_card_frame_achievement:
+    background "#ffffff0b"
+    xpadding 0
+    ypadding 0
+
 style inv_card_button:
     background "#ffffff0b"
     hover_background "#ffffff12"
@@ -453,7 +458,7 @@ screen inventory_menu():
                                     elif inv_tab == "achievements":
                                         for a in tab_items:
                                             frame:
-                                                style "inv_card_frame"
+                                                style "inv_card_frame_achievement"
                                                 xfill True
                                                 background a["card_bg"]
 
@@ -462,10 +467,10 @@ screen inventory_menu():
                                                     ysize 112
 
                                                     add Solid(a["accent_strip"]) xpos 0 ypos 0 xsize 8 ysize 112
-                                                    add Solid(a["glow_top"]) xpos 8 ypos 0 xsize 1190 ysize 3
-                                                    add Solid(a["glow_bottom"]) xpos 8 ypos 109 xsize 1190 ysize 3
-                                                    add Solid(a["glow_side"]) xpos 8 ypos 0 xsize 3 ysize 112
-                                                    add Solid(a["glow_side"]) xpos 1195 ypos 0 xsize 3 ysize 112
+                                                    add Solid(a["glow_top"]) xpos 8 ypos 0 ysize 3
+                                                    add Solid(a["glow_bottom"]) xpos 8 ypos 109  ysize 3
+                                                    add Solid(a["glow_side"]) xpos 8 ypos 3 xsize 3 ysize 106
+                                                    add Solid(a["glow_side"]) xpos 1325 ypos 3 xsize 3 ysize 106
 
                                                     frame:
                                                         background a["badge_bg"]
