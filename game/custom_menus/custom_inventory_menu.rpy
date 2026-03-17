@@ -526,30 +526,36 @@ screen inventory_menu():
                                     elif inv_tab == "collectibles":
                                         for c in tab_items:
                                             frame:
-                                                style "inv_card_frame"
+                                                style "inv_card_frame_achievement"
                                                 xfill True
                                                 background tab_colors["accent_soft"]
 
                                                 fixed:
                                                     xfill True
-                                                    ysize 96
+                                                    ysize 112
 
-                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 96
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 1190 ysize 3
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 93 xsize 1190 ysize 3
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 3 ysize 96
-                                                    add Solid(tab_colors["accent"]) xpos 1195 ypos 0 xsize 3 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 112
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 109  ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 3 xsize 3 ysize 106
+                                                    add Solid(tab_colors["accent"]) xpos 1325 ypos 3 xsize 3 ysize 106
 
                                                     frame:
                                                         background tab_colors["accent_soft"]
                                                         xpos 22
                                                         ypos 10
-                                                        xsize 82
-                                                        ysize 76
-                                                        xpadding 9
-                                                        ypadding 6
+                                                        xsize 90
+                                                        ysize 90
+                                                        xpadding 7
+                                                        ypadding 7
 
-                                                        add Transform("gui/window_icon.png", xsize=64, ysize=64)
+                                                        add Transform(
+                                                            "gui/window_icon.png",
+                                                            xalign=0.5,
+                                                            yalign=0.5,
+                                                            xsize=64,
+                                                            ysize=64
+                                                        )
 
                                                     vbox:
                                                         xpos 126
@@ -570,30 +576,36 @@ screen inventory_menu():
                                     elif inv_tab == "characters":
                                         for ch in tab_items:
                                             frame:
-                                                style "inv_card_frame"
+                                                style "inv_card_frame_achievement"
                                                 xfill True
                                                 background tab_colors["accent_soft"]
 
                                                 fixed:
                                                     xfill True
-                                                    ysize 96
+                                                    ysize 112
 
-                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 96
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 1190 ysize 3
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 93 xsize 1190 ysize 3
-                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 xsize 3 ysize 96
-                                                    add Solid(tab_colors["accent"]) xpos 1195 ypos 0 xsize 3 ysize 96
+                                                    add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 112
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 0 ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 109  ysize 3
+                                                    add Solid(tab_colors["accent"]) xpos 8 ypos 3 xsize 3 ysize 106
+                                                    add Solid(tab_colors["accent"]) xpos 1325 ypos 3 xsize 3 ysize 106
 
                                                     frame:
                                                         background tab_colors["accent_soft"]
                                                         xpos 22
                                                         ypos 10
-                                                        xsize 82
-                                                        ysize 76
-                                                        xpadding 9
-                                                        ypadding 6
+                                                        xsize 90
+                                                        ysize 90
+                                                        xpadding 7
+                                                        ypadding 7
 
-                                                        add Transform("gui/window_icon.png", xsize=64, ysize=64)
+                                                        add Transform(
+                                                            "gui/window_icon.png",
+                                                            xalign=0.5,
+                                                            yalign=0.5,
+                                                            xsize=64,
+                                                            ysize=64
+                                                        )
 
                                                     vbox:
                                                         xpos 126
