@@ -5,6 +5,7 @@
 default ell_day = 1
 default ell_time_of_day = "morning"
 default bedroom_clothes_taken = False
+default day1_uniform_added_to_inventory = False
 default day1_breakfast_topics_seen = set()
 default day1_plushie_system_introduced = False
 default persistent.picture_frames_found = set()
@@ -215,12 +216,17 @@ label day1_opening:
 
 
 label day1_bedroom_pnc:
+    $ renpy.choice_for_skipping()
+    if renpy.is_skipping():
+        $ renpy.stop_skipping()
     call screen bedroom_day1_screen
     return
 
 
 screen bedroom_day1_screen():
     tag room
+    modal True
+    on "show" action Function(renpy.stop_skipping)
 
     $ _bedroom_map = (
         "gui/maps/collectibles_gone.png"
@@ -237,14 +243,14 @@ screen bedroom_day1_screen():
             ground _bedroom_map
             hover _bedroom_map
 
-            hotspot (520, 360, 260, 240) action Jump("day1_dresser")
-            hotspot (0, 240, 240, 500) action Jump("day1_bedroom_door")
-            hotspot (1250, 300, 420, 420) action Jump("day1_bed")
-            hotspot (260, 760, 360, 220) action Jump("day1_desk")
-            hotspot (1570, 360, 90, 120) action Jump("day1_secret_picture1")
+            hotspot (520, 360, 260, 240) action [Function(renpy.stop_skipping), Jump("day1_dresser")]
+            hotspot (0, 240, 240, 500) action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
+            hotspot (1250, 300, 420, 420) action [Function(renpy.stop_skipping), Jump("day1_bed")]
+            hotspot (260, 760, 360, 220) action [Function(renpy.stop_skipping), Jump("day1_desk")]
+            hotspot (1570, 360, 90, 120) action [Function(renpy.stop_skipping), Jump("day1_secret_picture1")]
 
             if day1_plushie_system_introduced and bedroom_clothes_taken and not _cat_plush_found:
-                hotspot (860, 400, 70, 180) action Jump("day1_secret_plushie1")
+                hotspot (860, 400, 70, 180) action [Function(renpy.stop_skipping), Jump("day1_secret_plushie1")]
 
         vbox:
             xalign 0.5
@@ -253,7 +259,7 @@ screen bedroom_day1_screen():
             spacing 6
 
             textbutton "Dresser":
-                action Jump("day1_dresser")
+                action [Function(renpy.stop_skipping), Jump("day1_dresser")]
                 xfill True
                 ysize 48
                 background Solid("#141414c8")
@@ -263,7 +269,7 @@ screen bedroom_day1_screen():
                 text_xalign 0.5
 
             textbutton "Door":
-                action Jump("day1_bedroom_door")
+                action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
                 xfill True
                 ysize 48
                 background Solid("#141414c8")
@@ -273,7 +279,7 @@ screen bedroom_day1_screen():
                 text_xalign 0.5
 
             textbutton "Bed":
-                action Jump("day1_bed")
+                action [Function(renpy.stop_skipping), Jump("day1_bed")]
                 xfill True
                 ysize 48
                 background Solid("#141414c8")
@@ -283,7 +289,7 @@ screen bedroom_day1_screen():
                 text_xalign 0.5
 
             textbutton "Desk":
-                action Jump("day1_desk")
+                action [Function(renpy.stop_skipping), Jump("day1_desk")]
                 xfill True
                 ysize 48
                 background Solid("#141414c8")
@@ -299,14 +305,14 @@ screen bedroom_day1_screen():
             ground "bedroom_morning"
             hover "bedroom_morning"
 
-            hotspot (520, 360, 260, 240) action Jump("day1_dresser")
-            hotspot (0, 240, 240, 500) action Jump("day1_bedroom_door")
-            hotspot (1250, 300, 420, 420) action Jump("day1_bed")
-            hotspot (260, 760, 360, 220) action Jump("day1_desk")
-            hotspot (1570, 360, 90, 120) action Jump("day1_secret_picture1")
+            hotspot (520, 360, 260, 240) action [Function(renpy.stop_skipping), Jump("day1_dresser")]
+            hotspot (0, 240, 240, 500) action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
+            hotspot (1250, 300, 420, 420) action [Function(renpy.stop_skipping), Jump("day1_bed")]
+            hotspot (260, 760, 360, 220) action [Function(renpy.stop_skipping), Jump("day1_desk")]
+            hotspot (1570, 360, 90, 120) action [Function(renpy.stop_skipping), Jump("day1_secret_picture1")]
 
             if day1_plushie_system_introduced and bedroom_clothes_taken and not _cat_plush_found:
-                hotspot (860, 400, 70, 180) action Jump("day1_secret_plushie1")
+                hotspot (860, 400, 70, 180) action [Function(renpy.stop_skipping), Jump("day1_secret_plushie1")]
     else:
         if renpy.loadable("gui/mainmenu_bg.png"):
             add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
@@ -323,10 +329,10 @@ screen bedroom_day1_screen():
             vbox:
                 spacing 12
                 text "Bedroom Actions"
-                textbutton "Dresser" action Jump("day1_dresser")
-                textbutton "Door" action Jump("day1_bedroom_door")
-                textbutton "Bed" action Jump("day1_bed")
-                textbutton "Desk" action Jump("day1_desk")
+                textbutton "Dresser" action [Function(renpy.stop_skipping), Jump("day1_dresser")]
+                textbutton "Door" action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
+                textbutton "Bed" action [Function(renpy.stop_skipping), Jump("day1_bed")]
+                textbutton "Desk" action [Function(renpy.stop_skipping), Jump("day1_desk")]
 
 
 screen day1_secret_discovered_popup(image_path, message="You've discovered a secret."):
@@ -469,6 +475,13 @@ label day1_dresser:
         menu:
             "Take the clothes":
                 $ bedroom_clothes_taken = True
+                if "inventory" in globals() and not day1_uniform_added_to_inventory:
+                    $ inventory.add_item("uniform_top", notify=False)
+                    $ inventory.add_item("uniform_skirt", notify=False)
+                    $ inventory.add_item("uniform_shoes", notify=False)
+                    if "pm_notify" in globals():
+                        $ pm_notify("Added School Uniform.", sound_type="success")
+                    $ day1_uniform_added_to_inventory = True
                 if renpy.loadable("scenes/pickup.png"):
                     scene expression "scenes/pickup.png"
                 elif renpy.loadable("gui/maps/pickup.png"):
