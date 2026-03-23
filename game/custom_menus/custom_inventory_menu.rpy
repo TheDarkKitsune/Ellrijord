@@ -1,4 +1,4 @@
-init -5 python:
+﻿init -5 python:
     ELL_INVENTORY_TABS = [
         {"id": "quests", "label": "📜 Quests"},
         {"id": "achievements", "label": "🏆 Achievements"},
@@ -11,8 +11,8 @@ init -5 python:
         "quests": {
             "accent": "#d8b24f",
             "accent_soft": "#d8b24f22",
-            "selected_bg": "#f1dfaa",
-            "selected_text": "#4d3810",
+            "selected_bg": "#d5b1c6",
+            "selected_text": "#5b3c18",
         },
         "achievements": {
             "accent": "#9b6cff",
@@ -80,6 +80,7 @@ init -5 python:
             out.append({
                 "title": quest.get("title", quest_id),
                 "status": "Active",
+                "kind": quest.get("kind", "side"),
                 "progress": int((float(progress) / float(target)) * 100),
                 "progress_text": "{}/{}".format(progress, target),
                 "desc": quest.get("description", ""),
@@ -94,6 +95,7 @@ init -5 python:
             out.append({
                 "title": quest.get("title", quest_id),
                 "status": "Completed",
+                "kind": quest.get("kind", "side"),
                 "progress": 100,
                 "progress_text": "{}/{}".format(target, target),
                 "desc": quest.get("description", ""),
@@ -101,6 +103,17 @@ init -5 python:
             })
 
         return out
+
+    def ell_inventory_filter_quests(items, view_name):
+        if view_name == "active":
+            return [q for q in items if q.get("status") == "Active"]
+        if view_name == "completed":
+            return [q for q in items if q.get("status") == "Completed"]
+        if view_name == "main":
+            return [q for q in items if q.get("kind") == "story"]
+        if view_name == "side":
+            return [q for q in items if q.get("kind") != "story"]
+        return items
 
     def ell_inventory_achievement_items():
         out = []
@@ -174,8 +187,10 @@ init -5 python:
         return out
 
     def ell_inventory_collectible_items():
-        plushies_found = set(getattr(renpy.store.persistent, "plushies_found", set()))
-        picture_frames_found = set(getattr(renpy.store.persistent, "picture_frames_found", set()))
+        plushies_found = set(getattr(renpy.store.persistent, "plushies_found", None) or [])
+        picture_frames_found = set(getattr(renpy.store.persistent, "picture_frames_found", None) or [])
+        paw_prints_found = set(getattr(renpy.store.persistent, "foxfire_paw_prints_found", None) or [])
+        dream_fragments_found = set(getattr(renpy.store.persistent, "dream_fragments_found", None) or [])
 
         return [
             {
@@ -199,6 +214,28 @@ init -5 python:
                 "status": "{}/25 found".format(len(picture_frames_found)),
                 "desc": "Secret picture frames tied to exploration.",
                 "display_image": "gui/picture_frames.png",
+            },
+            {
+                "id": "foxfire_paw_prints",
+                "title": "Foxfire Paw Prints",
+                "type": "Collection",
+                "found": len(paw_prints_found) > 0,
+                "found_count": len(paw_prints_found),
+                "total_count": 25,
+                "status": "{}/25 found".format(len(paw_prints_found)),
+                "desc": "These appear at night.",
+                "display_image": "",
+            },
+            {
+                "id": "dream_fragments",
+                "title": "Dream Fragments",
+                "type": "Collection",
+                "found": len(dream_fragments_found) > 0,
+                "found_count": len(dream_fragments_found),
+                "total_count": 25,
+                "status": "{}/25 found".format(len(dream_fragments_found)),
+                "desc": "Pieces of lost dreams from Ellrijord scattered around Midgard.",
+                "display_image": "",
             },
         ]
 
@@ -312,12 +349,12 @@ init -5 python:
 
 
 style inv_shell_frame:
-    background "#07111dcc"
+    background "#07111d55"
     xpadding 28
     ypadding 28
 
 style inv_sidebar_frame:
-    background "#ffffff0a"
+    background "#ffffff06"
     xpadding 18
     ypadding 18
 
@@ -329,6 +366,13 @@ style inv_tab_button:
     xfill True
     ypadding 14
     xpadding 18
+
+style inv_quest_mode_button is inv_tab_button:
+    xfill False
+    ypadding 6
+    xpadding 14
+    background "#00000000"
+    hover_background "#ffffff08"
 
 style inv_tab_button_text:
     font "fonts/cinzel/Cinzel-Bold.otf"
@@ -366,18 +410,18 @@ style inv_label_text is text:
     color "#95a4bc"
 
 style inv_card_frame:
-    background "#ffffff0b"
+    background "#ffffff06"
     xpadding 22
     ypadding 18
 
 style inv_card_frame_achievement:
-    background "#ffffff0b"
+    background "#ffffff06"
     xpadding 0
     ypadding 0
 
 style inv_card_button:
-    background "#ffffff0b"
-    hover_background "#ffffff12"
+    background "#ffffff06"
+    hover_background "#ffffff0d"
     xpadding 0
     ypadding 0
 
@@ -517,9 +561,10 @@ screen inventory_menu():
     tag menu
 
     default inv_tab = "quests"
+    default inv_quest_view = "active"
     default inv_scroll = ui.adjustment()
     default inv_inventory_scroll = ui.adjustment()
-    default inv_collectible_id = "plushies"
+    default inv_collectible_id = None
 
     if "ell_sync_collectible_quests" in globals():
         on "show" action Function(ell_sync_collectible_quests)
@@ -529,17 +574,17 @@ screen inventory_menu():
     $ bag_idle = "gui/Bag btn_720p.png"
     $ summary_rows = ell_inventory_summary_rows()
     $ tab_items = ell_inventory_tab_items(inv_tab)
+    $ quest_view_items = ell_inventory_filter_quests(tab_items, inv_quest_view) if inv_tab == "quests" else []
     $ tab_label = next((t["label"] for t in ELL_INVENTORY_TABS if t["id"] == inv_tab), "Inventory")
+    $ tab_header_label = next((t["id"].replace("_", " ").title() for t in ELL_INVENTORY_TABS if t["id"] == inv_tab), "Inventory")
     $ tab_colors = ELL_INVENTORY_TAB_COLORS.get(inv_tab, ELL_INVENTORY_TAB_COLORS["quests"])
+    $ inv_content_height = 700 if inv_tab == "quests" else 620
     $ inventory_obj = getattr(store, "inventory", None)
     $ inventory_has_items = bool(inventory_obj and any(inventory_obj.get_items()))
     $ inventory_entry_count = (inventory_obj.total_item_count() if inventory_obj else 0)
     $ selected_collectible = next((c for c in ell_inventory_collectible_items() if c["id"] == inv_collectible_id), None)
-    if selected_collectible is None and inv_tab == "collectibles":
-        $ selected_collectible = ell_inventory_collectible_items()[0]
-        $ inv_collectible_id = selected_collectible["id"]
-    $ selected_collectible_status = selected_collectible["status"] if selected_collectible else "0/25 found"
-    $ selected_collectible_previews = ell_collectible_preview_slots(selected_collectible["id"]) if selected_collectible else []
+    $ selected_collectible_status = selected_collectible["status"] if selected_collectible else ""
+    $ selected_collectible_previews = ell_collectible_preview_slots(selected_collectible["id"], 15) if selected_collectible else []
     $ selected_collectible_art_xsize = 372
     $ selected_collectible_art_ysize = 372
     $ selected_collectible_art_xpos = 1248
@@ -550,9 +595,16 @@ screen inventory_menu():
     elif selected_collectible and selected_collectible["id"] == "picture_frames":
         $ selected_collectible_art_xsize = 320
         $ selected_collectible_art_ysize = 480
+    elif selected_collectible and selected_collectible["id"] == "foxfire_paw_prints":
+        $ selected_collectible_art_xsize = 320
+        $ selected_collectible_art_ysize = 480
+    elif selected_collectible and selected_collectible["id"] == "dream_fragments":
+        $ selected_collectible_art_xsize = 320
+        $ selected_collectible_art_ysize = 480
 
-    add Transform("gui/game_menu.png", xsize=config.screen_width, ysize=config.screen_height)
-    add Solid("#020617bb")
+    add Transform("gui/inventory_bg.png", xsize=config.screen_width, ysize=config.screen_height)
+    add Solid("#02061704")
+    add Solid("#8f6dff10")
 
     frame:
         style "inv_shell_frame"
@@ -614,38 +666,26 @@ screen inventory_menu():
                     hbox:
                         xfill True
 
-                        vbox:
-                            spacing 5
-                            text _("Menu System") style "inv_label_text"
-                            text _("Inventory Hub") style "inv_title"
-                            text _("Browse and manage your progress.") style "inv_subtitle"
-
-                    frame:
-                        style "inv_card_frame"
-                        background tab_colors["accent_soft"]
-                        xfill True
-                        ysize 92
-
-                        hbox:
-                            spacing 26
-                            yalign 0.5
+                        frame:
+                            background "#241d4358"
+                            xfill True
+                            ysize 120
+                            xpadding 18
+                            ypadding 14
 
                             vbox:
-                                spacing 4
-                                text _(tab_label) style "inv_section_title" color tab_colors["accent"]
+                                spacing 5
+                                text _(tab_header_label) style "inv_title" color tab_colors["accent"]
                                 if inv_tab == "quests":
-                                    text _("Active and completed story progress.") style "inv_muted_text"
+                                    text _("Active and completed story progress.") style "inv_subtitle"
                                 elif inv_tab == "achievements":
-                                    text _("Unlocked milestones and hidden rewards.") style "inv_muted_text"
+                                    text _("Unlocked milestones and hidden rewards.") style "inv_subtitle"
                                 elif inv_tab == "collectibles":
-                                    text _("Exploration progress and secret finds.") style "inv_muted_text"
+                                    text _("Exploration progress and secret finds.") style "inv_subtitle"
                                 elif inv_tab == "characters":
-                                    text _("Key cast members currently surfaced by the story.") style "inv_muted_text"
+                                    text _("Key cast members currently surfaced by the story.") style "inv_subtitle"
                                 else:
-                                    text _("Tracked items and future pickups.") style "inv_muted_text"
-
-                            null width 40
-                            text _("{0} entries".format(inventory_entry_count if inv_tab == "inventory" else len(tab_items))) style "inv_body_text" color tab_colors["accent"]
+                                    text _("Tracked items and future pickups.") style "inv_subtitle"
 
                     if inv_tab == "inventory":
                         fixed:
@@ -661,7 +701,7 @@ screen inventory_menu():
                                     frame:
                                         style "inv_card_frame"
                                         xfill True
-                                        background tab_colors["accent_soft"]
+                                        background tab_colors["accent_soft"][:-2] + "18"
 
                                         hbox:
                                             xfill True
@@ -749,7 +789,7 @@ screen inventory_menu():
                                     style "inv_card_frame"
                                     xfill True
                                     ysize 220
-                                    background tab_colors["accent_soft"]
+                                    background tab_colors["accent_soft"][:-2] + "18"
 
                                     vbox:
                                         spacing 10
@@ -761,7 +801,7 @@ screen inventory_menu():
                     else:
                         fixed:
                             xsize 1328
-                            ysize 620
+                            ysize inv_content_height
                             clipping True
 
                             viewport:
@@ -771,49 +811,128 @@ screen inventory_menu():
                                 yadjustment inv_scroll
                                 scrollbars None
                                 xsize 1328
-                                ysize 620
+                                ysize inv_content_height
 
                                 vbox:
                                     spacing 16
 
-                                    if tab_items:
+                                    if tab_items or inv_tab == "quests":
 
                                         if inv_tab == "quests":
-                                            for q in tab_items:
-                                                $ quest_card_bg = tab_colors["accent_soft"] if q["status"] == "Active" else "#ffffff0b"
-                                                frame:
-                                                    style "inv_card_frame"
-                                                    xfill True
-                                                    background quest_card_bg
+                                            frame:
+                                                background "#241d435e"
+                                                xfill True
+                                                ysize 52
+                                                xpadding 6
+                                                ypadding 6
 
+                                                hbox:
+                                                    spacing 14
+
+                                                    textbutton _("Active Quests"):
+                                                        style "inv_quest_mode_button"
+                                                        text_style "inv_body_text"
+                                                        action SetScreenVariable("inv_quest_view", "active")
+                                                        selected (inv_quest_view == "active")
+                                                        selected_background "#6e587f88"
+                                                        text_selected_color "#f4d892"
+                                                        text_hover_color "#f4d892"
+                                                        hover_background "#ffffff08"
+
+                                                    textbutton _("Completed Quests"):
+                                                        style "inv_quest_mode_button"
+                                                        text_style "inv_body_text"
+                                                        action SetScreenVariable("inv_quest_view", "completed")
+                                                        selected (inv_quest_view == "completed")
+                                                        selected_background "#6e587f88"
+                                                        text_selected_color "#f4d892"
+                                                        text_hover_color "#f4d892"
+                                                        hover_background "#ffffff08"
+
+                                                    textbutton _("Main Quests"):
+                                                        style "inv_quest_mode_button"
+                                                        text_style "inv_body_text"
+                                                        action SetScreenVariable("inv_quest_view", "main")
+                                                        selected (inv_quest_view == "main")
+                                                        selected_background "#6e587f88"
+                                                        text_selected_color "#f4d892"
+                                                        text_hover_color "#f4d892"
+                                                        hover_background "#ffffff08"
+
+                                                    textbutton _("Side Quests"):
+                                                        style "inv_quest_mode_button"
+                                                        text_style "inv_body_text"
+                                                        action SetScreenVariable("inv_quest_view", "side")
+                                                        selected (inv_quest_view == "side")
+                                                        selected_background "#6e587f88"
+                                                        text_selected_color "#f4d892"
+                                                        text_hover_color "#f4d892"
+                                                        hover_background "#ffffff08"
+
+                                            frame:
+                                                background "#241d435e"
+                                                xfill True
+                                                ysize 654
+                                                xpadding 24
+                                                ypadding 24
+
+                                                if quest_view_items:
                                                     vbox:
-                                                        spacing 10
+                                                        spacing 14
 
-                                                        hbox:
-                                                            xfill True
-                                                            text q["title"] style "inv_section_title"
-                                                            text _(q["status"]) style "inv_body_text" color tab_colors["accent"] xalign 1.0
+                                                        for q in quest_view_items:
+                                                            frame:
+                                                                background "#ffffff08"
+                                                                xfill True
+                                                                xpadding 18
+                                                                ypadding 14
 
-                                                        if q.get("giver"):
-                                                            text ("From: " + q["giver"]) style "inv_label_text"
-                                                        text q["desc"] style "inv_muted_text"
+                                                                vbox:
+                                                                    spacing 8
 
-                                                        hbox:
-                                                            xfill True
-                                                            text _("Progress") style "inv_label_text"
-                                                            text q["progress_text"] style "inv_body_text" xalign 1.0
+                                                                    hbox:
+                                                                        xfill True
+                                                                        text q["title"] style "inv_section_title"
+                                                                        text _(q["status"]) style "inv_body_text" color tab_colors["accent"] xalign 1.0
 
-                                                        bar value StaticValue(q["progress"], 100):
-                                                            xfill True
-                                                            left_bar Frame(Solid(tab_colors["accent"]), 0, 0)
-                                                            right_bar Frame(Solid("#0a1826"), 0, 0)
+                                                                    if q.get("giver"):
+                                                                        text ("From: " + q["giver"]) style "inv_label_text"
+                                                                    text q["desc"] style "inv_muted_text"
+
+                                                                    hbox:
+                                                                        xfill True
+                                                                        text _("Progress") style "inv_label_text"
+                                                                        text q["progress_text"] style "inv_body_text" xalign 1.0
+
+                                                                    bar value StaticValue(q["progress"], 100):
+                                                                        xfill True
+                                                                        left_bar Frame(Solid(tab_colors["accent"]), 0, 0)
+                                                                        right_bar Frame(Solid("#0a1826"), 0, 0)
+                                                else:
+                                                    vbox:
+                                                        spacing 14
+                                                        xalign 0.5
+                                                        yalign 0.28
+
+                                                        if inv_quest_view == "active":
+                                                            text _("No Active Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                            text _("New quests will appear here as you progress through the story.") style "inv_muted_text" xalign 0.5
+                                                        elif inv_quest_view == "completed":
+                                                            text _("No Completed Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                            text _("Completed quests will be archived here.") style "inv_muted_text" xalign 0.5
+                                                        elif inv_quest_view == "main":
+                                                            text _("No Main Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                            text _("Main story quests will appear here.") style "inv_muted_text" xalign 0.5
+                                                        else:
+                                                            text _("No Side Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                            text _("Optional quests and collections will appear here.") style "inv_muted_text" xalign 0.5
 
                                         elif inv_tab == "achievements":
                                             for a in tab_items:
                                                 frame:
                                                     style "inv_card_frame_achievement"
                                                     xfill True
-                                                    background a["card_bg"]
+                                                    background (a["card_bg"][:-2] + "52")
 
                                                     fixed:
                                                         xfill True
@@ -881,14 +1000,14 @@ screen inventory_menu():
                                                 style "inv_card_frame"
                                                 xfill True
                                                 ysize 620
-                                                background tab_colors["accent_soft"]
+                                                background tab_colors["accent_soft"][:-2] + "18"
 
                                                 fixed:
                                                     xfill True
                                                     ysize 620
 
                                                     frame:
-                                                        background "#0c1624aa"
+                                                        background "#0c162436"
                                                         xpos 16
                                                         ypos 16
                                                         xsize 1296
@@ -899,107 +1018,148 @@ screen inventory_menu():
                                                         fixed:
                                                             xfill True
                                                             yfill True
+                                                            if selected_collectible:
+                                                                button:
+                                                                    style "inv_card_button"
+                                                                    action SetScreenVariable("inv_collectible_id", None)
+                                                                    xpos 0
+                                                                    ypos 0
+                                                                    xsize 720
+                                                                    ysize 112
 
-                                                            vbox:
-                                                                xpos 0
-                                                                ypos 0
-                                                                spacing 14
-                                                                xsize 520
-
-                                                                for c in tab_items:
-                                                                    $ collectible_selected = (selected_collectible and selected_collectible["id"] == c["id"])
-                                                                    button:
-                                                                        style "inv_card_button"
-                                                                        action SetScreenVariable("inv_collectible_id", c["id"])
-                                                                        xsize 620
-                                                                        ysize 126
-
-                                                                        fixed:
-                                                                            xsize 620
-                                                                            ysize 126
-
-                                                                            add Solid("#12303bcc" if collectible_selected else "#101726cc")
-                                                                            add Solid(tab_colors["accent"] if collectible_selected else "#5e7684") xpos 0 ypos 0 xsize 6 ysize 126
-                                                                            add Solid(tab_colors["accent"] if collectible_selected else "#314756") xpos 6 ypos 0 xsize 614 ysize 2
-                                                                            add Solid(tab_colors["accent"] if collectible_selected else "#314756") xpos 6 ypos 124 xsize 614 ysize 2
-                                                                            add Solid(tab_colors["accent"] if collectible_selected else "#314756") xpos 618 ypos 2 xsize 2 ysize 122
-
-                                                                            frame:
-                                                                                background "#111a28"
-                                                                                xpos 18
-                                                                                ypos 22
-                                                                                xsize 74
-                                                                                ysize 74
-                                                                                xpadding 6
-                                                                                ypadding 6
-
-                                                                                if c["id"] == "plushies" and renpy.loadable("secrets/plushies/kittycat_plush.png"):
-                                                                                    add Transform("secrets/plushies/kittycat_plush.png", xalign=0.5, yalign=0.5, xsize=58, ysize=58)
-                                                                                elif c["id"] == "picture_frames" and renpy.loadable("secrets/Picture Frames/picture1.png"):
-                                                                                    add Transform("secrets/Picture Frames/picture1.png", xalign=0.5, yalign=0.5, xsize=58, ysize=58)
-                                                                                else:
-                                                                                    add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=58, ysize=58)
-
-                                                                            vbox:
-                                                                                xpos 106
-                                                                                ypos 14
-                                                                                spacing 8
-                                                                                xsize 320
-
-                                                                                text c["title"] style "inv_section_title"
-                                                                                text c["desc"] style "inv_muted_text" xmaximum 320
-
-                                                                            text c["status"] style "inv_body_text" color tab_colors["accent"]:
-                                                                                xpos 430
-                                                                                ypos 44
-                                                                                xsize 164
-                                                                                text_align 1.0
-
-                                                            if selected_collectible and renpy.loadable(selected_collectible["display_image"]):
-                                                                add Transform(
-                                                                    selected_collectible["display_image"],
-                                                                    xanchor=1.0,
-                                                                    yanchor=1.0,
-                                                                    xpos=selected_collectible_art_xpos,
-                                                                    ypos=selected_collectible_art_ypos,
-                                                                    xsize=selected_collectible_art_xsize,
-                                                                    ysize=selected_collectible_art_ysize
-                                                                )
-
-                                                    frame:
-                                                        background "#0a1622c8"
-                                                        xpos 16
-                                                        ypos 474
-                                                        xsize 1296
-                                                        ysize 136
-                                                        xpadding 18
-                                                        ypadding 14
-
-                                                        vbox:
-                                                            spacing 10
-
-                                                            text selected_collectible_status style "inv_body_text" color tab_colors["accent"] size 20
-
-                                                            hbox:
-                                                                spacing 12
-                                                                for preview_path in selected_collectible_previews:
                                                                     fixed:
-                                                                        xsize 108
-                                                                        ysize 78
+                                                                        xsize 720
+                                                                        ysize 112
 
-                                                                        add Solid("#06111bcc")
-                                                                        add Solid(tab_colors["accent_soft"] if preview_path else "#ffffff10") xpos 0 ypos 0 xsize 108 ysize 2
-                                                                        add Solid(tab_colors["accent_soft"] if preview_path else "#ffffff10") xpos 0 ypos 76 xsize 108 ysize 2
-                                                                        add Solid(tab_colors["accent_soft"] if preview_path else "#ffffff10") xpos 0 ypos 0 xsize 2 ysize 78
-                                                                        add Solid(tab_colors["accent_soft"] if preview_path else "#ffffff10") xpos 106 ypos 0 xsize 2 ysize 78
+                                                                        add Solid("#12303b3d")
+                                                                        add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 6 ysize 112
+                                                                        add Solid(tab_colors["accent"]) xpos 714 ypos 0 xsize 6 ysize 112
+                                                                        add Solid(tab_colors["accent"]) xpos 6 ypos 0 xsize 708 ysize 2
+                                                                        add Solid(tab_colors["accent"]) xpos 6 ypos 110 xsize 708 ysize 2
 
-                                                                        if preview_path and renpy.loadable(preview_path):
-                                                                            add Transform(preview_path, xalign=0.5, yalign=0.5, xsize=92, ysize=58)
-                                                                        else:
-                                                                            add Solid("#0f1b27") xpos 6 ypos 6 xsize 96 ysize 66
-                                                                            text "?" style "inv_section_title" color "#7d8ca6":
-                                                                                xalign 0.5
-                                                                                yalign 0.5
+                                                                        text selected_collectible["title"] style "inv_section_title":
+                                                                            xpos 18
+                                                                            ypos 12
+
+                                                                        text selected_collectible["status"] style "inv_body_text" color tab_colors["accent"]:
+                                                                            xpos 18
+                                                                            ypos 58
+
+                                                                        text selected_collectible["desc"] style "inv_muted_text":
+                                                                            xpos 250
+                                                                            ypos 58
+                                                                            xmaximum 430
+
+                                                                fixed:
+                                                                    xpos 0
+                                                                    ypos 138
+                                                                    xsize 760
+                                                                    ysize 258
+
+                                                                    add Solid("#111a2833")
+                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 0 xsize 760 ysize 2
+                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 256 xsize 760 ysize 2
+                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 0 xsize 2 ysize 258
+                                                                    add Solid(tab_colors["accent_soft"]) xpos 758 ypos 0 xsize 2 ysize 258
+
+                                                                    grid 5 3:
+                                                                        xpos 18
+                                                                        ypos 18
+                                                                        spacing 12
+
+                                                                        for preview_path in selected_collectible_previews[:15]:
+                                                                            fixed:
+                                                                                xsize 132
+                                                                                ysize 64
+
+                                                                                add Solid("#06111b30")
+                                                                                add Solid("#ffffff14") xpos 0 ypos 0 xsize 132 ysize 2
+                                                                                add Solid("#ffffff14") xpos 0 ypos 62 xsize 132 ysize 2
+                                                                                add Solid("#ffffff14") xpos 0 ypos 0 xsize 2 ysize 64
+                                                                                add Solid("#ffffff14") xpos 130 ypos 0 xsize 2 ysize 64
+
+                                                                                if preview_path and renpy.loadable(preview_path):
+                                                                                    add Transform(preview_path, xalign=0.5, yalign=0.5, fit="contain", xsize=116, ysize=48)
+                                                                                else:
+                                                                                    text "?" style "inv_section_title" color "#7d8ca6":
+                                                                                        xalign 0.5
+                                                                                        yalign 0.5
+
+                                                                if renpy.loadable(selected_collectible["display_image"]):
+                                                                    add Transform(
+                                                                        selected_collectible["display_image"],
+                                                                        xanchor=1.0,
+                                                                        yanchor=1.0,
+                                                                        xpos=1260,
+                                                                        ypos=420,
+                                                                        xsize=selected_collectible_art_xsize,
+                                                                        ysize=selected_collectible_art_ysize
+                                                                    )
+                                                            else:
+                                                                vbox:
+                                                                    xpos 0
+                                                                    ypos 0
+                                                                    spacing 14
+                                                                    xsize 520
+
+                                                                    for c in tab_items:
+                                                                        button:
+                                                                            style "inv_card_button"
+                                                                            action If(inv_collectible_id == c["id"], true=SetScreenVariable("inv_collectible_id", None), false=SetScreenVariable("inv_collectible_id", c["id"]))
+                                                                            xsize 620
+                                                                            ysize 96
+
+                                                                            fixed:
+                                                                                xsize 620
+                                                                                ysize 96
+
+                                                                                add Solid("#10172638")
+                                                                                add Solid("#5e7684") xpos 0 ypos 0 xsize 6 ysize 96
+                                                                                add Solid("#5e7684") xpos 614 ypos 0 xsize 6 ysize 96
+                                                                                add Solid("#314756") xpos 6 ypos 0 xsize 608 ysize 2
+                                                                                add Solid("#314756") xpos 6 ypos 94 xsize 608 ysize 2
+
+                                                                                frame:
+                                                                                    background "#111a2830"
+                                                                                    xpos 18
+                                                                                    ypos 16
+                                                                                    xsize 64
+                                                                                    ysize 64
+                                                                                    xpadding 6
+                                                                                    ypadding 6
+
+                                                                                    if c["id"] == "plushies" and renpy.loadable("secrets/plushies/kittycat_plush.png"):
+                                                                                        add Transform("secrets/plushies/kittycat_plush.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
+                                                                                    elif c["id"] == "picture_frames" and renpy.loadable("secrets/Picture Frames/picture1.png"):
+                                                                                        add Transform("secrets/Picture Frames/picture1.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
+                                                                                    else:
+                                                                                        add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
+
+                                                                                vbox:
+                                                                                    xpos 96
+                                                                                    ypos 12
+                                                                                    spacing 4
+                                                                                    xsize 320
+
+                                                                                    text c["title"] style "inv_section_title"
+                                                                                    text c["desc"] style "inv_muted_text" xmaximum 320
+
+                                                                                text c["status"] style "inv_body_text" color tab_colors["accent"]:
+                                                                                    xpos 430
+                                                                                    ypos 34
+                                                                                    xsize 164
+                                                                                    text_align 1.0
+
+                                                                if tab_items and selected_collectible is None:
+                                                                    add Transform(
+                                                                        "gui/tsuki_plushies.png",
+                                                                        xanchor=1.0,
+                                                                        yanchor=1.0,
+                                                                        xpos=1248,
+                                                                        ypos=408,
+                                                                        xsize=320,
+                                                                        ysize=480
+                                                                    )
 
                                         elif inv_tab == "characters":
                                             for ch in tab_items:
@@ -1067,7 +1227,7 @@ screen inventory_menu():
                                                 frame:
                                                     style "inv_card_frame"
                                                     xfill True
-                                                    background tab_colors["accent_soft"]
+                                                    background tab_colors["accent_soft"][:-2] + "18"
 
                                                     vbox:
                                                         spacing 8
@@ -1078,7 +1238,7 @@ screen inventory_menu():
                                             style "inv_card_frame"
                                             xfill True
                                             ysize 260
-                                            background tab_colors["accent_soft"]
+                                            background tab_colors["accent_soft"][:-2] + "16"
 
                                             vbox:
                                                 spacing 14
