@@ -115,6 +115,24 @@
             return [q for q in items if q.get("kind") != "story"]
         return items
 
+    def ell_inventory_masked_divider(width, color="#d8b24f", height=5):
+        return AlphaMask(
+            Transform(Solid(color), xsize=width, ysize=height),
+            Transform("gui/inventory_divider_mask.png", xsize=width, ysize=height),
+        )
+
+    def ell_inventory_tab_shadow(width=96, height=52, color="#00000055", flip=False):
+        return AlphaMask(
+            Transform(Solid(color), xsize=width, ysize=height),
+            Transform("gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height, xzoom=(-1 if flip else 1)),
+        )
+
+    def ell_inventory_fade_right(width, height, color):
+        return AlphaMask(
+            Transform(Solid(color), xsize=width, ysize=height),
+            Transform("gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height),
+        )
+
     def ell_inventory_achievement_items():
         out = []
         achievement_cls = getattr(renpy.store, "Achievement", None)
@@ -369,10 +387,15 @@ style inv_tab_button:
 
 style inv_quest_mode_button is inv_tab_button:
     xfill False
-    ypadding 6
-    xpadding 14
-    background "#00000000"
-    hover_background "#ffffff08"
+    background "#00000033"
+    hover_background "#0000004f"
+    ysize 52
+
+style inv_quest_mode_button_text is inv_body_text:
+    size 18
+    color "#d8d1ea"
+    hover_color "#f5dfab"
+    selected_color "#fff5da"
 
 style inv_tab_button_text:
     font "fonts/cinzel/Cinzel-Bold.otf"
@@ -565,6 +588,7 @@ screen inventory_menu():
     default inv_scroll = ui.adjustment()
     default inv_inventory_scroll = ui.adjustment()
     default inv_collectible_id = None
+    default inv_side_tab_hovered = False
 
     if "ell_sync_collectible_quests" in globals():
         on "show" action Function(ell_sync_collectible_quests)
@@ -804,128 +828,222 @@ screen inventory_menu():
                             ysize inv_content_height
                             clipping True
 
-                            viewport:
-                                mousewheel True
-                                draggable True
-                                pagekeys True
-                                yadjustment inv_scroll
-                                scrollbars None
-                                xsize 1328
-                                ysize inv_content_height
+                            vbox:
+                                spacing 0
+                                xfill True
 
-                                vbox:
-                                    spacing 16
+                                if inv_tab == "quests":
+                                    frame:
+                                        background "#241d435e"
+                                        xfill True
+                                        ysize 52
+                                        xpadding 0
+                                        ypadding 0
 
-                                    if tab_items or inv_tab == "quests":
+                                        hbox:
+                                            spacing 0
 
-                                        if inv_tab == "quests":
+                                            textbutton _("Active Quests"):
+                                                style "inv_quest_mode_button"
+                                                text_style "inv_body_text"
+                                                action SetScreenVariable("inv_quest_view", "active")
+                                                selected (inv_quest_view == "active")
+                                                xsize 220
+                                                selected_background "#6e587f88"
+                                                text_selected_color "#f4d892"
+                                                text_hover_color "#f4d892"
+
+                                            textbutton _("Completed Quests"):
+                                                style "inv_quest_mode_button"
+                                                text_style "inv_body_text"
+                                                action SetScreenVariable("inv_quest_view", "completed")
+                                                selected (inv_quest_view == "completed")
+                                                xsize 280
+                                                selected_background "#6e587f88"
+                                                text_selected_color "#f4d892"
+                                                text_hover_color "#f4d892"
+
+                                            textbutton _("Main Quests"):
+                                                style "inv_quest_mode_button"
+                                                text_style "inv_body_text"
+                                                action SetScreenVariable("inv_quest_view", "main")
+                                                selected (inv_quest_view == "main")
+                                                xsize 210
+                                                selected_background "#6e587f88"
+                                                text_selected_color "#f4d892"
+                                                text_hover_color "#f4d892"
+
+                                            textbutton _("Side Quests"):
+                                                style "inv_quest_mode_button"
+                                                text_style "inv_body_text"
+                                                action SetScreenVariable("inv_quest_view", "side")
+                                                hovered SetScreenVariable("inv_side_tab_hovered", True)
+                                                unhovered SetScreenVariable("inv_side_tab_hovered", False)
+                                                selected (inv_quest_view == "side")
+                                                xsize 206
+                                                selected_background "#6e587f88"
+                                                text_selected_color "#f4d892"
+                                                text_hover_color "#f4d892"
+
+                                        fixed:
+                                            xsize 1328
+                                            ysize 52
+
+                                            add ell_inventory_fade_right(96, 52, ("#6e587f88" if inv_quest_view == "side" else ("#0000004f" if inv_side_tab_hovered else "#00000033"))):
+                                                xpos 916
+                                                ypos 0
+
+                                            if inv_quest_view == "active":
+                                                add ell_inventory_tab_shadow():
+                                                    xpos 220
+                                                    ypos 0
+                                            elif inv_quest_view == "completed":
+                                                add ell_inventory_tab_shadow():
+                                                    xpos 500
+                                                    ypos 0
+                                                add ell_inventory_tab_shadow(flip=True):
+                                                    xpos 124
+                                                    ypos 0
+                                            elif inv_quest_view == "main":
+                                                add ell_inventory_tab_shadow():
+                                                    xpos 710
+                                                    ypos 0
+                                                add ell_inventory_tab_shadow(flip=True):
+                                                    xpos 404
+                                                    ypos 0
+                                            else:
+                                                add ell_inventory_tab_shadow(flip=True):
+                                                    xpos 614
+                                                    ypos 0
+
+                                    fixed:
+                                        xsize 1328
+                                        ysize 5
+
+                                        add Solid(tab_colors["accent_soft"]):
+                                            xsize 916
+                                            ysize 5
+
+                                        add ell_inventory_fade_right(96, 5, tab_colors["accent_soft"]):
+                                            xpos 916
+                                            ypos 0
+
+                                        if inv_quest_view == "active":
+                                            add ell_inventory_masked_divider(220):
+                                                xpos 0
+                                                ypos 0
+                                        elif inv_quest_view == "completed":
+                                            add ell_inventory_masked_divider(280):
+                                                xpos 220
+                                                ypos 0
+                                        elif inv_quest_view == "main":
+                                            add ell_inventory_masked_divider(210):
+                                                xpos 500
+                                                ypos 0
+                                        else:
+                                            add ell_inventory_masked_divider(206):
+                                                xpos 710
+                                                ypos 0
+
+                                viewport:
+                                    mousewheel True
+                                    draggable True
+                                    pagekeys True
+                                    yadjustment inv_scroll
+                                    scrollbars None
+                                    xsize 1328
+                                    ysize (inv_content_height - 60 if inv_tab == "quests" else inv_content_height)
+                                    ypos -5
+
+                                    vbox:
+                                        spacing 0
+
+                                        if not tab_items and inv_tab != "quests":
                                             frame:
-                                                background "#241d435e"
+                                                style "inv_card_frame"
                                                 xfill True
-                                                ysize 52
-                                                xpadding 6
-                                                ypadding 6
+                                                ysize 260
+                                                background tab_colors["accent_soft"][:-2] + "16"
 
-                                                hbox:
+                                                vbox:
                                                     spacing 14
+                                                    xalign 0.5
+                                                    yalign 0.5
+                                                    if inv_tab == "inventory":
+                                                        text _("Inventory Empty") style "inv_section_title" color tab_colors["accent"] xalign 0.5
+                                                        text _("You are not carrying anything yet.") style "inv_body_text" xalign 0.5
+                                                        text _("Items you discover during exploration will appear here.") style "inv_muted_text" xalign 0.5
+                                                    elif inv_tab == "collectibles":
+                                                        text _("No Collectibles Found") style "inv_section_title" color tab_colors["accent"] xalign 0.5
+                                                        text _("The world is still hiding its secrets.") style "inv_body_text" xalign 0.5
+                                                        text _("Rare finds and special discoveries will show up here.") style "inv_muted_text" xalign 0.5
+                                                    elif inv_tab == "characters":
+                                                        text _("No Character Notes Yet") style "inv_section_title" color tab_colors["accent"] xalign 0.5
+                                                        text _("You haven't filled out this section yet.") style "inv_body_text" xalign 0.5
+                                                        text _("Important people you meet can be surfaced here over time.") style "inv_muted_text" xalign 0.5
+                                                    else:
+                                                        text _("No Achievements Yet") style "inv_section_title" color tab_colors["accent"] xalign 0.5
+                                                        text _("Your record is still unwritten.") style "inv_body_text" xalign 0.5
+                                                        text _("Milestones and hidden rewards will appear as you play.") style "inv_muted_text" xalign 0.5
 
-                                                    textbutton _("Active Quests"):
-                                                        style "inv_quest_mode_button"
-                                                        text_style "inv_body_text"
-                                                        action SetScreenVariable("inv_quest_view", "active")
-                                                        selected (inv_quest_view == "active")
-                                                        selected_background "#6e587f88"
-                                                        text_selected_color "#f4d892"
-                                                        text_hover_color "#f4d892"
-                                                        hover_background "#ffffff08"
+                                        elif inv_tab == "quests":
+                                                frame:
+                                                    background "#241d435e"
+                                                    xfill True
+                                                    ysize 654
+                                                    xpadding 24
+                                                    ypadding 24
 
-                                                    textbutton _("Completed Quests"):
-                                                        style "inv_quest_mode_button"
-                                                        text_style "inv_body_text"
-                                                        action SetScreenVariable("inv_quest_view", "completed")
-                                                        selected (inv_quest_view == "completed")
-                                                        selected_background "#6e587f88"
-                                                        text_selected_color "#f4d892"
-                                                        text_hover_color "#f4d892"
-                                                        hover_background "#ffffff08"
+                                                    if quest_view_items:
+                                                        vbox:
+                                                            spacing 14
 
-                                                    textbutton _("Main Quests"):
-                                                        style "inv_quest_mode_button"
-                                                        text_style "inv_body_text"
-                                                        action SetScreenVariable("inv_quest_view", "main")
-                                                        selected (inv_quest_view == "main")
-                                                        selected_background "#6e587f88"
-                                                        text_selected_color "#f4d892"
-                                                        text_hover_color "#f4d892"
-                                                        hover_background "#ffffff08"
+                                                            for q in quest_view_items:
+                                                                frame:
+                                                                    background "#ffffff08"
+                                                                    xfill True
+                                                                    xpadding 18
+                                                                    ypadding 14
 
-                                                    textbutton _("Side Quests"):
-                                                        style "inv_quest_mode_button"
-                                                        text_style "inv_body_text"
-                                                        action SetScreenVariable("inv_quest_view", "side")
-                                                        selected (inv_quest_view == "side")
-                                                        selected_background "#6e587f88"
-                                                        text_selected_color "#f4d892"
-                                                        text_hover_color "#f4d892"
-                                                        hover_background "#ffffff08"
+                                                                    vbox:
+                                                                        spacing 8
 
-                                            frame:
-                                                background "#241d435e"
-                                                xfill True
-                                                ysize 654
-                                                xpadding 24
-                                                ypadding 24
+                                                                        hbox:
+                                                                            xfill True
+                                                                            text q["title"] style "inv_section_title"
+                                                                            text _(q["status"]) style "inv_body_text" color tab_colors["accent"] xalign 1.0
 
-                                                if quest_view_items:
-                                                    vbox:
-                                                        spacing 14
+                                                                        if q.get("giver"):
+                                                                            text ("From: " + q["giver"]) style "inv_label_text"
+                                                                        text q["desc"] style "inv_muted_text"
 
-                                                        for q in quest_view_items:
-                                                            frame:
-                                                                background "#ffffff08"
-                                                                xfill True
-                                                                xpadding 18
-                                                                ypadding 14
+                                                                        hbox:
+                                                                            xfill True
+                                                                            text _("Progress") style "inv_label_text"
+                                                                            text q["progress_text"] style "inv_body_text" xalign 1.0
 
-                                                                vbox:
-                                                                    spacing 8
+                                                                        bar value StaticValue(q["progress"], 100):
+                                                                            xfill True
+                                                                            left_bar Frame(Solid(tab_colors["accent"]), 0, 0)
+                                                                            right_bar Frame(Solid("#0a1826"), 0, 0)
+                                                    else:
+                                                        vbox:
+                                                            spacing 14
+                                                            xalign 0.5
+                                                            yalign 0.28
 
-                                                                    hbox:
-                                                                        xfill True
-                                                                        text q["title"] style "inv_section_title"
-                                                                        text _(q["status"]) style "inv_body_text" color tab_colors["accent"] xalign 1.0
-
-                                                                    if q.get("giver"):
-                                                                        text ("From: " + q["giver"]) style "inv_label_text"
-                                                                    text q["desc"] style "inv_muted_text"
-
-                                                                    hbox:
-                                                                        xfill True
-                                                                        text _("Progress") style "inv_label_text"
-                                                                        text q["progress_text"] style "inv_body_text" xalign 1.0
-
-                                                                    bar value StaticValue(q["progress"], 100):
-                                                                        xfill True
-                                                                        left_bar Frame(Solid(tab_colors["accent"]), 0, 0)
-                                                                        right_bar Frame(Solid("#0a1826"), 0, 0)
-                                                else:
-                                                    vbox:
-                                                        spacing 14
-                                                        xalign 0.5
-                                                        yalign 0.28
-
-                                                        if inv_quest_view == "active":
-                                                            text _("No Active Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
-                                                            text _("New quests will appear here as you progress through the story.") style "inv_muted_text" xalign 0.5
-                                                        elif inv_quest_view == "completed":
-                                                            text _("No Completed Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
-                                                            text _("Completed quests will be archived here.") style "inv_muted_text" xalign 0.5
-                                                        elif inv_quest_view == "main":
-                                                            text _("No Main Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
-                                                            text _("Main story quests will appear here.") style "inv_muted_text" xalign 0.5
-                                                        else:
-                                                            text _("No Side Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
-                                                            text _("Optional quests and collections will appear here.") style "inv_muted_text" xalign 0.5
+                                                            if inv_quest_view == "active":
+                                                                text _("No Active Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                                text _("New quests will appear here as you progress through the story.") style "inv_muted_text" xalign 0.5
+                                                            elif inv_quest_view == "completed":
+                                                                text _("No Completed Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                                text _("Completed quests will be archived here.") style "inv_muted_text" xalign 0.5
+                                                            elif inv_quest_view == "main":
+                                                                text _("No Main Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                                text _("Main story quests will appear here.") style "inv_muted_text" xalign 0.5
+                                                            else:
+                                                                text _("No Side Quests") style "inv_section_title" color "#d8cbe8" xalign 0.5
+                                                                text _("Optional quests and collections will appear here.") style "inv_muted_text" xalign 0.5
 
                                         elif inv_tab == "achievements":
                                             for a in tab_items:
@@ -1233,37 +1351,6 @@ screen inventory_menu():
                                                         spacing 8
                                                         text item.get("name", _("Unknown Item")) style "inv_section_title"
                                                         text item.get("description", _("No description yet.")) style "inv_muted_text"
-                                    else:
-                                        frame:
-                                            style "inv_card_frame"
-                                            xfill True
-                                            ysize 260
-                                            background tab_colors["accent_soft"][:-2] + "16"
-
-                                            vbox:
-                                                spacing 14
-                                                xalign 0.5
-                                                yalign 0.5
-                                                if inv_tab == "quests":
-                                                    text _("No Quests Yet") style "inv_section_title" color tab_colors["accent"] xalign 0.5
-                                                    text _("Your adventure hasn't begun.") style "inv_body_text" xalign 0.5
-                                                    text _("Explore the world to discover your first quest.") style "inv_muted_text" xalign 0.5
-                                                elif inv_tab == "inventory":
-                                                    text _("Inventory Empty") style "inv_section_title" color tab_colors["accent"] xalign 0.5
-                                                    text _("You are not carrying anything yet.") style "inv_body_text" xalign 0.5
-                                                    text _("Items you discover during exploration will appear here.") style "inv_muted_text" xalign 0.5
-                                                elif inv_tab == "collectibles":
-                                                    text _("No Collectibles Found") style "inv_section_title" color tab_colors["accent"] xalign 0.5
-                                                    text _("The world is still hiding its secrets.") style "inv_body_text" xalign 0.5
-                                                    text _("Rare finds and special discoveries will show up here.") style "inv_muted_text" xalign 0.5
-                                                elif inv_tab == "characters":
-                                                    text _("No Character Notes Yet") style "inv_section_title" color tab_colors["accent"] xalign 0.5
-                                                    text _("You haven't filled out this section yet.") style "inv_body_text" xalign 0.5
-                                                    text _("Important people you meet can be surfaced here over time.") style "inv_muted_text" xalign 0.5
-                                                else:
-                                                    text _("No Achievements Yet") style "inv_section_title" color tab_colors["accent"] xalign 0.5
-                                                    text _("Your record is still unwritten.") style "inv_body_text" xalign 0.5
-                                                    text _("Milestones and hidden rewards will appear as you play.") style "inv_muted_text" xalign 0.5
 
     hbox:
         xalign 0.5
