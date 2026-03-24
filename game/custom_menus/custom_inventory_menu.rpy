@@ -632,7 +632,7 @@ screen inventory_menu():
     $ tab_label = next((t["label"] for t in ELL_INVENTORY_TABS if t["id"] == inv_tab), "Inventory")
     $ tab_header_label = next((t["id"].replace("_", " ").title() for t in ELL_INVENTORY_TABS if t["id"] == inv_tab), "Inventory")
     $ tab_colors = ELL_INVENTORY_TAB_COLORS.get(inv_tab, ELL_INVENTORY_TAB_COLORS["quests"])
-    $ inv_content_height = 700 if inv_tab == "quests" else 620
+    $ inv_content_height = 727
     $ inventory_obj = getattr(store, "inventory", None)
     $ inventory_has_items = bool(inventory_obj and any(inventory_obj.get_items()))
     $ inventory_entry_count = (inventory_obj.total_item_count() if inventory_obj else 0)
@@ -744,7 +744,6 @@ screen inventory_menu():
                     if inv_tab == "inventory":
                         fixed:
                             xsize 1328
-                            ysize 640
                             clipping True
 
                             if inventory_obj:
@@ -782,8 +781,9 @@ screen inventory_menu():
                                                 text str(inventory_obj.max_items_per_slot) style "inv_section_title"
 
                                     vpgrid:
-                                        cols 7
-                                        spacing 3
+                                        cols 8
+                                        xspacing 5
+                                        yspacing 45
                                         mousewheel True
                                         draggable True
                                         pagekeys True
@@ -797,46 +797,41 @@ screen inventory_menu():
                                             $ slot_unlocked = inventory_obj.is_slot_unlocked(slot)
                                             frame:
                                                 background ("components/inventory_system/gui/slot_bg.png" if slot_unlocked else "components/inventory_system/gui/locked_slot_bg.png")
-                                                xsize 176
-                                                ysize 176
+                                                xsize 163
+                                                ysize 163
                                                 xpadding 10
                                                 ypadding 10
 
                                                 if slot_unlocked and slot_data:
                                                     $ slot_item, slot_qty = list(slot_data.items())[0]
                                                     $ slot_icon = inventory_obj._icon_path(slot_item)
-                                                    $ label_xpos = 60
-                                                    if slot_item == "uniform_skirt":
-                                                        $ label_xpos = 68
-                                                    elif slot_item == "uniform_shoes":
-                                                        $ label_xpos = 70
                                                     fixed:
                                                         xfill True
                                                         yfill True
 
                                                         if renpy.loadable(slot_icon):
-                                                            add Transform(slot_icon, xsize=150, ysize=150, xpos=-10, ypos=-10)
+                                                            add Transform(slot_icon, xsize=125, ysize=125)
                                                         else:
-                                                            text inventory_obj._display_name(slot_item) style "inv_label_text":
+                                                            text inventory_obj._display_name(slot_item) style "inv_muted_text":
                                                                 xalign 0.5
-                                                                ypos 38
                                                                 text_align 0.5
-                                                                xsize 140
+                                                                ypos 140
 
-                                                        text inventory_obj._display_name(slot_item) style "inv_label_text":
-                                                            xpos label_xpos
-                                                            xanchor 0.5
-                                                            ypos 140
+                                                        text inventory_obj._display_name(slot_item) style "inv_muted_text":
+                                                            xalign 0.5
                                                             text_align 0.5
-                                                            xsize 150
+                                                            ypos 140
+
                                                 elif slot_unlocked:
                                                     text _("Empty") style "inv_muted_text":
+                                                        text_align 0.5
                                                         xalign 0.5
-                                                        yalign 0.5
+                                                        ypos 140
                                                 else:
                                                     text _("Locked") style "inv_muted_text":
+                                                        text_align 0.5
                                                         xalign 0.5
-                                                        yalign 0.5
+                                                        ypos 140
 
                             else:
                                 frame:
@@ -1000,7 +995,6 @@ screen inventory_menu():
                                     scrollbars None
                                     xsize 1328
                                     ysize (inv_content_height - 60 if inv_tab == "quests" else inv_content_height)
-                                    ypos -5
 
                                     vbox:
                                         spacing 0
@@ -1167,12 +1161,10 @@ screen inventory_menu():
                                             frame:
                                                 style "inv_card_frame"
                                                 xfill True
-                                                ysize 620
                                                 background tab_colors["accent_soft"][:-2] + "18"
 
                                                 fixed:
                                                     xfill True
-                                                    ysize 620
 
                                                     frame:
                                                         background "#0c162436"
