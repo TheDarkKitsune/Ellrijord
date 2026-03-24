@@ -1,6 +1,6 @@
 init -1 python:
     class Inventory(object):
-        def __init__(self, slot_count=35, unlocked_slots=7, max_items_per_slot=99):
+        def __init__(self, slot_count=28, unlocked_slots=7, max_items_per_slot=99):
             self.slot_count = int(slot_count)
             self.unlocked_slots = int(unlocked_slots)
             self.max_items_per_slot = int(max_items_per_slot)
@@ -180,8 +180,8 @@ init -1 python:
                 for idx, slot in enumerate(current_items[:self.slot_count]):
                     self.slots[idx] = slot
 
-default inventory = Inventory(slot_count=35, unlocked_slots=7)
+default inventory = Inventory(slot_count=28, unlocked_slots=7)
 
 label ell_inventory_reset_once:
-    $ inventory.reset(35, 7)
+    $ inventory.reset(28, 7)
     return

@@ -133,6 +133,28 @@
             Transform("gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height),
         )
 
+    def ell_inventory_tab_glow(width, color="#f4d892"):
+        return Fixed(
+            Transform(
+                ell_inventory_masked_divider(width, color=color, height=5),
+                alpha=0.9,
+            ),
+            Transform(
+                ell_inventory_masked_divider(width + 28, color=color, height=9),
+                xpos=-14,
+                ypos=2,
+                alpha=0.2,
+            ),
+            Transform(
+                ell_inventory_masked_divider(width + 56, color=color, height=13),
+                xpos=-28,
+                ypos=5,
+                alpha=0.1,
+            ),
+            xsize=width + 56,
+            ysize=18,
+        )
+
     def ell_inventory_achievement_items():
         out = []
         achievement_cls = getattr(renpy.store, "Achievement", None)
@@ -143,9 +165,10 @@
             unlocked = ach.has()
             has_progress_bar = bool(ach.stat_max and ach.show_progress_bar)
             progress_raw = int(ach.stat_progress or 0) if ach.stat_max else 0
+            has_progress = bool(ach.stat_max and progress_raw > 0)
             if unlocked:
                 rarity = "Unlocked"
-            elif has_progress_bar and progress_raw > 0:
+            elif has_progress:
                 rarity = "{}/{}".format(progress_raw, int(ach.stat_max))
             else:
                 rarity = "Locked"
@@ -187,17 +210,24 @@
             out.append({
                 "title": ach.name,
                 "badge_icon": badge_icon,
+                "badge_image": ach.idle_img,
                 "rarity_tier": rarity_tier,
                 "rarity": rarity,
-                "rarity_color": "#c9a3ff" if unlocked else ("#b98cff" if has_progress_bar else "#9aa6ba"),
+                "rarity_color": "#f7e6b3" if unlocked else ("#edd0ff" if has_progress else "#d3bfd2"),
                 "glow_top": (rarity_glow + "88") if unlocked else ((rarity_border + "66") if has_progress_bar else "#6d5e8a44"),
                 "glow_bottom": (rarity_glow + "66") if unlocked else ((rarity_border + "50") if has_progress_bar else "#6d5e8a30"),
                 "glow_side": (rarity_glow + "88") if unlocked else ((rarity_border + "66") if has_progress_bar else "#6d5e8a44"),
                 "accent_strip": rarity_glow if unlocked else (rarity_border if has_progress_bar else "#5d5374"),
-                "card_bg": "#3b215a66" if unlocked else ("#24173d88" if has_progress_bar else "#1a1f2d88"),
-                "badge_bg": "#3a1456" if unlocked else ("#241042" if has_progress_bar else "#171326"),
+                "card_bg": "#5d33694c" if unlocked else ("#3b245b74" if has_progress else "#241d4358"),
+                "badge_bg": "#3a1456" if unlocked else ("#2d1348" if has_progress else "#1a162c"),
+                "border_color": (rarity_glow if unlocked else (rarity_border if has_progress else "#8d7b97")),
+                "border_soft": (rarity_glow + "55") if unlocked else ((rarity_border + "44") if has_progress else "#c8b5cf24"),
+                "status_text": ("{}/{}".format(progress_raw, int(ach.stat_max)) if has_progress else ("Unlocked" if unlocked else "Locked")),
+                "status_icon": ("✓" if unlocked else "🔒"),
                 "desc": ach.description,
                 "progress": progress,
+                "progress_raw": progress_raw,
+                "progress_max": int(ach.stat_max or 0),
                 "show_progress_bar": has_progress_bar,
                 "timestamp": ach.timestamp if unlocked else "",
             })
@@ -593,7 +623,7 @@ screen inventory_menu():
     if "ell_sync_collectible_quests" in globals():
         on "show" action Function(ell_sync_collectible_quests)
     if "inventory" in globals():
-        on "show" action Function(inventory.ensure_shape, 35, 7, False)
+        on "show" action Function(inventory.ensure_shape, 28, 7, False)
 
     $ bag_idle = "gui/Bag btn_720p.png"
     $ summary_rows = ell_inventory_summary_rows()
@@ -714,7 +744,7 @@ screen inventory_menu():
                     if inv_tab == "inventory":
                         fixed:
                             xsize 1328
-                            ysize 620
+                            ysize 640
                             clipping True
 
                             if inventory_obj:
@@ -760,7 +790,7 @@ screen inventory_menu():
                                         yadjustment inv_inventory_scroll
                                         scrollbars None
                                         xsize 1328
-                                        ysize 500
+                                        ysize 620
 
                                         for slot in range(inventory_obj.slot_count):
                                             $ slot_data = inventory_obj.slots[slot]
@@ -918,7 +948,7 @@ screen inventory_menu():
 
                                     fixed:
                                         xsize 1328
-                                        ysize 5
+                                        ysize 18
 
                                         add Solid(tab_colors["accent_soft"]):
                                             xsize 916
@@ -929,21 +959,38 @@ screen inventory_menu():
                                             ypos 0
 
                                         if inv_quest_view == "active":
+                                            add ell_inventory_tab_glow(220):
+                                                xpos -28
+                                                ypos 0
                                             add ell_inventory_masked_divider(220):
                                                 xpos 0
                                                 ypos 0
                                         elif inv_quest_view == "completed":
+                                            add ell_inventory_tab_glow(280):
+                                                xpos 206
+                                                ypos 0
                                             add ell_inventory_masked_divider(280):
                                                 xpos 220
                                                 ypos 0
                                         elif inv_quest_view == "main":
+                                            add ell_inventory_tab_glow(210):
+                                                xpos 472
+                                                ypos 0
                                             add ell_inventory_masked_divider(210):
                                                 xpos 500
                                                 ypos 0
                                         else:
+                                            add ell_inventory_tab_glow(206):
+                                                xpos 682
+                                                ypos 0
                                             add ell_inventory_masked_divider(206):
                                                 xpos 710
                                                 ypos 0
+
+                                    add Solid("#fff4cf18"):
+                                        xsize 1328
+                                        ysize 1
+                                        ypos 17
 
                                 viewport:
                                     mousewheel True
@@ -1046,72 +1093,75 @@ screen inventory_menu():
                                                                 text _("Optional quests and collections will appear here.") style "inv_muted_text" xalign 0.5
 
                                         elif inv_tab == "achievements":
-                                            for a in tab_items:
-                                                frame:
-                                                    style "inv_card_frame_achievement"
-                                                    xfill True
-                                                    background (a["card_bg"][:-2] + "52")
+                                            vbox:
+                                                spacing 20
 
-                                                    fixed:
+                                                for a in tab_items:
+                                                    frame:
+                                                        style "inv_card_frame_achievement"
                                                         xfill True
-                                                        ysize 112
+                                                        background (a["card_bg"][:-2] + "52")
 
-                                                        add Solid(a["accent_strip"]) xpos 0 ypos 0 xsize 8 ysize 112
-                                                        add Solid(a["glow_top"]) xpos 8 ypos 0 ysize 3
-                                                        add Solid(a["glow_bottom"]) xpos 8 ypos 109  ysize 3
-                                                        add Solid(a["glow_side"]) xpos 8 ypos 3 xsize 3 ysize 106
-                                                        add Solid(a["glow_side"]) xpos 1325 ypos 3 xsize 3 ysize 106
+                                                        fixed:
+                                                            xfill True
+                                                            ysize 110
 
-                                                        frame:
-                                                            background a["badge_bg"]
-                                                            xpos 22
-                                                            ypos 10
-                                                            xsize 90
-                                                            ysize 90
-                                                            xpadding 7
-                                                            ypadding 7
+                                                            add Solid(a["accent_strip"]) xpos 0 ypos 0 xsize 8 ysize 112
+                                                            add Solid(a["glow_top"]) xpos 8 ypos 0 ysize 3
+                                                            add Solid(a["glow_bottom"]) xpos 8 ypos 109  ysize 3
+                                                            add Solid(a["glow_side"]) xpos 8 ypos 3 xsize 3 ysize 106
+                                                            add Solid(a["glow_side"]) xpos 1325 ypos 3 xsize 3 ysize 106
 
-                                                            text a["badge_icon"]:
-                                                                xalign 0.5
-                                                                yalign 0.5
-                                                                size 64
+                                                            frame:
+                                                                background a["badge_bg"]
+                                                                xpos 22
+                                                                ypos 10
+                                                                xsize 90
+                                                                ysize 90
+                                                                xpadding 7
+                                                                ypadding 7
 
-                                                        vbox:
-                                                            xpos 132
-                                                            ypos 6
-                                                            spacing 6
-                                                            xsize 670
+                                                                text a["badge_icon"]:
+                                                                    xalign 0.5
+                                                                    yalign 0.5
+                                                                    size 64
 
-                                                            text a["title"] style "inv_section_title"
-                                                            text a["desc"] style "inv_muted_text"
-                                                            if a.get("timestamp"):
-                                                                text a["timestamp"] style "inv_label_text"
+                                                            vbox:
+                                                                xpos 132
+                                                                ypos 6
+                                                                spacing 6
+                                                                xsize 670
 
-                                                        text _(a["rarity"]) style "inv_body_text" color a["rarity_color"]:
-                                                            xpos 880
-                                                            ypos 10
-                                                            xsize 320
-                                                            text_align 0.5
+                                                                text a["title"] style "inv_section_title"
+                                                                text a["desc"] style "inv_muted_text"
+                                                                if a.get("timestamp"):
+                                                                    text a["timestamp"] style "inv_label_text"
 
-                                                        if a.get("show_progress_bar", False):
-                                                            fixed:
+                                                            text _(a["rarity"]) style "inv_body_text" color a["rarity_color"]:
                                                                 xpos 880
-                                                                ypos 48
+                                                                ypos 10
                                                                 xsize 320
-                                                                ysize 30
+                                                                text_align 0.5
 
-                                                                add Solid("#d8a8ff18") xpos 0 ypos 4 xsize 320 ysize 20
-                                                                add Solid("#c58cff30") xpos 2 ypos 6 xsize 316 ysize 16
-                                                                add Solid("#b06cff40") xpos 6 ypos 8 xsize 308 ysize 12
-                                                                add Solid("#ffffff30") xpos 10 ypos 9 xsize 300 ysize 3
-
-                                                                bar value StaticValue(a["progress"], 100):
-                                                                    xpos 0
-                                                                    ypos 6
+                                                            if a.get("show_progress_bar", False):
+                                                                fixed:
+                                                                    xpos 880
+                                                                    ypos 48
                                                                     xsize 320
-                                                                    ysize 14
-                                                                    left_bar Frame(Solid("#c58cff"), 0, 0)
-                                                                    right_bar Frame(Solid("#08121d"), 0, 0)
+                                                                    ysize 30
+
+                                                                    add Solid("#d8a8ff18") xpos 0 ypos 4 xsize 320 ysize 20
+                                                                    add Solid("#c58cff30") xpos 2 ypos 6 xsize 316 ysize 16
+                                                                    add Solid("#b06cff40") xpos 6 ypos 8 xsize 308 ysize 12
+                                                                    add Solid("#ffffff30") xpos 10 ypos 9 xsize 300 ysize 3
+
+                                                                    bar value StaticValue(a["progress"], 100):
+                                                                        xpos 0
+                                                                        ypos 6
+                                                                        xsize 320
+                                                                        ysize 14
+                                                                        left_bar Frame(Solid("#c58cff"), 0, 0)
+                                                                        right_bar Frame(Solid("#08121d"), 0, 0)
 
                                         elif inv_tab == "collectibles":
                                             frame:
