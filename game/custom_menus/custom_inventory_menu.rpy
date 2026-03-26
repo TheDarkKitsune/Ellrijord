@@ -976,7 +976,7 @@ screen inventory_menu():
 
                                     fixed:
                                         xsize 1328
-                                        ysize 18
+                                        ysize 5
 
                                         add Solid(tab_colors["accent_soft"]):
                                             xsize 916
@@ -987,38 +987,21 @@ screen inventory_menu():
                                             ypos 0
 
                                         if inv_quest_view == "active":
-                                            add ell_inventory_tab_glow(220):
-                                                xpos -28
-                                                ypos 0
                                             add ell_inventory_masked_divider(220):
                                                 xpos 0
                                                 ypos 0
                                         elif inv_quest_view == "completed":
-                                            add ell_inventory_tab_glow(280):
-                                                xpos 206
-                                                ypos 0
                                             add ell_inventory_masked_divider(280):
                                                 xpos 220
                                                 ypos 0
                                         elif inv_quest_view == "main":
-                                            add ell_inventory_tab_glow(210):
-                                                xpos 472
-                                                ypos 0
                                             add ell_inventory_masked_divider(210):
                                                 xpos 500
                                                 ypos 0
                                         else:
-                                            add ell_inventory_tab_glow(206):
-                                                xpos 682
-                                                ypos 0
                                             add ell_inventory_masked_divider(206):
                                                 xpos 710
                                                 ypos 0
-
-                                    add Solid("#fff4cf18"):
-                                        xsize 1328
-                                        ysize 1
-                                        ypos 17
 
                                 viewport:
                                     mousewheel True
@@ -1064,7 +1047,7 @@ screen inventory_menu():
                                                 frame:
                                                     background "#241d435e"
                                                     xfill True
-                                                    ysize 654
+                                                    ysize 690
                                                     xpadding 24
                                                     ypadding 24
 
@@ -1301,7 +1284,7 @@ screen inventory_menu():
 
                                                 fixed:
                                                     xsize 1328
-                                                    ysize 18
+                                                    ysize 5
                                                     ypos 52
 
                                                     add Solid(tab_colors["accent_soft"]):
@@ -1313,52 +1296,32 @@ screen inventory_menu():
                                                         ypos 0
 
                                                     if current_collectible and current_collectible["id"] == tab_items[0]["id"]:
-                                                        add ell_inventory_tab_glow(180):
-                                                            xpos -28
-                                                            ypos 0
                                                         add ell_inventory_masked_divider(180):
                                                             xpos 0
                                                             ypos 0
                                                     elif current_collectible and current_collectible["id"] == tab_items[1]["id"]:
-                                                        add ell_inventory_tab_glow(170):
-                                                            xpos 152
-                                                            ypos 0
                                                         add ell_inventory_masked_divider(170):
                                                             xpos 180
                                                             ypos 0
                                                     elif current_collectible and current_collectible["id"] == tab_items[2]["id"]:
-                                                        add ell_inventory_tab_glow(200):
-                                                            xpos 322
-                                                            ypos 0
                                                         add ell_inventory_masked_divider(200):
                                                             xpos 350
                                                             ypos 0
                                                     elif current_collectible and current_collectible["id"] == tab_items[3]["id"]:
-                                                        add ell_inventory_tab_glow(170):
-                                                            xpos 522
-                                                            ypos 0
                                                         add ell_inventory_masked_divider(170):
                                                             xpos 550
                                                             ypos 0
                                                     elif current_collectible and current_collectible["id"] == tab_items[4]["id"]:
-                                                        add ell_inventory_tab_glow(196):
-                                                            xpos 692
-                                                            ypos 0
                                                         add ell_inventory_masked_divider(196):
                                                             xpos 720
                                                             ypos 0
 
-                                                add Solid("#fff4cf18"):
-                                                    xsize 1328
-                                                    ysize 1
-                                                    ypos 69
-
                                                 frame:
                                                     background "#103a3f5e"
                                                     xpos 0
-                                                    ypos 86
+                                                    ypos 0
                                                     xfill True
-                                                    ysize 654
+                                                    ysize 654 + 86
                                                     xpadding 24
                                                     ypadding 24
 
