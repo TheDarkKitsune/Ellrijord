@@ -29,8 +29,8 @@
         "collectibles": {
             "accent": "#35c7c2",
             "accent_soft": "#35c7c222",
-            "selected_bg": "#c7f3f1",
-            "selected_text": "#0d5350",
+            "selected_bg": "#9fe8e4",
+            "selected_text": "#0f4f52",
         },
         "characters": {
             "accent": "#ff7fb6",
@@ -243,6 +243,8 @@
         return [
             {
                 "id": "plushies",
+                "tab_label": "Plushies",
+                "tab_icon": "🦊",
                 "title": "Tsuki's Plushies",
                 "type": "Collection",
                 "found": len(plushies_found) > 0,
@@ -254,6 +256,8 @@
             },
             {
                 "id": "picture_frames",
+                "tab_label": "Frames",
+                "tab_icon": "🖼",
                 "title": "Picture Frames",
                 "type": "Collection",
                 "found": len(picture_frames_found) > 0,
@@ -265,6 +269,8 @@
             },
             {
                 "id": "foxfire_paw_prints",
+                "tab_label": "Paw Prints",
+                "tab_icon": "🐾",
                 "title": "Foxfire Paw Prints",
                 "type": "Collection",
                 "found": len(paw_prints_found) > 0,
@@ -276,6 +282,8 @@
             },
             {
                 "id": "dream_fragments",
+                "tab_label": "Dreams",
+                "tab_icon": "💎",
                 "title": "Dream Fragments",
                 "type": "Collection",
                 "found": len(dream_fragments_found) > 0,
@@ -283,6 +291,19 @@
                 "total_count": 25,
                 "status": "{}/25 found".format(len(dream_fragments_found)),
                 "desc": "Pieces of lost dreams from Ellrijord scattered around Midgard.",
+                "display_image": "",
+            },
+            {
+                "id": "mystic_relics",
+                "tab_label": "Relics",
+                "tab_icon": "🎭",
+                "title": "Mystic Relics",
+                "type": "Collection",
+                "found": False,
+                "found_count": 0,
+                "total_count": 25,
+                "status": "0/25 found",
+                "desc": "Placeholder collectible entry for future content.",
                 "display_image": "",
             },
         ]
@@ -299,6 +320,16 @@
             return plush_map.get(entry_id, None)
         if collectible_id == "picture_frames":
             return frame_map.get(entry_id, None)
+        return None
+
+    def ell_collectible_icon_path(collectible_id):
+        icon_map = {
+            "plushies": "secrets/plushies/kittycat_plush.png",
+            "picture_frames": "secrets/Picture Frames/picture1.png",
+        }
+        path = icon_map.get(collectible_id, None)
+        if path and renpy.loadable(path):
+            return path
         return None
 
     def ell_collectible_preview_slots(collectible_id, slot_count=7):
@@ -619,13 +650,14 @@ screen inventory_menu():
     default inv_inventory_scroll = ui.adjustment()
     default inv_collectible_id = None
     default inv_side_tab_hovered = False
+    default inv_collectible_last_tab_hovered = False
 
     if "ell_sync_collectible_quests" in globals():
         on "show" action Function(ell_sync_collectible_quests)
     if "inventory" in globals():
         on "show" action Function(inventory.ensure_shape, 28, 7, False)
 
-    $ bag_idle = "gui/Bag btn_720p.png"
+    $ bag_idle = "gui/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/Player_female_btn.png"
     $ summary_rows = ell_inventory_summary_rows()
     $ tab_items = ell_inventory_tab_items(inv_tab)
     $ quest_view_items = ell_inventory_filter_quests(tab_items, inv_quest_view) if inv_tab == "quests" else []
@@ -637,24 +669,25 @@ screen inventory_menu():
     $ inventory_has_items = bool(inventory_obj and any(inventory_obj.get_items()))
     $ inventory_entry_count = (inventory_obj.total_item_count() if inventory_obj else 0)
     $ selected_collectible = next((c for c in ell_inventory_collectible_items() if c["id"] == inv_collectible_id), None)
-    $ selected_collectible_status = selected_collectible["status"] if selected_collectible else ""
-    $ selected_collectible_previews = ell_collectible_preview_slots(selected_collectible["id"], 15) if selected_collectible else []
-    $ selected_collectible_art_xsize = 372
-    $ selected_collectible_art_ysize = 372
-    $ selected_collectible_art_xpos = 1248
-    $ selected_collectible_art_ypos = 408
-    if selected_collectible and selected_collectible["id"] == "plushies":
-        $ selected_collectible_art_xsize = 320
-        $ selected_collectible_art_ysize = 480
-    elif selected_collectible and selected_collectible["id"] == "picture_frames":
-        $ selected_collectible_art_xsize = 320
-        $ selected_collectible_art_ysize = 480
-    elif selected_collectible and selected_collectible["id"] == "foxfire_paw_prints":
-        $ selected_collectible_art_xsize = 320
-        $ selected_collectible_art_ysize = 480
-    elif selected_collectible and selected_collectible["id"] == "dream_fragments":
-        $ selected_collectible_art_xsize = 320
-        $ selected_collectible_art_ysize = 480
+    $ current_collectible = (selected_collectible if selected_collectible else (tab_items[0] if (inv_tab == "collectibles" and tab_items) else None))
+    $ selected_collectible_status = current_collectible["status"] if current_collectible else ""
+    $ selected_collectible_previews = ell_collectible_preview_slots(current_collectible["id"], 15) if current_collectible else []
+    $ selected_collectible_art_xsize = 300
+    $ selected_collectible_art_ysize = 420
+    $ selected_collectible_art_xpos = 1288
+    $ selected_collectible_art_ypos = 650
+    if current_collectible and current_collectible["id"] == "plushies":
+        $ selected_collectible_art_xsize = 280
+        $ selected_collectible_art_ysize = 430
+    elif current_collectible and current_collectible["id"] == "picture_frames":
+        $ selected_collectible_art_xsize = 280
+        $ selected_collectible_art_ysize = 430
+    elif current_collectible and current_collectible["id"] == "foxfire_paw_prints":
+        $ selected_collectible_art_xsize = 280
+        $ selected_collectible_art_ysize = 430
+    elif current_collectible and current_collectible["id"] == "dream_fragments":
+        $ selected_collectible_art_xsize = 280
+        $ selected_collectible_art_ysize = 430
 
     add Transform("gui/inventory_bg.png", xsize=config.screen_width, ysize=config.screen_height)
     add Solid("#02061704")
@@ -680,10 +713,10 @@ screen inventory_menu():
 
                     hbox:
                         spacing 14
-                        add Transform(bag_idle, xsize=72, ysize=72)
+                        add Transform(bag_idle, xsize=110, ysize=110)
                         vbox:
                             spacing 2
-                            text _("Inventory Hub") style "inv_section_title"
+                            text _("Player Hub") style "inv_section_title"
                             text _("Your in-game systems menu.") style "inv_label_text"
 
                     null height 8
@@ -1158,168 +1191,306 @@ screen inventory_menu():
                                                                         right_bar Frame(Solid("#08121d"), 0, 0)
 
                                         elif inv_tab == "collectibles":
-                                            frame:
-                                                style "inv_card_frame"
+                                            fixed:
                                                 xfill True
-                                                background tab_colors["accent_soft"][:-2] + "18"
+                                                ysize 690
+
+                                                $ overall_found = sum(c["found_count"] for c in tab_items)
+                                                $ overall_total = sum(c["total_count"] for c in tab_items)
+                                                $ overall_progress_width = int((566 * overall_found) / max(1, overall_total))
+
+                                                frame:
+                                                    background "#241d435e"
+                                                    xfill True
+                                                    ysize 52
+                                                    xpadding 0
+                                                    ypadding 0
+
+                                                    hbox:
+                                                        spacing 0
+
+                                                        textbutton _(tab_items[0].get("tab_label", tab_items[0]["title"])):
+                                                            style "inv_quest_mode_button"
+                                                            text_style "inv_body_text"
+                                                            action SetScreenVariable("inv_collectible_id", tab_items[0]["id"])
+                                                            selected (current_collectible and current_collectible["id"] == tab_items[0]["id"])
+                                                            xsize 180
+                                                            selected_background "#6e587f88"
+                                                            text_selected_color "#f4d892"
+                                                            text_hover_color "#f4d892"
+
+                                                        textbutton _(tab_items[1].get("tab_label", tab_items[1]["title"])):
+                                                            style "inv_quest_mode_button"
+                                                            text_style "inv_body_text"
+                                                            action SetScreenVariable("inv_collectible_id", tab_items[1]["id"])
+                                                            selected (current_collectible and current_collectible["id"] == tab_items[1]["id"])
+                                                            xsize 170
+                                                            selected_background "#6e587f88"
+                                                            text_selected_color "#f4d892"
+                                                            text_hover_color "#f4d892"
+
+                                                        textbutton _(tab_items[2].get("tab_label", tab_items[2]["title"])):
+                                                            style "inv_quest_mode_button"
+                                                            text_style "inv_body_text"
+                                                            action SetScreenVariable("inv_collectible_id", tab_items[2]["id"])
+                                                            selected (current_collectible and current_collectible["id"] == tab_items[2]["id"])
+                                                            xsize 200
+                                                            selected_background "#6e587f88"
+                                                            text_selected_color "#f4d892"
+                                                            text_hover_color "#f4d892"
+
+                                                        textbutton _(tab_items[3].get("tab_label", tab_items[3]["title"])):
+                                                            style "inv_quest_mode_button"
+                                                            text_style "inv_body_text"
+                                                            action SetScreenVariable("inv_collectible_id", tab_items[3]["id"])
+                                                            selected (current_collectible and current_collectible["id"] == tab_items[3]["id"])
+                                                            xsize 170
+                                                            selected_background "#6e587f88"
+                                                            text_selected_color "#f4d892"
+                                                            text_hover_color "#f4d892"
+
+                                                        textbutton _(tab_items[4].get("tab_label", tab_items[4]["title"])):
+                                                            style "inv_quest_mode_button"
+                                                            text_style "inv_body_text"
+                                                            action SetScreenVariable("inv_collectible_id", tab_items[4]["id"])
+                                                            hovered SetScreenVariable("inv_collectible_last_tab_hovered", True)
+                                                            unhovered SetScreenVariable("inv_collectible_last_tab_hovered", False)
+                                                            selected (current_collectible and current_collectible["id"] == tab_items[4]["id"])
+                                                            xsize 196
+                                                            selected_background "#6e587f88"
+                                                            text_selected_color "#f4d892"
+                                                            text_hover_color "#f4d892"
 
                                                 fixed:
+                                                    xsize 1328
+                                                    ysize 52
+
+                                                    add ell_inventory_fade_right(96, 52, ("#6e587f88" if (current_collectible and current_collectible["id"] == tab_items[4]["id"]) else ("#0000004f" if inv_collectible_last_tab_hovered else "#00000033"))):
+                                                        xpos 916
+                                                        ypos 0
+
+                                                    if current_collectible and current_collectible["id"] == tab_items[0]["id"]:
+                                                        add ell_inventory_tab_shadow():
+                                                            xpos 180
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[1]["id"]:
+                                                        add ell_inventory_tab_shadow():
+                                                            xpos 350
+                                                            ypos 0
+                                                        add ell_inventory_tab_shadow(flip=True):
+                                                            xpos 84
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[2]["id"]:
+                                                        add ell_inventory_tab_shadow():
+                                                            xpos 550
+                                                            ypos 0
+                                                        add ell_inventory_tab_shadow(flip=True):
+                                                            xpos 254
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[3]["id"]:
+                                                        add ell_inventory_tab_shadow():
+                                                            xpos 720
+                                                            ypos 0
+                                                        add ell_inventory_tab_shadow(flip=True):
+                                                            xpos 454
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[4]["id"]:
+                                                        add ell_inventory_tab_shadow(flip=True):
+                                                            xpos 624
+                                                            ypos 0
+
+                                                fixed:
+                                                    xsize 1328
+                                                    ysize 18
+                                                    ypos 52
+
+                                                    add Solid(tab_colors["accent_soft"]):
+                                                        xsize 916
+                                                        ysize 5
+
+                                                    add ell_inventory_fade_right(96, 5, tab_colors["accent_soft"]):
+                                                        xpos 916
+                                                        ypos 0
+
+                                                    if current_collectible and current_collectible["id"] == tab_items[0]["id"]:
+                                                        add ell_inventory_tab_glow(180):
+                                                            xpos -28
+                                                            ypos 0
+                                                        add ell_inventory_masked_divider(180):
+                                                            xpos 0
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[1]["id"]:
+                                                        add ell_inventory_tab_glow(170):
+                                                            xpos 152
+                                                            ypos 0
+                                                        add ell_inventory_masked_divider(170):
+                                                            xpos 180
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[2]["id"]:
+                                                        add ell_inventory_tab_glow(200):
+                                                            xpos 322
+                                                            ypos 0
+                                                        add ell_inventory_masked_divider(200):
+                                                            xpos 350
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[3]["id"]:
+                                                        add ell_inventory_tab_glow(170):
+                                                            xpos 522
+                                                            ypos 0
+                                                        add ell_inventory_masked_divider(170):
+                                                            xpos 550
+                                                            ypos 0
+                                                    elif current_collectible and current_collectible["id"] == tab_items[4]["id"]:
+                                                        add ell_inventory_tab_glow(196):
+                                                            xpos 692
+                                                            ypos 0
+                                                        add ell_inventory_masked_divider(196):
+                                                            xpos 720
+                                                            ypos 0
+
+                                                add Solid("#fff4cf18"):
+                                                    xsize 1328
+                                                    ysize 1
+                                                    ypos 69
+
+                                                frame:
+                                                    background "#103a3f5e"
+                                                    xpos 0
+                                                    ypos 86
                                                     xfill True
+                                                    ysize 654
+                                                    xpadding 24
+                                                    ypadding 24
 
-                                                    frame:
-                                                        background "#0c162436"
-                                                        xpos 16
-                                                        ypos 16
-                                                        xsize 1296
-                                                        ysize 438
-                                                        xpadding 18
-                                                        ypadding 18
+                                                    fixed:
+                                                        xfill True
+                                                        yfill True
 
-                                                        fixed:
-                                                            xfill True
-                                                            yfill True
-                                                            if selected_collectible:
-                                                                button:
-                                                                    style "inv_card_button"
-                                                                    action SetScreenVariable("inv_collectible_id", None)
-                                                                    xpos 0
-                                                                    ypos 0
-                                                                    xsize 720
-                                                                    ysize 112
-
-                                                                    fixed:
-                                                                        xsize 720
-                                                                        ysize 112
-
-                                                                        add Solid("#12303b3d")
-                                                                        add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 6 ysize 112
-                                                                        add Solid(tab_colors["accent"]) xpos 714 ypos 0 xsize 6 ysize 112
-                                                                        add Solid(tab_colors["accent"]) xpos 6 ypos 0 xsize 708 ysize 2
-                                                                        add Solid(tab_colors["accent"]) xpos 6 ypos 110 xsize 708 ysize 2
-
-                                                                        text selected_collectible["title"] style "inv_section_title":
-                                                                            xpos 18
-                                                                            ypos 12
-
-                                                                        text selected_collectible["status"] style "inv_body_text" color tab_colors["accent"]:
-                                                                            xpos 18
-                                                                            ypos 58
-
-                                                                        text selected_collectible["desc"] style "inv_muted_text":
-                                                                            xpos 250
-                                                                            ypos 58
-                                                                            xmaximum 430
+                                                        if current_collectible:
+                                                            button:
+                                                                style "inv_card_button"
+                                                                action NullAction()
+                                                                xpos 184
+                                                                ypos 40
+                                                                xsize 860
+                                                                ysize 168
 
                                                                 fixed:
-                                                                    xpos 0
-                                                                    ypos 138
-                                                                    xsize 760
-                                                                    ysize 258
+                                                                    xsize 860
+                                                                    ysize 168
 
-                                                                    add Solid("#111a2833")
-                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 0 xsize 760 ysize 2
-                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 256 xsize 760 ysize 2
-                                                                    add Solid(tab_colors["accent_soft"]) xpos 0 ypos 0 xsize 2 ysize 258
-                                                                    add Solid(tab_colors["accent_soft"]) xpos 758 ypos 0 xsize 2 ysize 258
+                                                                    $ featured_icon_path = ell_collectible_icon_path(current_collectible["id"])
+                                                                    $ featured_icon_fallback = current_collectible.get("tab_icon", "?")
 
-                                                                    grid 5 3:
-                                                                        xpos 18
-                                                                        ypos 18
-                                                                        spacing 12
+                                                                    add Solid("#4a2c3e70")
+                                                                    add Solid("#ffca63") xpos 0 ypos 0 xsize 860 ysize 2
+                                                                    add Solid("#ffca63") xpos 0 ypos 166 xsize 860 ysize 2
+                                                                    add Solid("#ffca63") xpos 0 ypos 0 xsize 2 ysize 168
+                                                                    add Solid("#ffca63") xpos 858 ypos 0 xsize 2 ysize 168
+                                                                    add Solid("#fff2b818") xpos 6 ypos 6 xsize 848 ysize 156
+                                                                    add Solid("#ffb347") xpos 16 ypos 0 xsize 210 ysize 2
+                                                                    add Solid("#ffb347") xpos 650 ypos 166 xsize 184 ysize 2
 
-                                                                        for preview_path in selected_collectible_previews[:15]:
-                                                                            fixed:
-                                                                                xsize 132
-                                                                                ysize 64
+                                                                    frame:
+                                                                        background "#00000000"
+                                                                        xpos 16
+                                                                        ypos 16
+                                                                        xsize 136
+                                                                        ysize 136
+                                                                        xpadding 8
+                                                                        ypadding 8
 
-                                                                                add Solid("#06111b30")
-                                                                                add Solid("#ffffff14") xpos 0 ypos 0 xsize 132 ysize 2
-                                                                                add Solid("#ffffff14") xpos 0 ypos 62 xsize 132 ysize 2
-                                                                                add Solid("#ffffff14") xpos 0 ypos 0 xsize 2 ysize 64
-                                                                                add Solid("#ffffff14") xpos 130 ypos 0 xsize 2 ysize 64
+                                                                        if featured_icon_path:
+                                                                            add Transform(featured_icon_path, xalign=0.5, yalign=0.5, fit="contain", xsize=116, ysize=116)
+                                                                        else:
+                                                                            text featured_icon_fallback style "inv_title" color "#ffe39a" size 56:
+                                                                                xalign 0.5
+                                                                                yalign 0.5
 
-                                                                                if preview_path and renpy.loadable(preview_path):
-                                                                                    add Transform(preview_path, xalign=0.5, yalign=0.5, fit="contain", xsize=116, ysize=48)
-                                                                                else:
-                                                                                    text "?" style "inv_section_title" color "#7d8ca6":
-                                                                                        xalign 0.5
-                                                                                        yalign 0.5
+                                                                    vbox:
+                                                                        xpos 176
+                                                                        ypos 22
+                                                                        spacing 6
+                                                                        xsize 450
 
-                                                                if renpy.loadable(selected_collectible["display_image"]):
-                                                                    add Transform(
-                                                                        selected_collectible["display_image"],
-                                                                        xanchor=1.0,
-                                                                        yanchor=1.0,
-                                                                        xpos=1260,
-                                                                        ypos=420,
-                                                                        xsize=selected_collectible_art_xsize,
-                                                                        ysize=selected_collectible_art_ysize
-                                                                    )
-                                                            else:
-                                                                vbox:
-                                                                    xpos 0
-                                                                    ypos 0
-                                                                    spacing 14
-                                                                    xsize 520
+                                                                        text current_collectible["title"] style "inv_title" color "#ffe39a" size 30
+                                                                        text current_collectible["desc"] style "inv_body_text" color "#f2e7f4" size 17 xmaximum 430
 
-                                                                    for c in tab_items:
-                                                                        button:
-                                                                            style "inv_card_button"
-                                                                            action If(inv_collectible_id == c["id"], true=SetScreenVariable("inv_collectible_id", None), false=SetScreenVariable("inv_collectible_id", c["id"]))
-                                                                            xsize 620
-                                                                            ysize 96
+                                                                    text current_collectible["status"] style "inv_title" color "#ffe39a" size 28:
+                                                                        xpos 620
+                                                                        ypos 24
+                                                                        xsize 202
+                                                                        text_align 1.0
 
-                                                                            fixed:
-                                                                                xsize 620
-                                                                                ysize 96
+                                                                    fixed:
+                                                                        xpos 174
+                                                                        ypos 116
+                                                                        xsize 648
+                                                                        ysize 18
 
-                                                                                add Solid("#10172638")
-                                                                                add Solid("#5e7684") xpos 0 ypos 0 xsize 6 ysize 96
-                                                                                add Solid("#5e7684") xpos 614 ypos 0 xsize 6 ysize 96
-                                                                                add Solid("#314756") xpos 6 ypos 0 xsize 608 ysize 2
-                                                                                add Solid("#314756") xpos 6 ypos 94 xsize 608 ysize 2
+                                                                        add Solid("#140d20d8") xpos 0 ypos 4 xsize 648 ysize 10
+                                                                        add Solid("#ffffff20") xpos 1 ypos 5 xsize 646 ysize 1
+                                                                        $ featured_progress_width = int((648 * current_collectible["found_count"]) / max(1, current_collectible["total_count"]))
+                                                                        add Solid("#ffc64d") xpos 0 ypos 4 xsize featured_progress_width ysize 10
+                                                                        add Solid("#fff4c850") xpos 0 ypos 5 xsize max(0, featured_progress_width - 12) ysize 2
 
-                                                                                frame:
-                                                                                    background "#111a2830"
-                                                                                    xpos 18
-                                                                                    ypos 16
-                                                                                    xsize 64
-                                                                                    ysize 64
-                                                                                    xpadding 6
-                                                                                    ypadding 6
+                                                        fixed:
+                                                            xpos 184
+                                                            ypos 242
+                                                            xsize 800
+                                                            ysize 270
 
-                                                                                    if c["id"] == "plushies" and renpy.loadable("secrets/plushies/kittycat_plush.png"):
-                                                                                        add Transform("secrets/plushies/kittycat_plush.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
-                                                                                    elif c["id"] == "picture_frames" and renpy.loadable("secrets/Picture Frames/picture1.png"):
-                                                                                        add Transform("secrets/Picture Frames/picture1.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
-                                                                                    else:
-                                                                                        add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=48, ysize=48)
+                                                            grid 5 3:
+                                                                xpos 0
+                                                                ypos 0
+                                                                xspacing 10
+                                                                yspacing 12
 
-                                                                                vbox:
-                                                                                    xpos 96
-                                                                                    ypos 12
-                                                                                    spacing 4
-                                                                                    xsize 320
+                                                                for preview_path in selected_collectible_previews[:15]:
+                                                                    fixed:
+                                                                        xsize 152
+                                                                        ysize 82
 
-                                                                                    text c["title"] style "inv_section_title"
-                                                                                    text c["desc"] style "inv_muted_text" xmaximum 320
+                                                                        add Solid("#2a224682")
+                                                                        add Solid("#a7b6ff66") xpos 0 ypos 0 xsize 152 ysize 2
+                                                                        add Solid("#a7b6ff66") xpos 0 ypos 80 xsize 152 ysize 2
+                                                                        add Solid("#a7b6ff66") xpos 0 ypos 0 xsize 2 ysize 82
+                                                                        add Solid("#a7b6ff66") xpos 150 ypos 0 xsize 2 ysize 82
 
-                                                                                text c["status"] style "inv_body_text" color tab_colors["accent"]:
-                                                                                    xpos 430
-                                                                                    ypos 34
-                                                                                    xsize 164
-                                                                                    text_align 1.0
+                                                                        if preview_path and renpy.loadable(preview_path):
+                                                                            add Transform(preview_path, xalign=0.5, yalign=0.5, fit="contain", xsize=134, ysize=62)
+                                                                        else:
+                                                                            text "?" style "inv_title" color "#d7d1ef" size 28:
+                                                                                xalign 0.5
+                                                                                yalign 0.5
 
-                                                                if tab_items and selected_collectible is None:
-                                                                    add Transform(
-                                                                        "gui/tsuki_plushies.png",
-                                                                        xanchor=1.0,
-                                                                        yanchor=1.0,
-                                                                        xpos=1248,
-                                                                        ypos=408,
-                                                                        xsize=320,
-                                                                        ysize=480
-                                                                    )
+                                                        if renpy.loadable(current_collectible["display_image"]):
+                                                            add Transform(
+                                                                current_collectible["display_image"],
+                                                                xanchor=1.0,
+                                                                yanchor=1.0,
+                                                                xpos=(selected_collectible_art_xpos - 24),
+                                                                ypos=(selected_collectible_art_ypos - 86),
+                                                                xsize=selected_collectible_art_xsize,
+                                                                ysize=selected_collectible_art_ysize
+                                                            )
+
+                                                        vbox:
+                                                            xpos 328
+                                                            ypos 548
+                                                            spacing 10
+                                                            xsize 566
+
+                                                            text "Overall Completion: {}/{}".format(overall_found, overall_total) style "inv_section_title" color "#f0e8ff" size 22 xalign 0.5
+
+                                                            fixed:
+                                                                xsize 566
+                                                                ysize 20
+
+                                                                add Solid("#160f22de") xpos 0 ypos 5 xsize 566 ysize 10
+                                                                add Solid("#ffffff18") xpos 1 ypos 6 xsize 564 ysize 1
+                                                                add Solid("#e59cff") xpos 0 ypos 5 xsize overall_progress_width ysize 10
+                                                                add Solid("#ffffff32") xpos 0 ypos 6 xsize max(0, overall_progress_width - 10) ysize 2
 
                                         elif inv_tab == "characters":
                                             for ch in tab_items:
