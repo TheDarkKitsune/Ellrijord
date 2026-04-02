@@ -41,9 +41,9 @@ screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="
     $ scale = zoom * BTN_VISUAL_SCALE
     $ btn_w = int(BTN_SRC_W * scale) if xsize is None else int(xsize)
     $ btn_h = int(BTN_SRC_H * scale) if ysize is None else int(ysize)
-    $ idle_disp = "gui/btn_idle.png"
-    $ hover_disp = "gui/btn_hover.png"
-    $ disabled_disp = "gui/btn_disabled.png"
+    $ idle_disp = "gui/button/btn_idle.png"
+    $ hover_disp = "gui/button/btn_hover.png"
+    $ disabled_disp = "gui/button/btn_disabled.png"
     $ _disabled_render = (idle_disp if disabled_uses_idle else disabled_disp)
     $ idle_render = _disabled_render if (selected or disabled) else idle_disp
     $ hover_render = _disabled_render if (selected or disabled) else (hover_disp if use_hover_asset else idle_disp)

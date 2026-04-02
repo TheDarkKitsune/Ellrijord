@@ -65,8 +65,8 @@ screen intro_press_any_to_continue():
     key "K_RETURN" action Return()
     key "K_SPACE" action Return()
 
-    if renpy.loadable("gui/Start.png"):
-        add im.Scale("gui/Start.png", config.screen_width, config.screen_height)
+    if renpy.loadable("gui/menu/Start.png"):
+        add im.Scale("gui/menu/Start.png", config.screen_width, config.screen_height)
     else:
         add Solid("#000000")
 
@@ -87,8 +87,8 @@ screen mc_profile_setup():
     $ _female_display_name = _typed_name if (mc_gender == "female" and _typed_name) else "Akari"
     $ _male_display_name = _typed_name if (mc_gender == "male" and _typed_name) else "Kaito"
 
-    if renpy.loadable("gui/mainmenu_bg.png"):
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    if renpy.loadable("gui/menu/mainmenu_bg.png"):
+        add im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
     else:
         add Solid("#1f1f26")
     add Solid("#01061166")
@@ -127,14 +127,14 @@ screen mc_profile_setup():
                 hovered SetScreenVariable("hovered_gender", "female")
                 unhovered SetScreenVariable("hovered_gender", None)
 
-                if renpy.loadable("gui/Akari.png"):
+                if renpy.loadable("gui/characters/Akari.png"):
                     if mc_gender == "female":
-                        add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
 
-                    add Transform("gui/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
+                    add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
                         alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.62)
                         zoom (1.00 if female_hovered else 0.96)
 
@@ -266,14 +266,14 @@ screen mc_profile_setup():
                 hovered SetScreenVariable("hovered_gender", "male")
                 unhovered SetScreenVariable("hovered_gender", None)
 
-                if renpy.loadable("gui/Kaito.png"):
+                if renpy.loadable("gui/characters/Kaito.png"):
                     if mc_gender == "male":
-                        add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
 
-                    add Transform("gui/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
+                    add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
                         alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.62)
                         zoom (1.00 if male_hovered else 0.96)
                 elif renpy.loadable("gui/mc_male.png"):

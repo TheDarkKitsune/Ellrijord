@@ -2,7 +2,7 @@
 # Simple mouse-follow tooltip displayable.
 
 style ui_tooltip_frame is frame:
-    background Frame("gui/btn_hover.png", 24, 24)
+    background Frame("gui/button/btn_hover.png", 24, 24)
     padding (16, 10)
 
 style ui_tooltip_text is text:
@@ -73,7 +73,7 @@ screen ui_tooltip_from_rect(text, rect, ypad=10, min_width=200):
         $ tw = max(min_width, int(rw * 0.9))
         $ tx = rx + int((rw - tw) / 2)
         frame:
-            background Frame("gui/textbox.png", 10, 13, 10, 13)
+            background Frame("gui/hud/textbox.png", 10, 13, 10, 13)
             xpos tx
             ypos (ry + rh + ypad)
             xsize tw

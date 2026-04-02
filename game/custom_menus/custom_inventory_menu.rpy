@@ -55,8 +55,8 @@
         return [
             ("Active Quests", str(active_quests)),
             ("Completed Quests", str(completed_quests)),
-            ("Plushies Found", "{}/25".format(plushies_found)),
-            ("Picture Frames", "{}/25".format(frames_found)),
+            ("Plushies Found", "{}/15".format(plushies_found)),
+            ("Picture Frames", "{}/15".format(frames_found)),
         ]
 
     def ell_inventory_search_blob(item):
@@ -118,19 +118,19 @@
     def ell_inventory_masked_divider(width, color="#d8b24f", height=5):
         return AlphaMask(
             Transform(Solid(color), xsize=width, ysize=height),
-            Transform("gui/inventory_divider_mask.png", xsize=width, ysize=height),
+            Transform("gui/inventory_system/gui/inventory_divider_mask.png", xsize=width, ysize=height),
         )
 
     def ell_inventory_tab_shadow(width=96, height=52, color="#00000055", flip=False):
         return AlphaMask(
             Transform(Solid(color), xsize=width, ysize=height),
-            Transform("gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height, xzoom=(-1 if flip else 1)),
+            Transform("gui/inventory_system/gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height, xzoom=(-1 if flip else 1)),
         )
 
     def ell_inventory_fade_right(width, height, color):
         return AlphaMask(
             Transform(Solid(color), xsize=width, ysize=height),
-            Transform("gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height),
+            Transform("gui/inventory_system/gui/inventory_tab_side_shadow_mask.png", xsize=width, ysize=height),
         )
 
     def ell_inventory_tab_glow(width, color="#f4d892"):
@@ -223,7 +223,7 @@
                 "border_color": (rarity_glow if unlocked else (rarity_border if has_progress else "#8d7b97")),
                 "border_soft": (rarity_glow + "55") if unlocked else ((rarity_border + "44") if has_progress else "#c8b5cf24"),
                 "status_text": ("{}/{}".format(progress_raw, int(ach.stat_max)) if has_progress else ("Unlocked" if unlocked else "Locked")),
-                "status_icon": ("✓" if unlocked else "🔒"),
+                "status_icon": ("ÃƒÂ¢Ã…â€œÃ¢â‚¬Å“" if unlocked else "ÃƒÂ°Ã…Â¸Ã¢â‚¬ÂÃ¢â‚¬â„¢"),
                 "desc": ach.description,
                 "progress": progress,
                 "progress_raw": progress_raw,
@@ -249,10 +249,10 @@
                 "type": "Collection",
                 "found": len(plushies_found) > 0,
                 "found_count": len(plushies_found),
-                "total_count": 25,
-                "status": "{}/25 found".format(len(plushies_found)),
+                "total_count": 15,
+                "status": "{}/15 found".format(len(plushies_found)),
                 "desc": "Hidden plushies scattered through the story.",
-                "display_image": "gui/tsuki_plushies.png",
+                "display_image": "gui/inventory_system/collectibles/tsuki_plushies.png",
             },
             {
                 "id": "picture_frames",
@@ -262,10 +262,10 @@
                 "type": "Collection",
                 "found": len(picture_frames_found) > 0,
                 "found_count": len(picture_frames_found),
-                "total_count": 25,
-                "status": "{}/25 found".format(len(picture_frames_found)),
+                "total_count": 15,
+                "status": "{}/15 found".format(len(picture_frames_found)),
                 "desc": "Secret picture frames tied to exploration.",
-                "display_image": "gui/picture_frames.png",
+                "display_image": "gui/inventory_system/collectibles/picture_frames.png",
             },
             {
                 "id": "foxfire_paw_prints",
@@ -275,8 +275,8 @@
                 "type": "Collection",
                 "found": len(paw_prints_found) > 0,
                 "found_count": len(paw_prints_found),
-                "total_count": 25,
-                "status": "{}/25 found".format(len(paw_prints_found)),
+                "total_count": 15,
+                "status": "{}/15 found".format(len(paw_prints_found)),
                 "desc": "These appear at night.",
                 "display_image": "",
             },
@@ -288,8 +288,8 @@
                 "type": "Collection",
                 "found": len(dream_fragments_found) > 0,
                 "found_count": len(dream_fragments_found),
-                "total_count": 25,
-                "status": "{}/25 found".format(len(dream_fragments_found)),
+                "total_count": 15,
+                "status": "{}/15 found".format(len(dream_fragments_found)),
                 "desc": "Pieces of lost dreams from Ellrijord scattered around Midgard.",
                 "display_image": "",
             },
@@ -301,14 +301,28 @@
                 "type": "Collection",
                 "found": False,
                 "found_count": 0,
-                "total_count": 25,
-                "status": "0/25 found",
+                "total_count": 15,
+                "status": "0/15 found",
                 "desc": "Placeholder collectible entry for future content.",
                 "display_image": "",
             },
         ]
 
     def ell_collectible_thumbnail_path(collectible_id, entry_id):
+        plush_map = {
+            "cat_plush_1": "secrets/plushies/kittycat_plush.png",
+        }
+        frame_map = {
+            "picture1": "gui/inventory_system/collectibles/picture_frame1.png",
+        }
+
+        if collectible_id == "plushies":
+            return plush_map.get(entry_id, None)
+        if collectible_id == "picture_frames":
+            return frame_map.get(entry_id, None)
+        return None
+
+    def ell_collectible_full_path(collectible_id, entry_id):
         plush_map = {
             "cat_plush_1": "secrets/plushies/kittycat_plush.png",
         }
@@ -325,7 +339,7 @@
     def ell_collectible_icon_path(collectible_id):
         icon_map = {
             "plushies": "secrets/plushies/kittycat_plush.png",
-            "picture_frames": "secrets/Picture Frames/picture1.png",
+            "picture_frames": "gui/inventory_system/collectibles/picture_frame1.png",
         }
         path = icon_map.get(collectible_id, None)
         if path and renpy.loadable(path):
@@ -341,7 +355,10 @@
         previews = []
 
         for entry_id in found_ids[:slot_count]:
-            previews.append(ell_collectible_thumbnail_path(collectible_id, entry_id))
+            previews.append({
+                "thumbnail": ell_collectible_thumbnail_path(collectible_id, entry_id),
+                "full": ell_collectible_full_path(collectible_id, entry_id),
+            })
 
         while len(previews) < slot_count:
             previews.append(None)
@@ -366,9 +383,19 @@
                 "role": "Protagonist",
                 "affinity": "Light",
                 "desc": "Female player route lead.",
-                "portrait": ell_inventory_character_portrait("gui/Akari.png"),
+                "portrait": ell_inventory_character_portrait("gui/characters/Akari.png"),
+                "accent": "#ff88d8",
+                "accent_soft": "#ff88d824",
+                "card_bg": "#3b1d4f4a",
+                "card_bg_2": "#20163766",
+                "frame_glow": "#ff9be2",
+                "role_icon": "*",
+                "affinity_icon": "o",
+                "meta_icon": "-",
+                "meta_left": "Year 2",
+                "meta_right": "Route Lead",
                 "personality": "Determined, warm, observant, quietly stubborn.",
-                "description_long": "The Light-route protagonist. She pushes forward even when the day starts badly and tends to carry other people with her momentum.",
+                "description_long": "A calm and determined soul who guides the story with quiet strength.",
                 "favorite_spots": ["Home bedroom in the morning", "School grounds after classes"],
                 "storyline": "Her route focuses on connection, trust, and the brighter side of Ellrijord's mysteries.",
             },
@@ -378,9 +405,19 @@
                 "role": "Protagonist",
                 "affinity": "Void",
                 "desc": "Male player route lead.",
-                "portrait": ell_inventory_character_portrait("gui/Kaito.png"),
+                "portrait": ell_inventory_character_portrait("gui/characters/Kaito.png"),
+                "accent": "#b57cff",
+                "accent_soft": "#b57cff24",
+                "card_bg": "#24184e4a",
+                "card_bg_2": "#17123366",
+                "frame_glow": "#ca99ff",
+                "role_icon": "*",
+                "affinity_icon": "o",
+                "meta_icon": "-",
+                "meta_left": "Year 2",
+                "meta_right": "Route Lead",
                 "personality": "Dry, resilient, introspective, quietly protective.",
-                "description_long": "The Void-route protagonist. He tends to process things internally first, but becomes decisive once he commits to a path.",
+                "description_long": "A stoic and mysterious figure who walks the path of shadows and questions.",
                 "favorite_spots": ["Home bedroom in the morning", "School grounds after classes"],
                 "storyline": "His route leans more heavily into tension, distance, and the stranger corners of the story.",
             },
@@ -391,8 +428,18 @@
                 "affinity": "Home",
                 "desc": "Central to the plushie collection quest.",
                 "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png"),
+                "accent": "#ffb14f",
+                "accent_soft": "#ffb14f24",
+                "card_bg": "#4f2b2a4a",
+                "card_bg_2": "#2e1d2466",
+                "frame_glow": "#ffc97a",
+                "role_icon": "*",
+                "affinity_icon": "o",
+                "meta_icon": "-",
+                "meta_left": "Year 1",
+                "meta_right": "Family",
                 "personality": "Teasing, energetic, affectionate, impossible to ignore.",
-                "description_long": "Tsuki anchors the early home scenes and gives the opening route a lot of its energy. She is also tied closely to the plushie side content.",
+                "description_long": "Central to the plushie collection quest. Bright, energetic, and full of warmth.",
                 "favorite_spots": ["Home kitchen before school", "Shared family spaces"],
                 "storyline": "She is one of the first characters to shape the player's daily rhythm and side discoveries.",
             },
@@ -403,8 +450,18 @@
                 "affinity": "Mystery",
                 "desc": "Mentioned in the opening school route.",
                 "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Year 2s/Rika Kuzunoha.png", "Ellrijord Characters/Year 2s/Rika Kuzunoha.png"),
+                "accent": "#72c8ff",
+                "accent_soft": "#72c8ff24",
+                "card_bg": "#172c5a4a",
+                "card_bg_2": "#131d3e66",
+                "frame_glow": "#93d8ff",
+                "role_icon": "*",
+                "affinity_icon": "o",
+                "meta_icon": "-",
+                "meta_left": "Year 2",
+                "meta_right": "School",
                 "personality": "Reserved, intriguing, hard to place at first glance.",
-                "description_long": "Rika enters the codex as someone the opening route points toward before fully explaining her role.",
+                "description_long": "Mentioned in the opening school route. Intelligent, reserved, and always observant.",
                 "favorite_spots": ["School corridors", "Anywhere the story starts hinting at secrets"],
                 "storyline": "She currently sits in the story as a mystery hook that suggests more is coming later.",
             },
@@ -626,7 +683,7 @@ screen inventory_character_detail(character=None):
                                     spacing 8
                                     text "Favorite Spots" style "inv_body_text" color detail_accent
                                     for spot in character.get("favorite_spots", []):
-                                        text "• {}".format(spot) style "inv_muted_text"
+                                        text "ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ {}".format(spot) style "inv_muted_text"
 
                             frame:
                                 background detail_soft
@@ -657,7 +714,7 @@ screen inventory_menu():
     if "inventory" in globals():
         on "show" action Function(inventory.ensure_shape, 28, 7, False)
 
-    $ bag_idle = "gui/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/Player_female_btn.png"
+    $ bag_idle = "gui/hud/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn.png"
     $ summary_rows = ell_inventory_summary_rows()
     $ tab_items = ell_inventory_tab_items(inv_tab)
     $ quest_view_items = ell_inventory_filter_quests(tab_items, inv_quest_view) if inv_tab == "quests" else []
@@ -670,6 +727,7 @@ screen inventory_menu():
     $ inventory_entry_count = (inventory_obj.total_item_count() if inventory_obj else 0)
     $ selected_collectible = next((c for c in ell_inventory_collectible_items() if c["id"] == inv_collectible_id), None)
     $ current_collectible = (selected_collectible if selected_collectible else (tab_items[0] if (inv_tab == "collectibles" and tab_items) else None))
+    $ featured_character = next((c for c in tab_items if c.get("id") == "tsuki"), (tab_items[-1] if (inv_tab == "characters" and tab_items) else None))
     $ selected_collectible_status = current_collectible["status"] if current_collectible else ""
     $ selected_collectible_previews = ell_collectible_preview_slots(current_collectible["id"], 15) if current_collectible else []
     $ selected_collectible_art_xsize = 300
@@ -677,19 +735,27 @@ screen inventory_menu():
     $ selected_collectible_art_xpos = 1288
     $ selected_collectible_art_ypos = 650
     if current_collectible and current_collectible["id"] == "plushies":
-        $ selected_collectible_art_xsize = 280
-        $ selected_collectible_art_ysize = 430
+        $ selected_collectible_art_xsize = 335
+        $ selected_collectible_art_ysize = 500
+        $ selected_collectible_art_xpos = 1330
+        $ selected_collectible_art_ypos = 636
     elif current_collectible and current_collectible["id"] == "picture_frames":
-        $ selected_collectible_art_xsize = 280
-        $ selected_collectible_art_ysize = 430
+        $ selected_collectible_art_xsize = 335
+        $ selected_collectible_art_ysize = 500
+        $ selected_collectible_art_xpos = 1330
+        $ selected_collectible_art_ypos = 636
     elif current_collectible and current_collectible["id"] == "foxfire_paw_prints":
-        $ selected_collectible_art_xsize = 280
-        $ selected_collectible_art_ysize = 430
+        $ selected_collectible_art_xsize = 335
+        $ selected_collectible_art_ysize = 500
+        $ selected_collectible_art_xpos = 1330
+        $ selected_collectible_art_ypos = 636
     elif current_collectible and current_collectible["id"] == "dream_fragments":
-        $ selected_collectible_art_xsize = 280
-        $ selected_collectible_art_ysize = 430
+        $ selected_collectible_art_xsize = 335
+        $ selected_collectible_art_ysize = 500
+        $ selected_collectible_art_xpos = 1330
+        $ selected_collectible_art_ypos = 636
 
-    add Transform("gui/inventory_bg.png", xsize=config.screen_width, ysize=config.screen_height)
+    add Transform("gui/inventory_system/gui/inventory_bg.png", xsize=config.screen_width, ysize=config.screen_height)
     add Solid("#02061704")
     add Solid("#8f6dff10")
 
@@ -726,7 +792,13 @@ screen inventory_menu():
                         textbutton _(tab["label"]):
                             style "inv_tab_button"
                             text_style "inv_tab_button_text"
-                            action SetScreenVariable("inv_tab", tab["id"])
+                            action (
+                                [SetScreenVariable("inv_tab", tab["id"]), SetScreenVariable("inv_quest_view", "active"), SetScreenVariable("inv_collectible_id", None)]
+                                if tab["id"] == "quests"
+                                else [SetScreenVariable("inv_tab", tab["id"]), SetScreenVariable("inv_collectible_id", None)]
+                                if tab["id"] == "collectibles"
+                                else SetScreenVariable("inv_tab", tab["id"])
+                            )
                             selected (inv_tab == tab["id"])
                             if inv_tab == tab["id"]:
                                 selected_background sidebar_tab_colors["selected_bg"]
@@ -829,7 +901,7 @@ screen inventory_menu():
                                             $ slot_data = inventory_obj.slots[slot]
                                             $ slot_unlocked = inventory_obj.is_slot_unlocked(slot)
                                             frame:
-                                                background ("components/inventory_system/gui/slot_bg.png" if slot_unlocked else "components/inventory_system/gui/locked_slot_bg.png")
+                                                background ("gui/inventory_system/gui/slot_bg.png" if slot_unlocked else "gui/inventory_system/gui/locked_slot_bg.png")
                                                 xsize 163
                                                 ysize 163
                                                 xpadding 10
@@ -1181,6 +1253,7 @@ screen inventory_menu():
                                                 $ overall_found = sum(c["found_count"] for c in tab_items)
                                                 $ overall_total = sum(c["total_count"] for c in tab_items)
                                                 $ overall_progress_width = int((566 * overall_found) / max(1, overall_total))
+                                                $ collectible_tab_glow_soft = ELL_INVENTORY_TAB_COLORS["quests"]["accent_soft"]
 
                                                 frame:
                                                     background "#241d435e"
@@ -1192,7 +1265,7 @@ screen inventory_menu():
                                                     hbox:
                                                         spacing 0
 
-                                                        textbutton _(tab_items[0].get("tab_label", tab_items[0]["title"])):
+                                                        textbutton _("{} {}".format(tab_items[0].get("tab_icon", ""), tab_items[0].get("tab_label", tab_items[0]["title"])).strip()):
                                                             style "inv_quest_mode_button"
                                                             text_style "inv_body_text"
                                                             action SetScreenVariable("inv_collectible_id", tab_items[0]["id"])
@@ -1202,7 +1275,7 @@ screen inventory_menu():
                                                             text_selected_color "#f4d892"
                                                             text_hover_color "#f4d892"
 
-                                                        textbutton _(tab_items[1].get("tab_label", tab_items[1]["title"])):
+                                                        textbutton _("{} {}".format(tab_items[1].get("tab_icon", ""), tab_items[1].get("tab_label", tab_items[1]["title"])).strip()):
                                                             style "inv_quest_mode_button"
                                                             text_style "inv_body_text"
                                                             action SetScreenVariable("inv_collectible_id", tab_items[1]["id"])
@@ -1212,7 +1285,7 @@ screen inventory_menu():
                                                             text_selected_color "#f4d892"
                                                             text_hover_color "#f4d892"
 
-                                                        textbutton _(tab_items[2].get("tab_label", tab_items[2]["title"])):
+                                                        textbutton _("{} {}".format(tab_items[2].get("tab_icon", ""), tab_items[2].get("tab_label", tab_items[2]["title"])).strip()):
                                                             style "inv_quest_mode_button"
                                                             text_style "inv_body_text"
                                                             action SetScreenVariable("inv_collectible_id", tab_items[2]["id"])
@@ -1222,7 +1295,7 @@ screen inventory_menu():
                                                             text_selected_color "#f4d892"
                                                             text_hover_color "#f4d892"
 
-                                                        textbutton _(tab_items[3].get("tab_label", tab_items[3]["title"])):
+                                                        textbutton _("{} {}".format(tab_items[3].get("tab_icon", ""), tab_items[3].get("tab_label", tab_items[3]["title"])).strip()):
                                                             style "inv_quest_mode_button"
                                                             text_style "inv_body_text"
                                                             action SetScreenVariable("inv_collectible_id", tab_items[3]["id"])
@@ -1232,7 +1305,7 @@ screen inventory_menu():
                                                             text_selected_color "#f4d892"
                                                             text_hover_color "#f4d892"
 
-                                                        textbutton _(tab_items[4].get("tab_label", tab_items[4]["title"])):
+                                                        textbutton _("{} {}".format(tab_items[4].get("tab_icon", ""), tab_items[4].get("tab_label", tab_items[4]["title"])).strip()):
                                                             style "inv_quest_mode_button"
                                                             text_style "inv_body_text"
                                                             action SetScreenVariable("inv_collectible_id", tab_items[4]["id"])
@@ -1287,11 +1360,11 @@ screen inventory_menu():
                                                     ysize 5
                                                     ypos 52
 
-                                                    add Solid(tab_colors["accent_soft"]):
+                                                    add Solid(collectible_tab_glow_soft):
                                                         xsize 916
                                                         ysize 5
 
-                                                    add ell_inventory_fade_right(96, 5, tab_colors["accent_soft"]):
+                                                    add ell_inventory_fade_right(96, 5, collectible_tab_glow_soft):
                                                         xpos 916
                                                         ypos 0
 
@@ -1333,7 +1406,7 @@ screen inventory_menu():
                                                             button:
                                                                 style "inv_card_button"
                                                                 action NullAction()
-                                                                xpos 184
+                                                                xpos 154
                                                                 ypos 40
                                                                 xsize 860
                                                                 ysize 168
@@ -1355,7 +1428,7 @@ screen inventory_menu():
                                                                     add Solid("#ffb347") xpos 650 ypos 166 xsize 184 ysize 2
 
                                                                     frame:
-                                                                        background "#00000000"
+                                                                        background Transform("gui/button/Plain_btn.png", xsize=136, ysize=136)
                                                                         xpos 16
                                                                         ypos 16
                                                                         xsize 136
@@ -1409,23 +1482,22 @@ screen inventory_menu():
                                                                 xspacing 10
                                                                 yspacing 12
 
-                                                                for preview_path in selected_collectible_previews[:15]:
-                                                                    fixed:
-                                                                        xsize 152
-                                                                        ysize 82
+                                                                for preview_item in selected_collectible_previews[:15]:
+                                                                    if preview_item and renpy.loadable(preview_item.get("thumbnail", "")):
+                                                                        button:
+                                                                            style "inv_card_button"
+                                                                            action Show("extra_gallery_lightbox", image_path=preview_item.get("full", preview_item.get("thumbnail")), image_list=[preview_item.get("full", preview_item.get("thumbnail"))], image_index=0)
+                                                                            xsize 152
+                                                                            ysize 82
 
-                                                                        add Solid("#2a224682")
-                                                                        add Solid("#a7b6ff66") xpos 0 ypos 0 xsize 152 ysize 2
-                                                                        add Solid("#a7b6ff66") xpos 0 ypos 80 xsize 152 ysize 2
-                                                                        add Solid("#a7b6ff66") xpos 0 ypos 0 xsize 2 ysize 82
-                                                                        add Solid("#a7b6ff66") xpos 150 ypos 0 xsize 2 ysize 82
+                                                                            add Transform(preview_item.get("thumbnail", ""), xalign=0.5, yalign=0.5, fit="cover", xsize=152, ysize=82)
+                                                                    else:
+                                                                        fixed:
+                                                                            xsize 152
+                                                                            ysize 82
+                                                                            clipping True
 
-                                                                        if preview_path and renpy.loadable(preview_path):
-                                                                            add Transform(preview_path, xalign=0.5, yalign=0.5, fit="contain", xsize=134, ysize=62)
-                                                                        else:
-                                                                            text "?" style "inv_title" color "#d7d1ef" size 28:
-                                                                                xalign 0.5
-                                                                                yalign 0.5
+                                                                            add Transform("gui/inventory_system/gui/collectible_preview_box.png", xsize=152, ysize=82)
 
                                                         if renpy.loadable(current_collectible["display_image"]):
                                                             add Transform(
@@ -1439,82 +1511,106 @@ screen inventory_menu():
                                                             )
 
                                                         vbox:
-                                                            xpos 328
-                                                            ypos 548
-                                                            spacing 10
-                                                            xsize 566
+                                                            xalign 0.5
+                                                            ypos 574
+                                                            spacing 14
+                                                            xsize 640
 
-                                                            text "Overall Completion: {}/{}".format(overall_found, overall_total) style "inv_section_title" color "#f0e8ff" size 22 xalign 0.5
+                                                            text "Overall Completion: {}/{}".format(overall_found, overall_total) style "inv_section_title" color "#f0e8ff" size 28 xalign 0.5
 
                                                             fixed:
-                                                                xsize 566
-                                                                ysize 20
+                                                                xsize 640
+                                                                ysize 28
 
-                                                                add Solid("#160f22de") xpos 0 ypos 5 xsize 566 ysize 10
-                                                                add Solid("#ffffff18") xpos 1 ypos 6 xsize 564 ysize 1
-                                                                add Solid("#e59cff") xpos 0 ypos 5 xsize overall_progress_width ysize 10
-                                                                add Solid("#ffffff32") xpos 0 ypos 6 xsize max(0, overall_progress_width - 10) ysize 2
+                                                                $ overall_progress_width = int((640 * overall_found) / max(1, overall_total))
+                                                                add Solid("#160f22de") xpos 0 ypos 7 xsize 640 ysize 14
+                                                                add Solid("#ffffff18") xpos 1 ypos 8 xsize 638 ysize 1
+                                                                add Solid("#e59cff") xpos 0 ypos 7 xsize overall_progress_width ysize 14
+                                                                add Solid("#ffffff32") xpos 0 ypos 8 xsize max(0, overall_progress_width - 12) ysize 3
 
                                         elif inv_tab == "characters":
-                                            for ch in tab_items:
-                                                button:
-                                                    style "inv_card_button"
-                                                    xfill True
-                                                    action Show("inventory_character_detail", character=ch)
+                                            fixed:
+                                                xfill True
+                                                ysize 740
 
-                                                    fixed:
-                                                        xfill True
-                                                        ysize 112
+                                                vbox:
+                                                    xpos 0
+                                                    ypos 0
+                                                    spacing 12
+                                                    xsize 1060
 
-                                                        add Solid(tab_colors["accent_soft"])
-                                                        add Solid(tab_colors["accent"]) xpos 0 ypos 0 xsize 8 ysize 112
-                                                        add Solid(tab_colors["accent"]) xpos 8 ypos 0 ysize 3
-                                                        add Solid(tab_colors["accent"]) xpos 8 ypos 109 ysize 3
-                                                        add Solid(tab_colors["accent"]) xpos 8 ypos 3 xsize 3 ysize 106
-                                                        add Solid(tab_colors["accent"]) xpos 1325 ypos 3 xsize 3 ysize 106
+                                                    for ch in tab_items:
+                                                        button:
+                                                            style "inv_card_button"
+                                                            xsize 1060
+                                                            ysize 150
+                                                            action Show("inventory_character_detail", character=ch)
 
-                                                        frame:
-                                                            background tab_colors["accent_soft"]
-                                                            xpos 22
-                                                            ypos 10
-                                                            xsize 90
-                                                            ysize 90
-                                                            xpadding 7
-                                                            ypadding 7
+                                                            fixed:
+                                                                xsize 1060
+                                                                ysize 150
 
-                                                            if renpy.loadable(ch.get("portrait", "")):
-                                                                add Transform(
-                                                                    ch["portrait"],
-                                                                    xalign=0.5,
-                                                                    yalign=0.5,
-                                                                    xsize=76,
-                                                                    ysize=76
-                                                                )
-                                                            else:
-                                                                add Transform(
-                                                                    "gui/window_icon.png",
-                                                                    xalign=0.5,
-                                                                    yalign=0.5,
-                                                                    xsize=64,
-                                                                    ysize=64
-                                                                )
+                                                                add Solid(ch.get("card_bg", "#23173dca"))
+                                                                add Solid(ch.get("card_bg_2", "#17132bd8")) xpos 3 ypos 3 xsize 1054 ysize 144
+                                                                add Solid(ch.get("frame_glow", "#f2a4ff")) xpos 0 ypos 0 xsize 1060 ysize 2
+                                                                add Solid(ch.get("frame_glow", "#f2a4ff")) xpos 0 ypos 148 xsize 1060 ysize 2
+                                                                add Solid(ch.get("frame_glow", "#f2a4ff")) xpos 0 ypos 0 xsize 2 ysize 150
+                                                                add Solid(ch.get("frame_glow", "#f2a4ff")) xpos 1058 ypos 0 xsize 2 ysize 150
+                                                                add Solid(ch.get("accent_soft", "#ffffff10")) xpos 16 ypos 16 xsize 1028 ysize 118
+                                                                add Solid(ch.get("frame_glow", "#f2a4ff") + "22") xpos 14 ypos 14 xsize 1032 ysize 122
 
-                                                        vbox:
-                                                            xpos 126
-                                                            ypos 8
-                                                            spacing 6
-                                                            xsize 760
+                                                                fixed:
+                                                                    xpos 18
+                                                                    ypos 15
+                                                                    xsize 148
+                                                                    ysize 120
 
-                                                            text ch["name"] style "inv_section_title"
-                                                            text ch["desc"] style "inv_muted_text"
+                                                                    add Transform("gui/inventory_system/gui/slot_bg.png", xsize=148, ysize=120)
 
-                                                        vbox:
-                                                            xpos 930
-                                                            ypos 18
-                                                            spacing 6
-                                                            xsize 220
-                                                            text ch["role"] style "inv_body_text" color tab_colors["accent"] xalign 0.5
-                                                            text ch["affinity"] style "inv_label_text" color tab_colors["accent"] xalign 0.5
+                                                                vbox:
+                                                                    xpos 172
+                                                                    ypos 14
+                                                                    spacing 4
+                                                                    xsize 392
+
+                                                                    text ch["name"] style "inv_title" color ch.get("frame_glow", "#f2a4ff") size 30
+                                                                    text ch["desc"] style "inv_body_text" color "#fff6f9" size 16
+                                                                    text ch.get("description_long", "") style "inv_muted_text" color "#f1e8ff" size 15 xmaximum 372
+
+                                                                hbox:
+                                                                    xpos 640
+                                                                    ypos 24
+                                                                    spacing 14
+
+                                                                    frame:
+                                                                        background "#ffffff08"
+                                                                        xpadding 18
+                                                                        ypadding 8
+
+                                                                        hbox:
+                                                                            spacing 8
+                                                                            text ch.get("role_icon", "•") style "inv_body_text" color ch.get("frame_glow", "#f2a4ff") size 18
+                                                                            text ch["role"] style "inv_body_text" color "#ffe7fb" size 15
+
+                                                                    frame:
+                                                                        background "#ffffff08"
+                                                                        xpadding 18
+                                                                        ypadding 8
+
+                                                                        hbox:
+                                                                            spacing 8
+                                                                            text ch.get("affinity_icon", "•") style "inv_body_text" color ch.get("frame_glow", "#f2a4ff") size 18
+                                                                            text ch["affinity"] style "inv_body_text" color "#ffe7fb" size 15
+
+                                                                hbox:
+                                                                    xpos 640
+                                                                    ypos 84
+                                                                    spacing 10
+
+                                                                    text ch.get("meta_icon", "•") style "inv_label_text" color ch.get("frame_glow", "#f2a4ff") size 18
+                                                                    text ch.get("meta_left", "") style "inv_body_text" color "#efe4ff" size 16
+                                                                    text "•" style "inv_body_text" color ch.get("frame_glow", "#f2a4ff") size 16
+                                                                    text ch.get("meta_right", "") style "inv_body_text" color "#efe4ff" size 16
 
                                         else:
                                             for item in tab_items:

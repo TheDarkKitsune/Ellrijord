@@ -1,10 +1,10 @@
 init python:
     def pm_notify(message, sound_type="default"):
         sound_map = {
-            "default": "components/custom_notification/notification.mp3",
-            "error": "components/custom_notification/error.mp3",
-            "success": "components/custom_notification/success.mp3",
-            "remove": "components/custom_notification/remove.mp3",
+            "default": "gui/custom_notification/notification.mp3",
+            "error": "gui/custom_notification/error.mp3",
+            "success": "gui/custom_notification/success.mp3",
+            "remove": "gui/custom_notification/remove.mp3",
         }
 
         sound_path = sound_map.get(sound_type, sound_map["default"])
@@ -17,7 +17,7 @@ init python:
 
 screen custom_notification(message, sound_type="default"):
     zorder 250
-    $ notification_bg = ("components/custom_notification/images/gui/notification.png" if renpy.loadable("components/custom_notification/images/gui/notification.png") else Solid("#081220ee"))
+    $ notification_bg = ("gui/custom_notification/images/gui/notification.png" if renpy.loadable("gui/custom_notification/images/gui/notification.png") else Solid("#081220ee"))
 
     frame:
         background notification_bg

@@ -534,8 +534,8 @@ screen achievement_gallery():
     $ total = Achievement.num_total()
     $ remaining = max(total - earned, 0)
 
-    if renpy.loadable("gui/mainmenu_bg.png"):
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    if renpy.loadable("gui/menu/mainmenu_bg.png"):
+        add im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
     else:
         add Solid("#111a33")
 

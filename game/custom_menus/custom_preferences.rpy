@@ -1,9 +1,9 @@
 # custom_preferences.rpy
 # Uses:
-#   gui/game_menu.png
-#   gui/logo.png
-#   gui/btn_idle.png
-#   gui/btn_hover.png
+#   gui/menu/game_menu.png
+#   gui/menu/logo.png
+#   gui/button/btn_idle.png
+#   gui/button/btn_hover.png
 #   fonts/cinzel_decorative/CinzelDecorative-Bold.otf
 
 init -2 python:
@@ -307,6 +307,7 @@ screen pref_add_binding_button(action, tooltip_key=None, button_id=None):
 screen preferences():
 
     tag menu
+    on "hide" action Function(renpy.restart_interaction)
 
     default pref_tab = "display"
     default pref_remapper = pad_remap.ControllerRemap()
@@ -319,7 +320,7 @@ screen preferences():
     key "K_q" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, -1))
     key "K_e" action SetScreenVariable("pref_tab", next_pref_tab(pref_tab, 1))
 
-    add Transform("gui/game_menu.png", xsize=config.screen_width, ysize=config.screen_height)
+    add Transform("gui/menu/game_menu.png", xsize=config.screen_width, ysize=config.screen_height)
 
     # Top tabs
     hbox:

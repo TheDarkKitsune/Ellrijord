@@ -94,15 +94,15 @@ screen say(who, what):
 
         text what id "what"
 
-    $ _msgbox_btn_idle = "gui/msgbox_btn.png"
-    $ _msgbox_btn_hover = "gui/msgbox_btn_hover.png" if renpy.loadable("gui/msgbox_btn_hover.png") else ("gui/msgbox_btn hover.png" if renpy.loadable("gui/msgbox_btn hover.png") else _msgbox_btn_idle)
-    $ _back_btn_idle = "gui/back_btn.png"
-    $ _back_btn_hover = "gui/back_btn_hover.png" if renpy.loadable("gui/back_btn_hover.png") else _back_btn_idle
-    $ _bag_btn_idle = "gui/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/Player_female_btn.png"
-    $ _bag_btn_hover = ("gui/Player_male_btn_hover.png" if getattr(store, "mc_gender", "male") == "male" else "gui/Player_female_btn_hover.png")
+    $ _msgbox_btn_idle = "gui/hud/msgbox_btn.png"
+    $ _msgbox_btn_hover = "gui/hud/msgbox_btn_hover.png" if renpy.loadable("gui/hud/msgbox_btn_hover.png") else ("gui/msgbox_btn hover.png" if renpy.loadable("gui/msgbox_btn hover.png") else _msgbox_btn_idle)
+    $ _back_btn_idle = "gui/hud/back_btn.png"
+    $ _back_btn_hover = "gui/hud/back_btn_hover.png" if renpy.loadable("gui/hud/back_btn_hover.png") else _back_btn_idle
+    $ _bag_btn_idle = "gui/hud/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn.png"
+    $ _bag_btn_hover = ("gui/hud/Player_male_btn_hover.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn_hover.png")
     $ _bag_btn_hover = _bag_btn_hover if renpy.loadable(_bag_btn_hover) else _bag_btn_idle
-    $ _setting_btn_idle = "gui/Settings_btn.png"
-    $ _setting_btn_hover = "gui/Settings_btn_hover.png" if renpy.loadable("gui/Settings_btn_hover.png") else _setting_btn_idle
+    $ _setting_btn_idle = "gui/hud/Settings_btn.png"
+    $ _setting_btn_hover = "gui/hud/Settings_btn_hover.png" if renpy.loadable("gui/hud/Settings_btn_hover.png") else _setting_btn_idle
 
     fixed:
         xfill True
@@ -207,7 +207,7 @@ style window:
     xfill True
     yalign gui.textbox_yalign
     ysize gui.textbox_height
-    background Transform("gui/msgbox_720p.png", size=(1526, 251), xalign=0.5, yalign=0.0)
+    background Transform("gui/hud/msgbox_720p.png", size=(1526, 251), xalign=0.5, yalign=0.0)
 
 style namebox:
     xpos gui.name_xpos
@@ -215,7 +215,7 @@ style namebox:
     xsize gui.namebox_width
     ypos gui.name_ypos
     ysize gui.namebox_height
-    background Transform("gui/msgbox_name_header_720p.png", size=(380, 78))
+    background Transform("gui/hud/msgbox_name_header_720p.png", size=(380, 78))
     padding gui.namebox_borders.padding
 
 style say_label:
@@ -284,9 +284,9 @@ style choice_button is default:
     xalign 0.5
     xminimum 1185
     yminimum 80
-    background Transform("gui/choice_label_720p.png", size=(1185, 80))
-    hover_background Transform("gui/choice_label_hover_720p.png", size=(1185, 80))
-    insensitive_background Transform("gui/choice_label_720p.png", size=(1185, 80))
+    background Transform("gui/button/choice_label_720p.png", size=(1185, 80))
+    hover_background Transform("gui/button/choice_label_hover_720p.png", size=(1185, 80))
+    insensitive_background Transform("gui/button/choice_label_720p.png", size=(1185, 80))
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
@@ -704,7 +704,7 @@ screen confirm(message, yes_action, no_action=None):
     style_prefix "confirm"
 
     $ _confirm_msg = (message or "")
-    $ _confirm_bg = "gui/starlit_paws.png" if "starlit paws" in _confirm_msg.lower() else "gui/exit.jpg"
+    $ _confirm_bg = "gui/menu/starlit_paws.png" if "starlit paws" in _confirm_msg.lower() else "gui/menu/exit.jpg"
     add Transform(_confirm_bg, xalign=0.5, yalign=0.5, fit="contain")
     add Solid("#00000066")
 

@@ -1,9 +1,9 @@
 # custom_main_menu.rpy
 # Uses:
-#   gui/mainmenu_bg.png
-#   gui/logo.png
-#   gui/btn_idle.png
-#   gui/btn_hover.png
+#   gui/menu/mainmenu_bg.png
+#   gui/menu/logo.png
+#   gui/button/btn_idle.png
+#   gui/button/btn_hover.png
 
 default persistent.mm_mode = "light"
 default persistent.mm_alt = False
@@ -64,11 +64,11 @@ init -2 python:
     def get_main_menu_bg_path():
         mode = get_main_menu_mode()
         if mode == "dark":
-            preferred = "gui/mainmenu_bg2.png"
+            preferred = "gui/menu/mainmenu_bg2.png"
         elif mode == "twilight":
-            preferred = "gui/mainmenu_bg3.png"
+            preferred = "gui/menu/mainmenu_bg3.png"
         else:
-            preferred = "gui/mainmenu_bg.png"
+            preferred = "gui/menu/mainmenu_bg.png"
 
         if renpy.loadable(preferred):
             return preferred
@@ -121,8 +121,8 @@ init -2 python:
     def get_main_menu_toggle_icon():
         mode = get_main_menu_mode()
         if mode == "light":
-            return "gui/lightmode_icon.png"
-        return "gui/darkmode_icon.png"
+            return "gui/menu/lightmode_icon.png"
+        return "gui/menu/darkmode_icon.png"
 
     def cycle_main_menu_mode():
         modes = ("light", "dark", "twilight")
@@ -162,7 +162,7 @@ transform main_menu_now_playing_fade:
     linear 0.7 alpha 0.0
 
 # ------------------------------------------------------------
-# Falling petals/leaves (put image at: gui/petal.png)
+# Falling petals/leaves (put image at: gui/menu/petal.png)
 # ------------------------------------------------------------
 init -2:
     transform petal_fall(xstart=0.5, t=12.0, s=0.06, r=220, drift=0.06, delay=0.0):
@@ -190,18 +190,18 @@ screen menu_petals():
     # behind UI elements in this file
     zorder 2
 
-    add "gui/petal.png" at petal_fall(xstart=0.05, t=11.0, s=0.055, r=220,  drift=0.06, delay=0.0)
-    add "gui/petal.png" at petal_fall(xstart=0.12, t=13.0, s=0.050, r=-260, drift=0.07, delay=1.0)
-    add "gui/petal.png" at petal_fall(xstart=0.20, t=12.0, s=0.060, r=240,  drift=0.06, delay=2.0)
-    add "gui/petal.png" at petal_fall(xstart=0.28, t=14.0, s=0.052, r=280,  drift=0.08, delay=3.0)
-    add "gui/petal.png" at petal_fall(xstart=0.36, t=10.5, s=0.060, r=-230, drift=0.06, delay=0.6)
-    add "gui/petal.png" at petal_fall(xstart=0.44, t=12.8, s=0.050, r=300,  drift=0.07, delay=1.7)
-    add "gui/petal.png" at petal_fall(xstart=0.52, t=11.5, s=0.062, r=-280, drift=0.06, delay=2.6)
-    add "gui/petal.png" at petal_fall(xstart=0.60, t=15.0, s=0.052, r=260,  drift=0.08, delay=3.6)
-    add "gui/petal.png" at petal_fall(xstart=0.68, t=10.8, s=0.058, r=230,  drift=0.06, delay=1.2)
-    add "gui/petal.png" at petal_fall(xstart=0.76, t=13.5, s=0.050, r=-300, drift=0.08, delay=2.2)
-    add "gui/petal.png" at petal_fall(xstart=0.84, t=12.3, s=0.058, r=290,  drift=0.06, delay=3.2)
-    add "gui/petal.png" at petal_fall(xstart=0.92, t=14.5, s=0.052, r=-250, drift=0.07, delay=4.0)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.05, t=11.0, s=0.055, r=220,  drift=0.06, delay=0.0)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.12, t=13.0, s=0.050, r=-260, drift=0.07, delay=1.0)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.20, t=12.0, s=0.060, r=240,  drift=0.06, delay=2.0)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.28, t=14.0, s=0.052, r=280,  drift=0.08, delay=3.0)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.36, t=10.5, s=0.060, r=-230, drift=0.06, delay=0.6)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.44, t=12.8, s=0.050, r=300,  drift=0.07, delay=1.7)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.52, t=11.5, s=0.062, r=-280, drift=0.06, delay=2.6)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.60, t=15.0, s=0.052, r=260,  drift=0.08, delay=3.6)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.68, t=10.8, s=0.058, r=230,  drift=0.06, delay=1.2)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.76, t=13.5, s=0.050, r=-300, drift=0.08, delay=2.2)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.84, t=12.3, s=0.058, r=290,  drift=0.06, delay=3.2)
+    add "gui/menu/petal.png" at petal_fall(xstart=0.92, t=14.5, s=0.052, r=-250, drift=0.07, delay=4.0)
 
 
 screen main_menu_now_playing(text):
@@ -244,7 +244,7 @@ screen main_menu():
 
     fixed:
 
-        add Transform("gui/logo.png") at logo_bob:
+        add Transform("gui/menu/logo.png") at logo_bob:
             xalign 0.5
             yanchor 0.0
             ypos 100
@@ -269,8 +269,8 @@ screen main_menu():
 
             hbox:
                 spacing 8
-                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
-                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
+                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/menu/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
+                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/menu/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
 
         fixed:
             xalign 0.95

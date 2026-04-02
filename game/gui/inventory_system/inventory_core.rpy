@@ -14,11 +14,11 @@ init -1 python:
 
         def _icon_path(self, item):
             normalized = self._normalize_item(item)
-            normalized_path = "components/inventory_system/icons/{}.png".format(normalized)
+            normalized_path = "gui/inventory_system/icons/{}.png".format(normalized)
             if renpy.loadable(normalized_path):
                 return normalized_path
             icon_name = normalized.replace("_", " ").title().replace(" ", "")
-            return "components/inventory_system/icons/{}.png".format(icon_name)
+            return "gui/inventory_system/icons/{}.png".format(icon_name)
 
         def add_item(self, item, quantity=1, notify=True, label=None):
             item = self._normalize_item(item)

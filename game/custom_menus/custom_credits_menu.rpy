@@ -27,7 +27,7 @@ default credits_entries = [
 
 init -2 python:
     CREDITS_AVATAR_SEEDS = [
-        "gui/news_icon.png",
+        "gui/menu/news_icon.png",
         "gui/window_icon.png",
     ]
 

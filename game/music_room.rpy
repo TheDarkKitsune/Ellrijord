@@ -1285,7 +1285,7 @@ screen music_room4(mr):
             if current_track:
                 add current_track.art xalign 0.5 yalign 0.5 fit "contain" xsize 420 ysize 260
             else:
-                text "♪" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
+                text "ÃƒÂ¢Ã¢â€žÂ¢Ã‚Âª" xalign 0.5 yalign 0.5 size 220 color "#efe3a7"
 
     text (current_track.name if current_track else _("Track Title")):
         xpos 280
@@ -1388,12 +1388,12 @@ screen music_room5(mr):
     default category_open = False
     default hovered_track_path = None
 
-    if renpy.loadable("gui/mainmenu_bg3.png"):
-        add im.Scale("gui/mainmenu_bg3.png", config.screen_width, config.screen_height)
-    elif renpy.loadable("gui/mainmenu_bg2.png"):
-        add im.Scale("gui/mainmenu_bg2.png", config.screen_width, config.screen_height)
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+    if renpy.loadable("gui/menu/mainmenu_bg3.png"):
+        add im.Scale("gui/menu/mainmenu_bg3.png", config.screen_width, config.screen_height)
+    elif renpy.loadable("gui/menu/mainmenu_bg2.png"):
+        add im.Scale("gui/menu/mainmenu_bg2.png", config.screen_width, config.screen_height)
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        add im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
     else:
         add Solid("#120f22")
 
@@ -1607,7 +1607,7 @@ screen music_room5(mr):
                     yfill True
 
         # Divider ornament.
-        text "──────── ✦ ────────":
+        text "ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ ÃƒÂ¢Ã…â€œÃ‚Â¦ ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬":
             xalign 0.5
             ypos 724
             color "#d9a85f"
@@ -1666,13 +1666,13 @@ screen music_room5(mr):
                 fixed:
                     xsize 86
                     ysize 72
-                    text "●":
+                    text "ÃƒÂ¢Ã¢â‚¬â€Ã‚Â":
                         xalign 0.5
                         yalign 0.5
                         color "#ff963c33"
                         size 92
                         font "DejaVuSans.ttf"
-                    text "●":
+                    text "ÃƒÂ¢Ã¢â‚¬â€Ã‚Â":
                         xalign 0.5
                         yalign 0.5
                         color "#ff963c66"

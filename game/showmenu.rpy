@@ -53,7 +53,9 @@ style showmenu_button_text:
 
 
 screen showmenu():
+    tag menu
     modal True
+    on "hide" action Function(renpy.restart_interaction)
 
     frame at showmenu_panel_enter:
         style "showmenu_frame"
@@ -73,7 +75,7 @@ screen showmenu():
                 style "showmenu_button"
                 text_style "showmenu_button_text"
                 at showmenu_button_hover
-                action Hide("showmenu")
+                action Return()
 
             textbutton _("Save Game"):
                 style "showmenu_button"
@@ -119,9 +121,10 @@ screen showmenu():
                     at showmenu_button_hover
                     action Quit(confirm=True)
 
-    key "game_menu" action Hide("showmenu")
+    key "game_menu" action Return()
 
 
 init -10 python:
-    # Make Esc/right-click open this as an overlay over the current scene.
-    config.game_menu_action = Show("showmenu")
+    # Route Esc/right-click through Ren'Py's real game-menu stack so Return()
+    # from nested screens like preferences cleanly restores gameplay.
+    config.game_menu_action = ShowMenu("showmenu")

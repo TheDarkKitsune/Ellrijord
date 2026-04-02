@@ -147,8 +147,8 @@ label day1_opening:
         scene bedroom_morning with dissolve
     elif renpy.has_image("bg morning_city"):
         scene bg morning_city with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
@@ -314,8 +314,8 @@ screen bedroom_day1_screen():
             if day1_plushie_system_introduced and bedroom_clothes_taken and not _cat_plush_found:
                 hotspot (860, 400, 70, 180) action [Function(renpy.stop_skipping), Jump("day1_secret_plushie1")]
     else:
-        if renpy.loadable("gui/mainmenu_bg.png"):
-            add im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height)
+        if renpy.loadable("gui/menu/mainmenu_bg.png"):
+            add im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
         else:
             add Solid("#101018")
 
@@ -377,8 +377,8 @@ screen day1_game_ui_popup(title, subtitle="", body=""):
         xsize 980
         ypadding 28
         xpadding 36
-        if renpy.loadable("gui/collectible_panel_720p.png"):
-            background Frame("gui/collectible_panel_720p.png", 40, 40)
+        if renpy.loadable("gui/collectibles/collectible_panel_720p.png"):
+            background Frame("gui/collectibles/collectible_panel_720p.png", 40, 40)
         else:
             background Solid("#111111ee")
 
@@ -408,8 +408,8 @@ screen day1_game_ui_popup(title, subtitle="", body=""):
                     xsize 760
                     ysize 210
 
-                    if renpy.loadable("gui/collectible_body_720p.png"):
-                        add Transform("gui/collectible_body_720p.png", fit="contain", xsize=760, ysize=210):
+                    if renpy.loadable("gui/collectibles/collectible_body_720p.png"):
+                        add Transform("gui/collectibles/collectible_body_720p.png", fit="contain", xsize=760, ysize=210):
                             xalign 0.5
                             yalign 0.5
 
@@ -424,7 +424,7 @@ screen day1_game_ui_popup(title, subtitle="", body=""):
 
             null height 10
 
-            if renpy.loadable("gui/collectible_button_720p.png"):
+            if renpy.loadable("gui/collectibles/collectible_button_720p.png"):
                 fixed:
                     xalign 0.5
                     xsize 320
@@ -432,11 +432,11 @@ screen day1_game_ui_popup(title, subtitle="", body=""):
                     yoffset -12
 
                     imagebutton:
-                        idle Transform("gui/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
-                        if renpy.loadable("gui/collectible_button_hover_720p.png"):
-                            hover Transform("gui/collectible_button_hover_720p.png", fit="contain", xsize=320, ysize=96)
+                        idle Transform("gui/collectibles/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
+                        if renpy.loadable("gui/collectibles/collectible_button_hover_720p.png"):
+                            hover Transform("gui/collectibles/collectible_button_hover_720p.png", fit="contain", xsize=320, ysize=96)
                         else:
-                            hover Transform("gui/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
+                            hover Transform("gui/collectibles/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
                         xalign 0.5
                         yalign 0.5
                         action Return()
@@ -657,8 +657,8 @@ label day1_living_room:
         scene living_room_morning with dissolve
     elif renpy.has_image("bg morning_city"):
         scene bg morning_city with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
@@ -922,8 +922,8 @@ label day1_school_gate:
         scene school_gate_morning with dissolve
     elif renpy.has_image("bg city_street_day"):
         scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
@@ -962,8 +962,8 @@ label day1_intro_year3:
         scene school_courtyard_morning with dissolve
     elif renpy.has_image("bg city_street_day"):
         scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
@@ -1001,8 +1001,8 @@ label day1_intro_year2:
         scene school_hallway_morning with dissolve
     elif renpy.has_image("bg city_street_day"):
         scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
@@ -1039,8 +1039,8 @@ label day1_class_intro:
         scene classroom_morning with dissolve
     elif renpy.has_image("bg bakery_day"):
         scene bg bakery_day with dissolve
-    elif renpy.loadable("gui/mainmenu_bg.png"):
-        scene expression im.Scale("gui/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
+        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
         scene black with dissolve
 
