@@ -40,6 +40,13 @@
         },
     }
 
+    ELL_CHARACTER_DETAIL_TABS = [
+        ("overview", "Overview"),
+        ("lore", "Lore"),
+        ("relationships", "Relationships"),
+        ("routine", "Routine / Locations"),
+    ]
+
     def ell_inventory_items():
         items = getattr(renpy.store, "ell_inventory_items", [])
         if callable(items):
@@ -392,12 +399,47 @@
                 "role_icon": "*",
                 "affinity_icon": "o",
                 "meta_icon": "-",
-                "meta_left": "Year 2",
+                "meta_left": "Year 3",
                 "meta_right": "Route Lead",
+                "subtitle": "The Quiet Light",
+                "year": "3",
+                "route_status": "Route Active",
+                "traits": ["Determined", "Warm", "Observant", "Stubborn"],
                 "personality": "Determined, warm, observant, quietly stubborn.",
                 "description_long": "A calm and determined soul who guides the story with quiet strength.",
+                "overview": "A calm and determined soul who guides the story with quiet strength. Akari carries the lighter emotional cadence of the route and keeps other people anchored when the world starts to lean toward the uncanny.",
+                "lore": "Akari stands at the center of the Kuzunoha route and is closely tied to the more hopeful side of Ellrijord's mysteries. Her scenes usually frame trust, emotional warmth, and the idea that connection can be a force strong enough to push back against fear.",
+                "relationships": [
+                    {
+                        "name": "Tsuki",
+                        "role": "Younger Sister",
+                        "summary": "Protective but teasing",
+                        "hearts": 5,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png"),
+                    },
+                    {
+                        "name": "Hana",
+                        "role": "Mother",
+                        "summary": "Gentle support",
+                        "hearts": 5,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png"),
+                    },
+                    {
+                        "name": "Rika",
+                        "role": "Family / School Link",
+                        "summary": "Growing trust",
+                        "hearts": 4,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Year 2s/Rika Kuzunoha.png", "game/Ellrijord Characters/Family/Aunt-Cousins/Rika Kuzunoha.png", "Ellrijord Characters/Year 2s/Rika Kuzunoha.png"),
+                    },
+                ],
+                "routine_locations": [
+                    {"time": "Morning", "place": "Home bedroom"},
+                    {"time": "After Classes", "place": "School grounds"},
+                    {"time": "Evening", "place": "Family living room"},
+                ],
                 "favorite_spots": ["Home bedroom in the morning", "School grounds after classes"],
                 "storyline": "Her route focuses on connection, trust, and the brighter side of Ellrijord's mysteries.",
+                "default_tab": "relationships",
             },
             {
                 "id": "kaito",
@@ -414,10 +456,44 @@
                 "role_icon": "*",
                 "affinity_icon": "o",
                 "meta_icon": "-",
-                "meta_left": "Year 2",
+                "meta_left": "Year 3",
                 "meta_right": "Route Lead",
+                "subtitle": "The Quiet Shadow",
+                "year": "3",
+                "route_status": "Route Active",
+                "traits": ["Dry", "Resilient", "Introspective", "Protective"],
                 "personality": "Dry, resilient, introspective, quietly protective.",
                 "description_long": "A stoic and mysterious figure who walks the path of shadows and questions.",
+                "overview": "A stoic and mysterious figure who walks the path of shadows and questions. Kaito's route leans harder into suspicion, guarded emotion, and the unsettling edges of Ellrijord's hidden systems.",
+                "lore": "Kaito is positioned closer to the stranger and more dangerous branches of the setting. His interactions tend to stress distance, survival, and the cost of understanding things that are easier to leave buried.",
+                "relationships": [
+                    {
+                        "name": "Tsuki",
+                        "role": "Younger Sister",
+                        "summary": "Protective, sarcastic, dependable",
+                        "hearts": 5,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png"),
+                    },
+                    {
+                        "name": "Hana",
+                        "role": "Mother",
+                        "summary": "Quiet care beneath the tension",
+                        "hearts": 4,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png"),
+                    },
+                    {
+                        "name": "Rika",
+                        "role": "School Connection",
+                        "summary": "Measured trust and curiosity",
+                        "hearts": 3,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Year 2s/Rika Kuzunoha.png", "game/Ellrijord Characters/Family/Aunt-Cousins/Rika Kuzunoha.png", "Ellrijord Characters/Year 2s/Rika Kuzunoha.png"),
+                    },
+                ],
+                "routine_locations": [
+                    {"time": "Morning", "place": "Home bedroom"},
+                    {"time": "Late Afternoon", "place": "School rooftop edge"},
+                    {"time": "Night", "place": "Any place tied to the unknown"},
+                ],
                 "favorite_spots": ["Home bedroom in the morning", "School grounds after classes"],
                 "storyline": "His route leans more heavily into tension, distance, and the stranger corners of the story.",
             },
@@ -438,8 +514,42 @@
                 "meta_icon": "-",
                 "meta_left": "Year 1",
                 "meta_right": "Family",
+                "subtitle": "The Bright Spark",
+                "year": "1",
+                "route_status": "Always Present",
+                "traits": ["Teasing", "Energetic", "Affectionate", "Honest"],
                 "personality": "Teasing, energetic, affectionate, impossible to ignore.",
                 "description_long": "Central to the plushie collection quest. Bright, energetic, and full of warmth.",
+                "overview": "Bright, energetic, and impossible to ignore, Tsuki brings constant movement into scenes that might otherwise stay too quiet. She often acts like a pressure release valve for the heavier parts of the story.",
+                "lore": "Tsuki sits close to the emotional center of the family dynamic and doubles as a recurring link to side discoveries like the plushie hunt. Even when the story turns serious, she keeps the world feeling lived in and personal.",
+                "relationships": [
+                    {
+                        "name": female_name,
+                        "role": "Older Sibling",
+                        "summary": "Constant banter with real warmth",
+                        "hearts": 5,
+                        "portrait": ell_inventory_character_portrait("gui/characters/Akari.png"),
+                    },
+                    {
+                        "name": "Hana",
+                        "role": "Mother",
+                        "summary": "Comfort and structure at home",
+                        "hearts": 5,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png"),
+                    },
+                    {
+                        "name": male_name,
+                        "role": "Older Sibling",
+                        "summary": "Reliable even when distant",
+                        "hearts": 4,
+                        "portrait": ell_inventory_character_portrait("gui/characters/Kaito.png"),
+                    },
+                ],
+                "routine_locations": [
+                    {"time": "Before School", "place": "Home kitchen"},
+                    {"time": "Afternoon", "place": "Shared family spaces"},
+                    {"time": "Evening", "place": "Wherever attention is easiest to steal"},
+                ],
                 "favorite_spots": ["Home kitchen before school", "Shared family spaces"],
                 "storyline": "She is one of the first characters to shape the player's daily rhythm and side discoveries.",
             },
@@ -460,8 +570,42 @@
                 "meta_icon": "-",
                 "meta_left": "Year 2",
                 "meta_right": "School",
+                "subtitle": "The Distant Echo",
+                "year": "2",
+                "route_status": "Side Presence",
+                "traits": ["Reserved", "Observant", "Intriguing", "Guarded"],
                 "personality": "Reserved, intriguing, hard to place at first glance.",
                 "description_long": "Mentioned in the opening school route. Intelligent, reserved, and always observant.",
+                "overview": "Rika reads like someone who notices more than she says. She enters the story with a deliberate distance that makes every small piece of trust feel important.",
+                "lore": "She currently works best as a mystery-forward school connection. Rika's scenes imply wider family ties, careful judgment, and a role that will matter more once the story starts exposing deeper layers of Ellrijord.",
+                "relationships": [
+                    {
+                        "name": female_name,
+                        "role": "School Connection",
+                        "summary": "Respect built through observation",
+                        "hearts": 3,
+                        "portrait": ell_inventory_character_portrait("gui/characters/Akari.png"),
+                    },
+                    {
+                        "name": male_name,
+                        "role": "School Connection",
+                        "summary": "Tension mixed with curiosity",
+                        "hearts": 3,
+                        "portrait": ell_inventory_character_portrait("gui/characters/Kaito.png"),
+                    },
+                    {
+                        "name": "Tsuki",
+                        "role": "Family Link",
+                        "summary": "Warmth that cuts through distance",
+                        "hearts": 2,
+                        "portrait": ell_inventory_character_portrait("game/Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png", "Ellrijord Characters/Family/MC Family/Tsuki Kuzunoha.png"),
+                    },
+                ],
+                "routine_locations": [
+                    {"time": "Morning", "place": "School corridors"},
+                    {"time": "After Classes", "place": "Quiet campus corners"},
+                    {"time": "Late Day", "place": "Anywhere secrets start surfacing"},
+                ],
                 "favorite_spots": ["School corridors", "Anywhere the story starts hinting at secrets"],
                 "storyline": "She currently sits in the story as a mystery hook that suggests more is coming later.",
             },
@@ -566,135 +710,433 @@ style inv_card_button:
     xpadding 0
     ypadding 0
 
+style inv_char_display_name is text:
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
+    size 42
+    color "#f6e7d4"
+
+style inv_char_card_name is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 24
+    color "#f8ead7"
+    textalign 0.5
+
+style inv_char_card_meta is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 18
+    color "#ead9ca"
+    textalign 0.5
+
+style inv_char_subtitle is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 24
+    color "#dfc8d6"
+    italic True
+
+style inv_char_chip_text is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 18
+    color "#fff4ea"
+
+style inv_char_tab_text is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 18
+    color "#d9c9dd"
+    selected_color "#fff3eb"
+
+style inv_char_small_label is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 16
+    color "#e2bfd2"
+
+style inv_char_small_body is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 16
+    color "#efe6f4"
+
+style inv_char_heart is text:
+    font "fonts/cinzel/Cinzel-Bold.otf"
+    size 24
+    color "#ff92ba"
+
 screen inventory_character_detail(character=None):
 
     modal True
     zorder 200
 
     if character:
-        $ detail_accent = ELL_INVENTORY_TAB_COLORS["characters"]["accent"]
-        $ detail_soft = ELL_INVENTORY_TAB_COLORS["characters"]["accent_soft"]
+        default detail_tab = character.get("default_tab", "overview")
+        default detail_relationship_page = 0
 
-        add Solid("#020617dd")
+        $ detail_accent = character.get("frame_glow", ELL_INVENTORY_TAB_COLORS["characters"]["accent"])
+        $ detail_soft = character.get("accent_soft", ELL_INVENTORY_TAB_COLORS["characters"]["accent_soft"])
+        $ detail_name = character.get("name", "Unknown").upper()
+        $ detail_subtitle = character.get("subtitle", character.get("desc", "Character Entry"))
+        $ detail_traits = character.get("traits", []) or [t.strip().title() for t in character.get("personality", "").split(",") if t.strip()]
+        $ detail_relationships = character.get("relationships", [])
+        $ detail_routine = character.get("routine_locations", [])
+        $ relation_page_size = 3
+        $ relation_page_count = max(1, (len(detail_relationships) + relation_page_size - 1) // relation_page_size)
+        $ relation_page = min(detail_relationship_page, relation_page_count - 1)
+        $ visible_relationships = detail_relationships[relation_page * relation_page_size:(relation_page + 1) * relation_page_size]
+
+        add Solid("#04030ddd")
+
+        key "game_menu" action Hide("inventory_character_detail")
+        key "dismiss" action Hide("inventory_character_detail")
 
         fixed:
             xfill True
             yfill True
 
-            button:
-                action Hide("inventory_character_detail")
-                background "#00000000"
-                hover_background "#00000000"
-                xfill True
-                yfill True
-
             frame:
-                background "#08121eea"
-                xpos 210
-                ypos 90
-                xsize 1500
-                ysize 900
-                xpadding 28
-                ypadding 28
+                background "#0d0a18f2"
+                xalign 0.5
+                yalign 0.5
+                xsize 1680
+                ysize 930
+                xpadding 0
+                ypadding 0
 
                 fixed:
                     xfill True
                     yfill True
 
+                    add Solid("#c49a74") xpos 0 ypos 0 xsize 1680 ysize 2
+                    add Solid("#c49a74") xpos 0 ypos 928 xsize 1680 ysize 2
+                    add Solid("#c49a74") xpos 0 ypos 0 xsize 2 ysize 930
+                    add Solid("#c49a74") xpos 1678 ypos 0 xsize 2 ysize 930
+                    add Transform("gui/inventory_system/gui/inventory_bg.png", xsize=1680, ysize=930, alpha=0.18)
+
                     hbox:
-                        xfill True
-                        spacing 28
+                        xpos 28
+                        ypos 26
+                        spacing 26
 
                         frame:
-                            background "#101a28"
-                            xsize 640
-                            ysize 844
-                            xpadding 0
-                            ypadding 0
+                            background "#1a1329ee"
+                            xsize 690
+                            ysize 878
+                            xpadding 18
+                            ypadding 18
 
-                            if renpy.loadable(character.get("portrait", "")):
-                                add Transform(character["portrait"], xalign=0.5, yalign=1.0, xsize=620, ysize=820)
-                            else:
-                                add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=220, ysize=220)
-
-                        vbox:
-                            spacing 20
-                            xsize 780
-
-                            frame:
-                                background "#140f26dd"
+                            fixed:
                                 xfill True
-                                ysize 74
-                                xpadding 24
-                                ypadding 12
+                                yfill True
+
+                                add Solid("#c49a74") xpos 0 ypos 0 xsize 654 ysize 2
+                                add Solid("#c49a74") xpos 0 ypos 838 xsize 654 ysize 2
+                                add Solid("#c49a74") xpos 0 ypos 0 xsize 2 ysize 840
+                                add Solid("#c49a74") xpos 652 ypos 0 xsize 2 ysize 840
+                                add Solid(character.get("card_bg", "#2a1d42")) xpos 2 ypos 2 xsize 650 ysize 836
+                                add Solid("#ffffff08") xpos 24 ypos 24 xsize 606 ysize 652
+                                add Solid(detail_soft) xpos 24 ypos 24 xsize 606 ysize 652
+
+                                if renpy.loadable(character.get("portrait", "")):
+                                    add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain", xoffset=-6, alpha=0.14, matrixcolor=TintMatrix(detail_accent))
+                                    add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain", xoffset=6, alpha=0.14, matrixcolor=TintMatrix(detail_accent))
+                                    add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain", yoffset=-6, alpha=0.14, matrixcolor=TintMatrix(detail_accent))
+                                    add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain", yoffset=6, alpha=0.14, matrixcolor=TintMatrix(detail_accent))
+                                    add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain")
+                                else:
+                                    add Transform("gui/window_icon.png", xalign=0.5, ypos=210, xsize=240, ysize=240)
+
+                                frame:
+                                    background "#120d1ff0"
+                                    xpos 22
+                                    ypos 694
+                                    xsize 610
+                                    ysize 124
+                                    xpadding 24
+                                    ypadding 14
+
+                                    vbox:
+                                        xalign 0.5
+                                        spacing 8
+                                        text detail_name style "inv_char_card_name" size 26 xalign 0.5
+                                        text "Role: {}   *   Affinity: {}   *   Year: {}".format(character.get("role", "Unknown"), character.get("affinity", "Unknown"), character.get("year", "?")) style "inv_char_card_meta" xalign 0.5
+                                        text character.get("route_status", "Profile Active") style "inv_char_card_meta" color detail_accent xalign 0.5
+
+                        fixed:
+                            xsize 908
+                            ysize 878
+
+                            vbox:
+                                xfill True
+                                spacing 18
+
+                                frame:
+                                    background "#171028ee"
+                                    xfill True
+                                    xpadding 34
+                                    ypadding 26
+
+                                    vbox:
+                                        spacing 6
+                                        text detail_name style "inv_char_display_name"
+                                        text detail_subtitle style "inv_char_subtitle"
 
                                 hbox:
+                                    spacing 14
+
+                                    for idx, trait in enumerate(detail_traits[:4]):
+                                        $ chip_colors = ["#7a5a3b", "#69507c", "#8a5475", "#8d6b31"]
+
+                                        frame:
+                                            background chip_colors[idx % len(chip_colors)] + "dd"
+                                            xpadding 22
+                                            ypadding 10
+
+                                            text trait style "inv_char_chip_text"
+
+                                frame:
+                                    background "#171028cc"
                                     xfill True
-                                    text character["name"] style "inv_section_title"
-                                    textbutton "X":
-                                        action Hide("inventory_character_detail")
-                                        background "#00000000"
-                                        hover_background "#ffffff12"
-                                        text_style "inv_section_title"
-                                        text_color detail_accent
-                                        xalign 1.0
+                                    xpadding 0
+                                    ypadding 0
 
-                            frame:
-                                background detail_soft
-                                xfill True
-                                xpadding 20
-                                ypadding 14
+                                    fixed:
+                                        xfill True
+                                        ysize 64
 
-                                vbox:
-                                    spacing 6
-                                    text "Personality" style "inv_body_text" color detail_accent
-                                    text character.get("personality", "Unknown.") style "inv_muted_text"
+                                        hbox:
+                                            xpos 18
+                                            ypos 11
+                                            spacing 8
 
-                            frame:
-                                background "#ffffff0a"
-                                xfill True
-                                xpadding 20
-                                ypadding 14
+                                            for tab_id, tab_label in ELL_CHARACTER_DETAIL_TABS:
+                                                button:
+                                                    action [SetScreenVariable("detail_tab", tab_id), SetScreenVariable("detail_relationship_page", 0)]
+                                                    background ("#6b3f6fe8" if detail_tab == tab_id else "#21172fcc")
+                                                    hover_background ("#7a4a7fde" if detail_tab == tab_id else "#2d203fcc")
+                                                    xpadding 18
+                                                    ypadding 10
 
-                                vbox:
-                                    spacing 6
-                                    text "Description" style "inv_body_text" color detail_accent
-                                    text character.get("description_long", character.get("desc", "")) style "inv_muted_text"
+                                                    text tab_label style "inv_char_tab_text" color ("#fff4e9" if detail_tab == tab_id else "#d9c9dd")
 
-                            frame:
-                                background detail_soft
-                                xfill True
-                                xpadding 20
-                                ypadding 14
+                                        add ell_inventory_masked_divider(872, color="#c49a74", height=4) xpos 18 ypos 58
 
-                                vbox:
-                                    spacing 6
-                                    text "Details" style "inv_body_text" color detail_accent
-                                    text "Role: {}".format(character["role"]) style "inv_muted_text"
-                                    text "Affinity: {}".format(character["affinity"]) style "inv_muted_text"
+                                frame:
+                                    background "#161022d8"
+                                    xfill True
+                                    ysize 610
+                                    xpadding 18
+                                    ypadding 18
 
-                            frame:
-                                background "#ffffff0a"
-                                xfill True
-                                xpadding 20
-                                ypadding 14
+                                    if detail_tab == "overview":
+                                        vbox:
+                                            spacing 18
 
-                                vbox:
-                                    spacing 8
-                                    text "Favorite Spots" style "inv_body_text" color detail_accent
-                                    for spot in character.get("favorite_spots", []):
-                                        text "ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ {}".format(spot) style "inv_muted_text"
+                                            frame:
+                                                background "#ffffff08"
+                                                xfill True
+                                                xpadding 24
+                                                ypadding 20
 
-                            frame:
-                                background detail_soft
-                                xfill True
-                                xpadding 20
-                                ypadding 14
+                                                vbox:
+                                                    spacing 8
+                                                    text "Overview" style "inv_section_title" color detail_accent
+                                                    text character.get("overview", character.get("description_long", character.get("desc", ""))) style "inv_muted_text" color "#f1e8f6" size 20
 
-                                vbox:
-                                    spacing 6
-                                    text "Storyline" style "inv_body_text" color detail_accent
-                                    text character.get("storyline", "No details yet.") style "inv_muted_text"
+                                            hbox:
+                                                spacing 18
+
+                                                frame:
+                                                    background detail_soft
+                                                    xsize 417
+                                                    ysize 160
+                                                    xpadding 22
+                                                    ypadding 18
+
+                                                    vbox:
+                                                        spacing 8
+                                                        text "Profile" style "inv_body_text" color detail_accent
+                                                        text "Role: {}".format(character.get("role", "Unknown")) style "inv_muted_text" color "#f4e7f1" size 19
+                                                        text "Affinity: {}".format(character.get("affinity", "Unknown")) style "inv_muted_text" color "#f4e7f1" size 19
+                                                        text "Year: {}".format(character.get("year", "?")) style "inv_muted_text" color "#f4e7f1" size 19
+
+                                                frame:
+                                                    background "#ffffff08"
+                                                    xsize 417
+                                                    ysize 160
+                                                    xpadding 22
+                                                    ypadding 18
+
+                                                    vbox:
+                                                        spacing 8
+                                                        text "Current Status" style "inv_body_text" color detail_accent
+                                                        text character.get("route_status", "Profile Active") style "inv_muted_text" color "#f4e7f1" size 19
+                                                        text character.get("personality", "Unknown.") style "inv_muted_text" color "#d9cddf" size 18
+
+                                            frame:
+                                                background "#ffffff08"
+                                                xfill True
+                                                xpadding 24
+                                                ypadding 20
+
+                                                vbox:
+                                                    spacing 8
+                                                    text "Storyline" style "inv_body_text" color detail_accent
+                                                    text character.get("storyline", "No details yet.") style "inv_muted_text" color "#f1e8f6" size 20
+
+                                    elif detail_tab == "lore":
+                                        vbox:
+                                            spacing 18
+
+                                            frame:
+                                                background "#ffffff08"
+                                                xfill True
+                                                xpadding 24
+                                                ypadding 20
+
+                                                vbox:
+                                                    spacing 8
+                                                    text "Lore" style "inv_section_title" color detail_accent
+                                                    text character.get("lore", character.get("storyline", "No lore written yet.")) style "inv_muted_text" color "#f1e8f6" size 20
+
+                                            frame:
+                                                background detail_soft
+                                                xfill True
+                                                xpadding 24
+                                                ypadding 20
+
+                                                vbox:
+                                                    spacing 8
+                                                    text "Favorite Spots" style "inv_body_text" color detail_accent
+                                                    for spot in character.get("favorite_spots", []):
+                                                        text spot style "inv_muted_text" color "#f1e8f6" size 19
+
+                                            frame:
+                                                background "#ffffff08"
+                                                xfill True
+                                                xpadding 24
+                                                ypadding 20
+
+                                                vbox:
+                                                    spacing 8
+                                                    text "Route Notes" style "inv_body_text" color detail_accent
+                                                    text character.get("description_long", character.get("desc", "")) style "inv_muted_text" color "#f1e8f6" size 20
+
+                                    elif detail_tab == "relationships":
+                                        if visible_relationships:
+                                            vbox:
+                                                spacing 14
+
+                                                for rel in visible_relationships:
+                                                    frame:
+                                                        background "#211631d8"
+                                                        xfill True
+                                                        ysize 154
+                                                        xpadding 16
+                                                        ypadding 12
+
+                                                        fixed:
+                                                            xfill True
+                                                            yfill True
+
+                                                            add Solid("#c49a74") xpos 0 ypos 0 xsize 840 ysize 2
+                                                            add Solid("#c49a74") xpos 0 ypos 128 xsize 840 ysize 2
+                                                            add Solid("#c49a74") xpos 0 ypos 0 xsize 2 ysize 130
+                                                            add Solid("#c49a74") xpos 838 ypos 0 xsize 2 ysize 130
+
+                                                            hbox:
+                                                                xpos 14
+                                                                ypos 12
+                                                                spacing 16
+
+                                                                frame:
+                                                                    background "#ffffff08"
+                                                                    xsize 128
+                                                                    ysize 106
+                                                                    xpadding 0
+                                                                    ypadding 0
+
+                                                                    if renpy.loadable(rel.get("portrait", "")):
+                                                                        add Transform(rel["portrait"], xalign=0.5, yalign=1.0, xsize=122, ysize=102, fit="contain")
+                                                                    else:
+                                                                        add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=64, ysize=64)
+
+                                                                fixed:
+                                                                    xsize 664
+                                                                    ysize 108
+
+                                                                    vbox:
+                                                                        spacing 6
+                                                                        text rel.get("name", "Unknown") style "inv_section_title" color "#f6e2d0" size 24
+                                                                        text rel.get("role", "Connection") style "inv_muted_text" color "#cfbdd0" size 18
+                                                                        text rel.get("summary", "No relationship notes yet.") style "inv_muted_text" color "#f3e9f5" size 18
+
+                                                                    hbox:
+                                                                        xpos 474
+                                                                        ypos 0
+                                                                        spacing 3
+
+                                                                        for heart_idx in range(5):
+                                                                            text "♥" style "inv_char_heart" color ("#ff92ba" if heart_idx < rel.get("hearts", 0) else "#7e647b")
+
+                                                                    add ell_inventory_masked_divider(214, color="#8d6679", height=3) xpos 448 ypos 36
+
+                                                hbox:
+                                                    xalign 0.5
+                                                    spacing 18
+
+                                                    textbutton "<":
+                                                        action SetScreenVariable("detail_relationship_page", max(0, relation_page - 1))
+                                                        sensitive relation_page > 0
+                                                        background "#00000000"
+                                                        hover_background "#ffffff12"
+                                                        text_style "inv_body_text"
+                                                        text_color "#d8bfd0"
+
+                                                    hbox:
+                                                        spacing 10
+                                                        for page_idx in range(relation_page_count):
+                                                            text ("●" if page_idx == relation_page else "•") style "inv_char_small_body" color ("#f0cfe1" if page_idx == relation_page else "#7f6b82")
+
+                                                    textbutton ">":
+                                                        action SetScreenVariable("detail_relationship_page", min(relation_page_count - 1, relation_page + 1))
+                                                        sensitive relation_page < (relation_page_count - 1)
+                                                        background "#00000000"
+                                                        hover_background "#ffffff12"
+                                                        text_style "inv_body_text"
+                                                        text_color "#d8bfd0"
+                                        else:
+                                            vbox:
+                                                xfill True
+                                                yfill True
+                                                spacing 12
+                                                xalign 0.5
+                                                yalign 0.5
+                                                text "No Relationship Entries Yet" style "inv_section_title" color detail_accent xalign 0.5
+                                                text "Relationship notes will appear here once this character is documented further." style "inv_muted_text" color "#d8cddb" size 20 xalign 0.5
+
+                                    else:
+                                        vbox:
+                                            spacing 16
+
+                                            for stop_idx, stop in enumerate(detail_routine):
+                                                frame:
+                                                    background ("#ffffff08" if (stop_idx % 2 == 0) else detail_soft)
+                                                    xfill True
+                                                    ysize 120
+                                                    xpadding 24
+                                                    ypadding 18
+
+                                                    hbox:
+                                                        spacing 20
+                                                        xfill True
+
+                                                        text stop.get("time", "Any Time") style "inv_section_title" color detail_accent size 24 xsize 220
+                                                        text stop.get("place", "Unknown Location") style "inv_muted_text" color "#f2e9f5" size 20 xmaximum 560
+
+                                            if not detail_routine:
+                                                text "No routine or location notes yet." style "inv_muted_text" color "#d8cddb" size 20
+
+                                hbox:
+                                    xalign 0.5
+                                    spacing 20
+
+                                    use ui_png_button(_("Back"), Hide("inventory_character_detail"), xsize=290, ysize=62, text_style="ui_btn_text_small")
 
 
 screen inventory_menu():
