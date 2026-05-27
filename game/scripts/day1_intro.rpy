@@ -653,7 +653,23 @@ label day1_secret_plushie1:
 
 
 label day1_living_room:
-    if renpy.has_image("living_room_morning"):
+    if renpy.loadable("scenes/Hallway.png"):
+        scene expression im.Scale("scenes/Hallway.png", config.screen_width, config.screen_height) with dissolve
+        pause 1.1
+
+    if renpy.loadable("scenes/Hallway2.png"):
+        scene expression im.Scale("scenes/Hallway2.png", config.screen_width, config.screen_height) with dissolve
+        pause 1.1
+
+    if renpy.loadable("scenes/Kitchen_open.png"):
+        scene expression im.Scale("scenes/Kitchen_open.png", config.screen_width, config.screen_height) with dissolve
+        pause 1.1
+
+    narrator "The smell of breakfast reaches me before I even make it fully into the room."
+
+    if renpy.loadable("scenes/hana.png"):
+        scene expression im.Scale("scenes/hana.png", config.screen_width, config.screen_height) with dissolve
+    elif renpy.has_image("living_room_morning"):
         scene living_room_morning with dissolve
     elif renpy.has_image("bg morning_city"):
         scene bg morning_city with dissolve
@@ -662,9 +678,7 @@ label day1_living_room:
     else:
         scene black with dissolve
 
-    narrator "The smell of breakfast reaches me before I even make it fully into the room."
-
-    if renpy.has_image("hana neutral"):
+    if renpy.has_image("hana neutral") and not renpy.loadable("scenes/hana.png"):
         show hana neutral at left
     if renpy.has_image("tsuki happy"):
         show tsuki happy at right
@@ -675,6 +689,8 @@ label day1_living_room:
     if mc_gender == "male":
         mc "That would've been a war crime."
     else:
+        if renpy.loadable("scenes/hana2.png"):
+            scene expression im.Scale("scenes/hana2.png", config.screen_width, config.screen_height) with dissolve
         mc "I'm pretty sure that counts as child abuse."
 
     tsuki "Worth it."

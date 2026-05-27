@@ -12,6 +12,10 @@ default main_menu_force_announce_track = None
 
 init -2 python:
     BTN_ZOOM = 1
+    MAIN_MENU_BTN_SRC_W = 1080
+    MAIN_MENU_BTN_SRC_H = 168.7
+    MAIN_MENU_BTN_BORDER_X = 120
+    MAIN_MENU_BTN_BORDER_Y = 0
 
     TOGGLE_ZOOM = 0.35
 
@@ -121,8 +125,13 @@ init -2 python:
     def get_main_menu_toggle_icon():
         mode = get_main_menu_mode()
         if mode == "light":
-            return "gui/menu/lightmode_icon.png"
-        return "gui/menu/darkmode_icon.png"
+            return "gui/logos/sun_icon.png"
+        if mode == "twilight":
+            preferred = "gui/logos/twilight_logo.png"
+            if renpy.loadable(preferred):
+                return preferred
+            return "gui/logos/sun_icon.png"
+        return "gui/logos/dark_icon.png"
 
     def cycle_main_menu_mode():
         modes = ("light", "dark", "twilight")
@@ -147,6 +156,30 @@ style main_menu_social_caption is text:
     size 14
     color "#f4eaff"
     outlines [(2, "#2a1a44", 0, 0)]
+
+style main_menu_icon_caption is text:
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
+    size 14
+    color "#f8edff"
+    outlines [(2, "#55336d", 0, 0)]
+    text_align 0.5
+    xalign 0.5
+    yalign 0.5
+
+style main_menu_primary_text is text:
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
+    size 28
+    color "#ffffff"
+    outlines [(3, "#6b3aa8", 0, 0)]
+    kerning 1
+    xalign 0.5
+    yalign 0.5
+
+style main_menu_version_text is text:
+    font "fonts/cinzel_decorative/CinzelDecorative-Bold.otf"
+    size 16
+    color "#eadcf7"
+    outlines [(1, "#2a1a44", 0, 0)]
 
 
 transform logo_bob:
@@ -213,6 +246,65 @@ screen main_menu_now_playing(text):
     timer 4.0 action Hide("main_menu_now_playing")
 
 
+screen main_menu_icon_tile(label, action, icon, width=110, height=100, icon_size=38, tooltip=None, show_label=True):
+    $ tile_idle = Transform("gui/Pixel.png", xsize=width, ysize=height)
+    $ tile_hover = Transform("gui/Pixel.png", xsize=width, ysize=height, matrixcolor=BrightnessMatrix(0.08))
+    $ icon_disp = Transform(icon, fit="contain", xsize=icon_size, ysize=icon_size, xalign=0.5, ypos=(16 if show_label else int((height - icon_size) / 2)))
+    $ label_disp = (
+        Text(label, style="main_menu_icon_caption", xsize=width - 18, xpos=55, ypos=68, text_align=0.5)
+        if show_label
+        else Null(width=0, height=0)
+    )
+
+    imagebutton:
+        xsize width
+        ysize height
+        action action
+        focus_mask True
+        if tooltip:
+            tooltip tooltip
+
+        idle Fixed(
+            tile_idle,
+            icon_disp,
+            label_disp,
+            xsize=width,
+            ysize=height
+        )
+        hover Fixed(
+            At(tile_hover, btn_hover_fx(1.0, 0, 2)),
+            At(icon_disp, btn_hover_fx(1.0, 0, 2)),
+            At(label_disp, btn_hover_fx(1.0, 0, 2)),
+            xsize=width,
+            ysize=height
+        )
+
+
+screen main_menu_mode_button(label, action, icon, width=68, height=68, tooltip=None):
+    $ icon_disp = Transform(icon, xsize=40, ysize=40, xalign=0.5, yalign=0.5)
+
+    imagebutton:
+        xsize width
+        ysize height
+        action action
+        focus_mask True
+        if tooltip:
+            tooltip tooltip
+
+        idle Fixed(
+            Transform("gui/right_btn.png", xsize=width, ysize=height),
+            icon_disp,
+            xsize=width,
+            ysize=height
+        )
+        hover Fixed(
+            At(Transform("gui/right_btn_hover.png", xsize=width, ysize=height), btn_hover_fx(1.0, 0, 2)),
+            At(icon_disp, btn_hover_fx(1.0, 0, 2)),
+            xsize=width,
+            ysize=height
+        )
+
+
 # --- CLIPPED button that cannot overlap others, even if hover PNG is bigger ---
 screen main_menu():
 
@@ -247,78 +339,107 @@ screen main_menu():
         add Transform("gui/menu/logo.png") at logo_bob:
             xalign 0.5
             yanchor 0.0
-            ypos 100
-            xsize 600
-            ysize 500
+            ypos 78
+            xsize 535
+            ysize 446
 
         vbox:
             xalign 0.5
-            yalign 0.96
-            spacing 8
+            yalign 0.91
+            spacing 12
 
-            use ui_png_button(L("mm_new_game"), Start(), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"))
-            use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"))
-            use ui_png_button(L("mm_settings"), ShowMenu("preferences"), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_settings"))
-            use ui_png_button(L("mm_exit"), Quit(confirm=True), xsize=640, ysize=94, text_style="ui_btn_text", use_alt=mm_alt, tooltip=L("mm_tip_exit"))
-
-        fixed:
-            xalign 0.05
-            yalign 0.95
-            xsize 220
-            ysize 48
-
-            hbox:
-                spacing 8
-                use ui_png_button(L("mm_news"), ShowMenu("news_updates"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/menu/news_icon.png", left_icon_size=36, left_icon_xpad=5, tooltip=L("mm_tip_news"))
-                use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=220, ysize=48, text_style="ui_btn_text_small", use_alt=mm_alt, left_icon="gui/menu/extras_icon.png", left_icon_size=30, left_icon_xpad=5, tooltip=L("mm_tip_extra"))
+            use ui_png_button(L("mm_new_game"), Start(), xsize=540, ysize=88, text_style="main_menu_primary_text", use_alt=mm_alt, tooltip=L("mm_tip_new_game"), source_w=MAIN_MENU_BTN_SRC_W, source_h=MAIN_MENU_BTN_SRC_H, border_x=MAIN_MENU_BTN_BORDER_X, border_y=MAIN_MENU_BTN_BORDER_Y)
+            use ui_png_button(L("mm_continue"), ShowMenu("load"), xsize=540, ysize=88, text_style="main_menu_primary_text", use_alt=mm_alt, tooltip=L("mm_tip_continue"), source_w=MAIN_MENU_BTN_SRC_W, source_h=MAIN_MENU_BTN_SRC_H, border_x=MAIN_MENU_BTN_BORDER_X, border_y=MAIN_MENU_BTN_BORDER_Y)
+            use ui_png_button(L("mm_extra"), ShowMenu("extra_menu"), xsize=540, ysize=88, text_style="main_menu_primary_text", use_alt=mm_alt, tooltip=L("mm_tip_extra"), source_w=MAIN_MENU_BTN_SRC_W, source_h=MAIN_MENU_BTN_SRC_H, border_x=MAIN_MENU_BTN_BORDER_X, border_y=MAIN_MENU_BTN_BORDER_Y)
+            use ui_png_button(L("mm_exit"), Quit(confirm=True), xsize=540, ysize=88, text_style="main_menu_primary_text", use_alt=mm_alt, tooltip=L("mm_tip_exit"), source_w=MAIN_MENU_BTN_SRC_W, source_h=MAIN_MENU_BTN_SRC_H, border_x=MAIN_MENU_BTN_BORDER_X, border_y=MAIN_MENU_BTN_BORDER_Y)
 
         fixed:
-            xalign 0.95
-            yalign 0.95
-            xsize 220
-            ysize 48
+            xpos 28
+            ypos 940
+            xsize 520
+            ysize 108
 
             hbox:
                 spacing 12
-                use ui_png_button(
-                    get_main_menu_toggle_label(),
-                    Function(cycle_main_menu_mode),
-                    xsize=220,
-                    ysize=48,
-                    text_style="ui_btn_text_small",
-                    use_alt=mm_alt,
-                    left_icon=get_main_menu_toggle_icon(),
-                    left_icon_size=30,
-                    left_icon_xpad=5
+                use main_menu_icon_tile(
+                    "NEWS",
+                    ShowMenu("news_updates"),
+                    "gui/menu/news_icon.png",
+                    width=110,
+                    height=100,
+                    icon_size=38,
+                    tooltip=L("mm_tip_news")
+                )
+                use main_menu_icon_tile(
+                    "ITCHI.IO",
+                    OpenURL(SOCIAL_URL_ITCH),
+                    "gui/logos/itch_logo.png",
+                    width=110,
+                    height=100,
+                    icon_size=40,
+                    tooltip="itch.io"
+                )
+                use main_menu_icon_tile(
+                    "WEBSITE",
+                    OpenURL(SOCIAL_URL_WEBSITE),
+                    "gui/logos/enderfall_logo.png",
+                    width=110,
+                    height=100,
+                    icon_size=40,
+                    tooltip="website"
+                )
+                use main_menu_icon_tile(
+                    "DISCORD",
+                    OpenURL(SOCIAL_URL_DISCORD),
+                    "gui/logos/discord_logo.png",
+                    width=110,
+                    height=100,
+                    icon_size=46,
+                    tooltip="discord"
                 )
 
-        # Social buttons: placed to the left of the mode toggle.
         fixed:
-            xalign 0.87
-            xoffset -25
-            yalign 0.97
-            xsize 420
-            ysize 78
+            xpos 1744
+            ypos 956
+            xsize 68
+            ysize 68
 
             hbox:
-                spacing 10
+                spacing 0
+                use main_menu_mode_button(
+                    get_main_menu_toggle_label(),
+                    Function(cycle_main_menu_mode),
+                    get_main_menu_toggle_icon(),
+                    width=68,
+                    height=68,
+                    tooltip=get_main_menu_toggle_tooltip()
+                )
 
-                vbox:
-                    spacing 2
-                    use ui_rect_icon_button("gui/logos/itch_logo.png", OpenURL(SOCIAL_URL_ITCH), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="itch.io")
-                    text "ITCH.IO" style "main_menu_social_caption" xalign 0.5
+        fixed:
+            xpos 1824
+            ypos 956
+            xsize 68
+            ysize 68
 
-                vbox:
-                    spacing 2
-                    use ui_rect_icon_button("gui/logos/discord_logo.png", OpenURL(SOCIAL_URL_DISCORD), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="discord")
-                    text "DISCORD" style "main_menu_social_caption" xalign 0.5
+            imagebutton:
+                xsize 68
+                ysize 68
+                action ShowMenu("preferences")
+                focus_mask True
+                tooltip L("mm_tip_settings")
+                idle Fixed(
+                    Transform("gui/right_btn.png", xsize=68, ysize=68),
+                    Transform("gui/logos/settings.png", xsize=40, ysize=40, xalign=0.5, yalign=0.5),
+                    xsize=68,
+                    ysize=68
+                )
+                hover Fixed(
+                    At(Transform("gui/right_btn_hover.png", xsize=68, ysize=68), btn_hover_fx(1.0, 0, 2)),
+                    At(Transform("gui/logos/settings.png", xsize=40, ysize=40, xalign=0.5, yalign=0.5), btn_hover_fx(1.0, 0, 2)),
+                    xsize=68,
+                    ysize=68
+                )
 
-                vbox:
-                    spacing 2
-                    use ui_rect_icon_button("gui/logos/patreon_logo.png", OpenURL(SOCIAL_URL_PATREON), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="patreon")
-                    text "PATREON" style "main_menu_social_caption" xalign 0.5
-
-                vbox:
-                    spacing 2
-                    use ui_rect_icon_button("gui/logos/enderfall_logo.png", OpenURL(SOCIAL_URL_WEBSITE), size=62, bg="#0000", hover_overlay="#ffffff22", tooltip="website")
-                    text "WEBSITE" style "main_menu_social_caption" xalign 0.5
+        text "Ver. 1.0.0" style "main_menu_version_text":
+            xpos 1750
+            ypos 1046

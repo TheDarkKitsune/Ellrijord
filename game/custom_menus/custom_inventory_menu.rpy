@@ -638,7 +638,8 @@ style inv_sidebar_frame:
     xpadding 18
     ypadding 18
 
-style inv_main_frame is inv_sidebar_frame
+style inv_main_frame is inv_sidebar_frame:
+    background "#ffffff06"
 
 style inv_tab_button:
     background "#00000000"

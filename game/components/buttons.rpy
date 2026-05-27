@@ -37,19 +37,19 @@ style ui_btn_text_small is ui_btn_text:
     size 22
 
 
-screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None, left_icon=None, left_icon_size=None, left_icon_xpad=12, use_hover_asset=True, use_hover_bounce=True, disabled_uses_idle=False):
-    $ scale = zoom * BTN_VISUAL_SCALE
-    $ btn_w = int(BTN_SRC_W * scale) if xsize is None else int(xsize)
-    $ btn_h = int(BTN_SRC_H * scale) if ysize is None else int(ysize)
-    $ idle_disp = "gui/button/btn_idle.png"
-    $ hover_disp = "gui/button/btn_hover.png"
-    $ disabled_disp = "gui/button/btn_disabled.png"
+screen ui_png_button(label, action, zoom=1, xsize=None, ysize=None, text_style="ui_btn_text", use_alt=False, selected=False, disabled=False, yoffset=0, hovered_action=None, unhovered_action=None, tooltip=None, button_id=None, left_icon=None, left_icon_size=None, left_icon_xpad=12, use_hover_asset=True, use_hover_bounce=True, disabled_uses_idle=False, idle_asset="gui/button/btn_idle.png", hover_asset="gui/button/btn_hover.png", disabled_asset="gui/button/btn_disabled.png", source_w=BTN_SRC_W, source_h=BTN_SRC_H, border_x=BTN_BORDER_X, border_y=BTN_BORDER_Y, visual_scale=BTN_VISUAL_SCALE):
+    $ scale = zoom * visual_scale
+    $ btn_w = int(source_w * scale) if xsize is None else int(xsize)
+    $ btn_h = int(source_h * scale) if ysize is None else int(ysize)
+    $ idle_disp = idle_asset
+    $ hover_disp = hover_asset
+    $ disabled_disp = disabled_asset
     $ _disabled_render = (idle_disp if disabled_uses_idle else disabled_disp)
     $ idle_render = _disabled_render if (selected or disabled) else idle_disp
     $ hover_render = _disabled_render if (selected or disabled) else (hover_disp if use_hover_asset else idle_disp)
-    $ idle_img = Transform(Frame(idle_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
-    $ hover_img = Transform(Frame(hover_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
-    $ disabled_img = Transform(Frame(_disabled_render, BTN_BORDER_X, BTN_BORDER_Y, BTN_BORDER_X, BTN_BORDER_Y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ idle_img = Transform(Frame(idle_render, border_x, border_y, border_x, border_y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ hover_img = Transform(Frame(hover_render, border_x, border_y, border_x, border_y, tile=False), xsize=btn_w, ysize=btn_h)
+    $ disabled_img = Transform(Frame(_disabled_render, border_x, border_y, border_x, border_y, tile=False), xsize=btn_w, ysize=btn_h)
     $ hover_actions = ([hovered_action] if hovered_action is not None else [])
     $ unhover_actions = ([unhovered_action] if unhovered_action is not None else [])
     $ icon_sz = int(left_icon_size) if left_icon_size is not None else int(btn_h * 0.62)
