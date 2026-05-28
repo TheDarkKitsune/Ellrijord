@@ -693,11 +693,56 @@ label day1_living_room:
             scene expression im.Scale("scenes/hana2.png", config.screen_width, config.screen_height) with dissolve
         mc "I'm pretty sure that counts as child abuse."
 
+    if renpy.loadable("scenes/worth it.png"):
+        scene expression im.Scale("scenes/worth it.png", config.screen_width, config.screen_height) with dissolve
     tsuki "Worth it."
 
-    hana "Sit down and eat before it gets cold."
+    if renpy.loadable("scenes/hana.png"):
+        scene expression im.Scale("scenes/hana.png", config.screen_width, config.screen_height) with dissolve
+    hana "Now Sit down at the table the pair of you. I'll bring your breakfast over."
 
-    narrator "The table is already set."
+    if renpy.loadable("scenes/table.png"):
+        scene expression im.Scale("scenes/table.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/table2.png"):
+        scene expression im.Scale("scenes/table2.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/table3.png"):
+        scene expression im.Scale("scenes/table3.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/table4.png"):
+        scene expression im.Scale("scenes/table4.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+
+    if renpy.loadable("scenes/food.png"):
+        scene expression im.Scale("scenes/food.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/food2.png"):
+        scene expression im.Scale("scenes/food2.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/food3.png"):
+        scene expression im.Scale("scenes/food3.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/food4.png"):
+        scene expression im.Scale("scenes/food4.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/food5.png"):
+        scene expression im.Scale("scenes/food5.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/food6.png"):
+        scene expression im.Scale("scenes/food6.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.5, hard=True)
+
+    if renpy.loadable("scenes/sit.png"):
+        scene expression im.Scale("scenes/sit.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/sit2.png"):
+        scene expression im.Scale("scenes/sit2.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.35, hard=True)
+    if renpy.loadable("scenes/sit4.png"):
+        scene expression im.Scale("scenes/sit4.png", config.screen_width, config.screen_height) with dissolve
+
+    narrator "Hana brings the food over to us, sets everything down, and then takes her seat beside Tsuki."
     narrator "For one ordinary moment, the morning feels almost too peaceful."
 
     if renpy.has_image("tsuki happy"):
@@ -705,29 +750,58 @@ label day1_living_room:
     if renpy.has_image("tsuki neutral"):
         show tsuki neutral at right
 
+    if renpy.loadable("scenes/talk.png"):
+        scene expression im.Scale("scenes/talk.png", config.screen_width, config.screen_height) with dissolve
     hana "First day back always feels longer than it is."
     hana "You'll be fine."
 
     if mc_gender == "male":
+        if renpy.loadable("scenes/talk2.png"):
+            scene expression im.Scale("scenes/talk2.png", config.screen_width, config.screen_height) with dissolve
         mc "That's easy for you to say."
     else:
+        if renpy.loadable("scenes/talk2.png"):
+            scene expression im.Scale("scenes/talk2.png", config.screen_width, config.screen_height) with dissolve
         mc "You say that like I don't remember how chaotic this school gets."
 
+    if renpy.loadable("scenes/talk.png"):
+        scene expression im.Scale("scenes/talk.png", config.screen_width, config.screen_height) with dissolve
     hana "And yet, you always come back in one piece."
     hana "Usually."
 
+    if renpy.loadable("scenes/talk3.png"):
+        scene expression im.Scale("scenes/talk3.png", config.screen_width, config.screen_height) with dissolve
     tsuki "Barely."
 
     if mc_gender == "male":
+        if renpy.loadable("scenes/talk4.png"):
+            scene expression im.Scale("scenes/talk4.png", config.screen_width, config.screen_height) with dissolve
         mc "I don't need commentary from the peanut gallery."
     else:
+        if renpy.loadable("scenes/talk4.png"):
+            scene expression im.Scale("scenes/talk4.png", config.screen_width, config.screen_height) with dissolve
         mc "You're enjoying this far too much."
 
+    if renpy.loadable("scenes/talk5.png"):
+        scene expression im.Scale("scenes/talk5.png", config.screen_width, config.screen_height) with dissolve
     tsuki "A little."
 
-    narrator "I sit down and start eating."
+    if renpy.loadable("scenes/eat.png"):
+        scene expression im.Scale("scenes/eat.png", config.screen_width, config.screen_height) with dissolve
+    narrator "The two of us start eating."
     narrator "Tsuki picks at her breakfast with that half-distracted, half-alert energy she always has in the morning."
-    narrator "Mom watches us with the kind of quiet smile that makes the whole room feel warmer."
+    narrator "Mum watches us with the kind of quiet smile that makes the whole room feel warmer."
+
+    if renpy.loadable("scenes/eat.png"):
+        scene expression im.Scale("scenes/eat.png", config.screen_width, config.screen_height) with dissolve
+
+    narrator "For a few minutes, breakfast takes over the conversation."
+    narrator "The clink of cutlery, Hana's soft reminders, and Tsuki's occasional complaints fill the room."
+
+    if renpy.loadable("scenes/finishedbreakfast.png"):
+        scene expression im.Scale("scenes/finishedbreakfast.png", config.screen_width, config.screen_height) with dissolve
+
+    narrator "By the time the plates are nearly empty, the morning feels a little less rushed."
 
     if not day1_plushie_system_introduced:
         tsuki "Oh! Wait."
@@ -831,7 +905,7 @@ label day1_living_room:
             body="Hidden plushies are scattered across different locations. Keep an eye out while exploring and collect them when you find them."
         )
 
-    hana "You'll see your upperclassmen again today too, won't you?"
+    hana "Speaking of school, you'll see your upperclassmen again today too, won't you?"
     hana "Aria, Poko, and Reina?"
 
     if mc_gender == "male":
