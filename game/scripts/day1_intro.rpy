@@ -742,7 +742,7 @@ label day1_living_room:
     if renpy.loadable("scenes/sit4.png"):
         scene expression im.Scale("scenes/sit4.png", config.screen_width, config.screen_height) with dissolve
 
-    narrator "Hana brings the food over to us, sets everything down, and then takes her seat beside Tsuki."
+    narrator "Mum brings the food over to us, sets everything down, and then takes her seat beside Tsuki."
     narrator "For one ordinary moment, the morning feels almost too peaceful."
 
     if renpy.has_image("tsuki happy"):
@@ -789,178 +789,150 @@ label day1_living_room:
     if renpy.loadable("scenes/eat.png"):
         scene expression im.Scale("scenes/eat.png", config.screen_width, config.screen_height) with dissolve
     narrator "The two of us start eating."
+    if renpy.loadable("scenes/eating.png"):
+        scene expression im.Scale("scenes/eating.png", config.screen_width, config.screen_height) with dissolve
     narrator "Tsuki picks at her breakfast with that half-distracted, half-alert energy she always has in the morning."
+    if renpy.loadable("scenes/eating2.png"):
+        scene expression im.Scale("scenes/eating2.png", config.screen_width, config.screen_height) with dissolve
     narrator "Mum watches us with the kind of quiet smile that makes the whole room feel warmer."
 
-    if renpy.loadable("scenes/eat.png"):
-        scene expression im.Scale("scenes/eat.png", config.screen_width, config.screen_height) with dissolve
-
+    if renpy.loadable("scenes/eating3.png"):
+        scene expression im.Scale("scenes/eating3.png", config.screen_width, config.screen_height) with dissolve
     narrator "For a few minutes, breakfast takes over the conversation."
+    if renpy.loadable("scenes/eating4.png"):
+        scene expression im.Scale("scenes/eating4.png", config.screen_width, config.screen_height) with dissolve
     narrator "The clink of cutlery, Hana's soft reminders, and Tsuki's occasional complaints fill the room."
 
-    if renpy.loadable("scenes/finishedbreakfast.png"):
-        scene expression im.Scale("scenes/finishedbreakfast.png", config.screen_width, config.screen_height) with dissolve
+    scene black with fade
+    $ renpy.pause(0.6)
 
-    narrator "By the time the plates are nearly empty, the morning feels a little less rushed."
+    narrator "A little while later..."
 
-    if not day1_plushie_system_introduced:
-        tsuki "Oh! Wait."
-        tsuki "I almost forgot."
+    if renpy.loadable("scenes/finish.png"):
+        scene expression im.Scale("scenes/finish.png", config.screen_width, config.screen_height) with dissolve
+    narrator "Breakfast is finished, and the morning feels a little less rushed."
+    if renpy.loadable("scenes/finish2.png"):
+        scene expression im.Scale("scenes/finish2.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.9, hard=True)
 
-        if mc_gender == "male":
-            mc "That already sounds dangerous."
-        else:
-            mc "That already sounds like trouble."
+    if renpy.loadable("scenes/finish.png"):
+        scene expression im.Scale("scenes/finish.png", config.screen_width, config.screen_height) with dissolve
+        $ renpy.pause(0.7, hard=True)
 
-        tsuki "It's not dangerous."
-        tsuki "It's important."
-
-        hana "That usually means it's dangerous."
-
-        tsuki "Mom!"
-
-        narrator "Tsuki suddenly leans forward across the table."
-
-        tsuki "You haven't seen any of my plushies around the house, have you?"
-
-        mc "Your plushies?"
-
-        tsuki "Yeah."
-        tsuki "The little cat ones."
-        tsuki "And the fox one."
-        tsuki "And the moon one."
-        tsuki "And the-"
-
-        mc "How many plushies did you lose?"
-
-        tsuki "I didn't lose them!"
-        tsuki "They just... relocated."
-
-        hana "Somehow into places no one can reach."
-
-        tsuki "Exactly."
-
-        narrator "Tsuki puffs her cheeks in protest."
-
-        tsuki "I hid them around the house a while ago."
-        tsuki "But now I can't remember where half of them are."
-
-        if mc_gender == "male":
-            mc "So you're asking me to go plushie hunting."
-        else:
-            mc "So I'm being recruited as your plushie detective."
-
-        tsuki "Yes."
-
-        if mc_gender == "male":
-            mc "Why me?"
-        else:
-            mc "And why exactly me?"
-
-        tsuki "Because you leave your room sometimes."
-
-        if mc_gender == "male":
-            mc "Rude."
-        else:
-            mc "Wow. Rude."
-
-        tsuki "Also because I know you'll find them eventually."
-        tsuki "You always poke around everywhere."
-
-        narrator "She's not wrong."
-
-        tsuki "If you see any while you're exploring places..."
-        tsuki "Can you grab them for me?"
-        tsuki "Please?"
-
-        menu:
-            "Sure, I'll keep an eye out.":
-                mc "Fine."
-                mc "If I spot any plushies hiding around, I'll pick them up."
-                tsuki "Yay!"
-                tsuki "I knew you'd help!"
-            "You're really making me your plushie detective.":
-                mc "So this is official now?"
-                mc "I'm your plushie detective?"
-                tsuki "Correct."
-                tsuki "Congratulations on your promotion."
-
-        hana "Just try not to tear the house apart while you're looking."
-
-        tsuki "And if you find them..."
-        tsuki "Bring them back to me!"
-
-        narrator "Tsuki beams proudly."
-
-        $ day1_plushie_system_introduced = True
-
-        if "ell_accept_quest" in globals():
-            $ ell_accept_quest("tsuki_lost_plushies")
-        if "ell_sync_collectible_quests" in globals():
-            $ ell_sync_collectible_quests()
-
-        call screen day1_game_ui_popup(
-            title="NEW QUEST OBTAINED",
-            subtitle="Tsuki's Lost Plushies",
-            body="Hidden plushies are scattered across different locations. Keep an eye out while exploring and collect them when you find them."
-        )
-
-    hana "Speaking of school, you'll see your upperclassmen again today too, won't you?"
-    hana "Aria, Poko, and Reina?"
+    if renpy.loadable("scenes/hana_to_mc.png"):
+        scene expression im.Scale("scenes/hana_to_mc.png", config.screen_width, config.screen_height) with dissolve
+    hana "You'll be seeing Aria, Poko, and Reina again today, won't you?"
 
     if mc_gender == "male":
-        mc "Yeah. The Year 3 trio."
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
+        mc "Yeah."
+        mc "The usual trio."
     else:
-        mc "Yeah. I guess they'll be even more intimidating now that they're Year 3s."
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
+        mc "Yeah."
+        mc "The usual trio."
 
+    if renpy.loadable("scenes/tsuki_to_mc.png"):
+        scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
     tsuki "Poko's the loud one, right?"
-    tsuki "And Reina's the pretty one everyone gets all nervous around?"
 
+    if mc_gender == "male":
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
+        mc "That's one way to describe her."
+    else:
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
+        mc "That's one way to describe her."
+
+    if renpy.loadable("scenes/tsuki_to_mc.png"):
+        scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
+    tsuki "And Reina's the pretty one everyone gets nervous around?"
+
+    if renpy.loadable("scenes/hana_to_tsuki.png"):
+        scene expression im.Scale("scenes/hana_to_tsuki.png", config.screen_width, config.screen_height) with dissolve
     hana "Tsuki."
 
+    if renpy.loadable("scenes/tsuki_to_hana.png"):
+        scene expression im.Scale("scenes/tsuki_to_hana.png", config.screen_width, config.screen_height) with dissolve
     tsuki "What? I'm right."
 
+    if renpy.loadable("scenes/finish.png"):
+        scene expression im.Scale("scenes/finish.png", config.screen_width, config.screen_height) with dissolve
     narrator "I can already feel where this is going."
 
+    if renpy.loadable("scenes/hana_to_mc.png"):
+        scene expression im.Scale("scenes/hana_to_mc.png", config.screen_width, config.screen_height) with dissolve
     hana "And for Year 2, you'll have Kuroe, Sakura, and Rika around too."
 
     if mc_gender == "male":
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
         mc "Rika being there still feels weird."
         mc "Having your younger cousin at school should not feel this threatening."
     else:
+        if renpy.loadable("scenes/mc_to_both.png"):
+            scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
         mc "Rika being in the same school now still feels strange."
         mc "She's definitely going to cause trouble."
 
-    tsuki "She's family. Causing trouble is tradition."
+    if renpy.loadable("scenes/tsuki_to_mc.png"):
+        scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
+    tsuki "She's family."
+    tsuki "Causing trouble is basically tradition."
 
+    if renpy.loadable("scenes/hana_to_tsuki.png"):
+        scene expression im.Scale("scenes/hana_to_tsuki.png", config.screen_width, config.screen_height) with dissolve
     hana "Just make sure you all look after one another."
 
-    narrator "I nod, though I know that with this group, 'normal' is probably already out of reach."
+    if renpy.loadable("scenes/mc_to_both.png"):
+        scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
+    narrator "I nod, though with this group, 'normal' is probably already out of reach."
 
     $ day1_breakfast_topics_seen = set()
 
     while len(day1_breakfast_topics_seen) < 3:
         menu:
-            "Ask about Aria" if "aria" not in day1_breakfast_topics_seen:
+            "Talk about Aria" if "aria" not in day1_breakfast_topics_seen:
                 $ day1_breakfast_topics_seen.add("aria")
                 mc "Aria's probably going to act like she runs the entire school."
+                if renpy.loadable("scenes/tsuki_to_mc.png"):
+                    scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
                 tsuki "Doesn't she?"
+                if renpy.loadable("scenes/hana_to_tsuki.png"):
+                    scene expression im.Scale("scenes/hana_to_tsuki.png", config.screen_width, config.screen_height) with dissolve
                 hana "Only in her own head."
+                if renpy.loadable("scenes/mc_to_both.png"):
+                    scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
                 narrator "Even so, Aria has a way of drawing attention without trying."
 
-            "Ask about Poko" if "poko" not in day1_breakfast_topics_seen:
+            "Talk about Poko" if "poko" not in day1_breakfast_topics_seen:
                 $ day1_breakfast_topics_seen.add("poko")
                 mc "If Poko's in a good mood, the whole hallway will know in five seconds."
+                if renpy.loadable("scenes/tsuki_to_mc.png"):
+                    scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
                 tsuki "And if she's in a bad mood?"
+                if renpy.loadable("scenes/mc_to_both.png"):
+                    scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
                 mc "Then the whole building will know."
                 narrator "Loud, fiery, impossible to ignore. That's Poko."
 
-            "Ask about Reina" if "reina" not in day1_breakfast_topics_seen:
+            "Talk about Reina" if "reina" not in day1_breakfast_topics_seen:
                 $ day1_breakfast_topics_seen.add("reina")
                 mc "Reina's the dangerous one."
+                if renpy.loadable("scenes/tsuki_to_mc.png"):
+                    scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
                 tsuki "Dangerous?"
+                if renpy.loadable("scenes/mc_to_both.png"):
+                    scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
                 mc "The elegant kind."
+                if renpy.loadable("scenes/hana_to_mc.png"):
+                    scene expression im.Scale("scenes/hana_to_mc.png", config.screen_width, config.screen_height) with dissolve
                 hana "Be nice."
+                if renpy.loadable("scenes/mc_to_both.png"):
+                    scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
                 narrator "Reina never needs to raise her voice to take control of a conversation."
 
     if persistent.first_plush_found and not persistent.tsuki_first_plush_reaction_seen:
@@ -988,17 +960,206 @@ label day1_living_room:
         $ persistent.tsuki_first_plush_reaction_seen = True
         $ renpy.save_persistent()
 
-    hana "Finish up. You don't want to rush the walk there."
+    if not day1_plushie_system_introduced:
+        if renpy.loadable("scenes/plush_quest/quest.png"):
+            scene expression im.Scale("scenes/plush_quest/quest.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Oh! Wait."
+        if renpy.loadable("scenes/plush_quest/quest2.png"):
+            scene expression im.Scale("scenes/plush_quest/quest2.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "I almost forgot."
 
-    narrator "I finish breakfast, grab my things, and head toward the door."
+        if mc_gender == "male":
+            if renpy.loadable("scenes/plush_quest/quest3.png"):
+                scene expression im.Scale("scenes/plush_quest/quest3.png", config.screen_width, config.screen_height) with dissolve
+            mc "That already sounds dangerous."
+        else:
+            if renpy.loadable("scenes/plush_quest/quest3.png"):
+                scene expression im.Scale("scenes/plush_quest/quest3.png", config.screen_width, config.screen_height) with dissolve
+            mc "That already sounds like trouble."
 
+        if renpy.loadable("scenes/plush_quest/quest2.png"):
+            scene expression im.Scale("scenes/plush_quest/quest2.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "It's not dangerous."
+        if renpy.loadable("scenes/plush_quest/quest2.png"):
+            scene expression im.Scale("scenes/plush_quest/quest2.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "It's important."
+
+        if renpy.loadable("scenes/plush_quest/quest4.png"):
+            scene expression im.Scale("scenes/plush_quest/quest4.png", config.screen_width, config.screen_height) with dissolve
+        hana "That usually means it's dangerous."
+
+        if renpy.loadable("scenes/plush_quest/quest5.png"):
+            scene expression im.Scale("scenes/plush_quest/quest5.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Mum!"
+
+        if renpy.loadable("scenes/plush_quest/quest6.png"):
+            scene expression im.Scale("scenes/plush_quest/quest6.png", config.screen_width, config.screen_height) with dissolve
+        narrator "Tsuki suddenly leans forward across the table."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "You haven't seen any of my plushies around the house, have you?"
+
+        if renpy.loadable("scenes/plush_quest/quest8.png"):
+            scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+        mc "Your plushies?"
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Yeah."
+        tsuki "The little cat ones."
+        tsuki "And the fox one."
+        tsuki "And the moon one."
+        tsuki "And the-"
+
+        if renpy.loadable("scenes/plush_quest/quest8.png"):
+            scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+        mc "How many plushies did you lose?"
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "I didn't lose them!"
+        tsuki "They just... relocated."
+
+        if renpy.loadable("scenes/plush_quest/quest9.png"):
+            scene expression im.Scale("scenes/plush_quest/quest9.png", config.screen_width, config.screen_height) with dissolve
+        hana "Somehow into places no one can reach."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Exactly."
+
+        if renpy.loadable("scenes/plush_quest/quest10.png"):
+            scene expression im.Scale("scenes/plush_quest/quest10.png", config.screen_width, config.screen_height) with dissolve
+        narrator "Tsuki puffs her cheeks in protest."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "I hid them around the house a while ago."
+        tsuki "But now I can't remember where half of them are."
+
+        if mc_gender == "male":
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "So you're asking me to go plushie hunting."
+        else:
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "So I'm being recruited as your plushie detective."
+
+        if renpy.loadable("scenes/plush_quest/quest11.png"):
+            scene expression im.Scale("scenes/plush_quest/quest11.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Yes."
+
+        if mc_gender == "male":
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "Why me?"
+        else:
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "And why exactly me?"
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Because you leave your room sometimes."
+
+        if mc_gender == "male":
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "Rude."
+        else:
+            if renpy.loadable("scenes/plush_quest/quest8.png"):
+                scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+            mc "Wow. Rude."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "Also because I know you'll find them eventually."
+        tsuki "You always poke around everywhere."
+
+        if renpy.loadable("scenes/plush_quest/quest8.png"):
+            scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+        narrator "She's not wrong."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "If you see any while you're exploring places..."
+        tsuki "Can you grab them for me?"
+        tsuki "Please?"
+
+        menu:
+            "Sure, I'll keep an eye out.":
+                if renpy.loadable("scenes/plush_quest/quest8.png"):
+                    scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+                mc "Fine."
+                mc "If I spot any plushies hiding around, I'll pick them up."
+                if renpy.loadable("scenes/plush_quest/quest12.png"):
+                    scene expression im.Scale("scenes/plush_quest/quest12.png", config.screen_width, config.screen_height) with dissolve
+                tsuki "Yay!"
+                tsuki "I knew you'd help!"
+            "You're really making me your plushie detective.":
+                if renpy.loadable("scenes/plush_quest/quest8.png"):
+                    scene expression im.Scale("scenes/plush_quest/quest8.png", config.screen_width, config.screen_height) with dissolve
+                mc "So this is official now?"
+                mc "I'm your plushie detective?"
+                tsuki "Correct."
+                if renpy.loadable("scenes/plush_quest/quest13.png"):
+                    scene expression im.Scale("scenes/plush_quest/quest13.png", config.screen_width, config.screen_height) with dissolve
+                tsuki "Congratulations on your promotion."
+
+        if renpy.loadable("scenes/plush_quest/quest9.png"):
+            scene expression im.Scale("scenes/plush_quest/quest9.png", config.screen_width, config.screen_height) with dissolve
+        hana "Just try not to tear the house apart while you're looking."
+
+        if renpy.loadable("scenes/plush_quest/quest7.png"):
+            scene expression im.Scale("scenes/plush_quest/quest7.png", config.screen_width, config.screen_height) with dissolve
+        tsuki "And if you find them..."
+        tsuki "Bring them back to me!"
+
+        if renpy.loadable("scenes/plush_quest/quest13.png"):
+            scene expression im.Scale("scenes/plush_quest/quest13.png", config.screen_width, config.screen_height) with dissolve
+        narrator "Tsuki beams proudly."
+
+        $ day1_plushie_system_introduced = True
+
+        if "ell_accept_quest" in globals():
+            $ ell_accept_quest("tsuki_lost_plushies")
+        if "ell_sync_collectible_quests" in globals():
+            $ ell_sync_collectible_quests()
+
+        call screen day1_game_ui_popup(
+            title="NEW QUEST OBTAINED",
+            subtitle="Tsuki's Lost Plushies",
+            body="Hidden plushies are scattered across different locations. Keep an eye out while exploring and collect them when you find them."
+        )
+
+    if renpy.loadable("scenes/plush_quest/quest4.png"):
+        scene expression im.Scale("scenes/plush_quest/quest4.png", config.screen_width, config.screen_height) with dissolve
+    hana "Alright, you two. Finish getting ready. You don't want to rush the walk there."
+
+    if renpy.loadable("scenes/breakfast_end.png"):
+        scene expression im.Scale("scenes/breakfast_end.png", config.screen_width, config.screen_height) with dissolve
+    narrator "With breakfast over and the morning conversation behind us, it's finally time to head out."
+
+    scene black with fade
+    narrator "A few minutes later..."
+
+    if renpy.loadable("scenes/leaving.png"):
+        scene expression im.Scale("scenes/leaving.png", config.screen_width, config.screen_height) with dissolve
     tsuki "Try not to embarrass yourself on day one."
 
     if mc_gender == "male":
+        if renpy.loadable("scenes/leaving2.png"):
+            scene expression im.Scale("scenes/leaving2.png", config.screen_width, config.screen_height) with dissolve
         mc "I'll do my worst."
     else:
+        if renpy.loadable("scenes/leaving2.png"):
+            scene expression im.Scale("scenes/leaving2.png", config.screen_width, config.screen_height) with dissolve
         mc "No promises."
 
+    if renpy.loadable("scenes/leaving3.png"):
+        scene expression im.Scale("scenes/leaving3.png", config.screen_width, config.screen_height) with dissolve
     hana "Have a good day, both of you."
 
     scene black with fade
@@ -1068,6 +1229,7 @@ label day1_intro_year3:
 
     narrator "Aria. Poko. Reina."
     narrator "The Year 3 trio has presence in a way that makes the air around them feel just a little more charged."
+    narrator "Even among the crowd gathering before class, they stand out effortlessly."
 
     poko "Well, well."
     poko "Look who survived morning."

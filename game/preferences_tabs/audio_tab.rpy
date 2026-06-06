@@ -1,85 +1,86 @@
 # preferences_tabs/audio_tab.rpy
 
 screen preferences_tab_audio():
-    default pref_audio_yadj = ui.adjustment()
+    $ tab_colors = pref_tab_colors("audio")
+    $ all_muted = is_all_muted()
+    $ output_status = "AUDIO MUTED" if all_muted else "AUDIO LIVE"
 
     fixed:
-        xsize 1480
-        ysize 640
+        xsize 1450
+        ysize 740
 
-        $ left_w = 360
-        $ right_w = 1060
-        $ row_h = 86
-        $ slider_row_h = 96
-        $ row_gap = 20
+        hbox:
+            spacing 22
 
-        side "c r":
-            xpos 10
-            ypos 10
-            xysize (1460, 620)
+            vbox:
+                spacing 18
 
-            controller_viewport:
-                id "pref_audio_vp"
-                xysize (1460, 620)
-                mousewheel True
-                draggable True
-                arrowkeys "not sticks"
-                focus_scroll True
-                shortcuts True
-                yadjustment pref_audio_yadj
+                use pref_hub_panel("MASTER MIXER", "Overall mute and per-channel balance.", 930, 390, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 14
 
-                vbox:
-                    spacing row_gap
-
-                    hbox:
-                        spacing 28
-                        fixed:
-                            xsize left_w
-                            ysize row_h
-                            text L("pref_label_mute_all") style "pref_setting_label" yalign 0.5
-                        fixed:
-                            xsize right_w
-                            ysize row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 12
-                                use pref_small_button("pref_button_muted", Function(set_all_mute, True), selected=is_all_muted(), tooltip_key="pref_tip_muted")
-                                use pref_small_button("pref_button_not_muted", Function(set_all_mute, False), selected=not is_all_muted(), tooltip_key="pref_tip_not_muted")
-
-                    if config.has_music:
                         hbox:
-                            spacing 28
+                            spacing 14
                             fixed:
-                                xsize left_w
-                                ysize row_h
-                                text L("pref_label_music_volume") style "pref_setting_label" yalign 0.5
-                            fixed:
-                                xsize right_w
-                                ysize row_h
-                                use ui_slider(Preference("music volume"), variant="fill", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_music_volume"))
+                                xsize 220
+                                ysize 52
+                                text pref_L("pref_label_mute_all") style "pref_setting_label" yalign 0.5
+                            use pref_small_button("pref_button_muted", Function(set_all_mute, True), selected=all_muted, xsize=180, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_button_not_muted", Function(set_all_mute, False), selected=(not all_muted), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                    if config.has_sound:
+                        if config.has_music:
+                            use pref_hub_slider_row("pref_label_music_volume", Preference("music volume"), variant="fill", label_width=220, slider_width=420, dimmed=all_muted)
+
+                        if config.has_sound:
+                            use pref_hub_slider_row("pref_label_sfx_volume", Preference("sound volume"), variant="fill", label_width=220, slider_width=420, dimmed=all_muted)
+
+                        if config.has_voice:
+                            use pref_hub_slider_row("pref_label_voice_volume", Preference("voice volume"), variant="fill", label_width=220, slider_width=420, dimmed=all_muted)
+
+                use pref_hub_panel("SOUNDSTAGE", "How each channel shapes the scene.", 930, 150, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 8
+                        text "Music shapes ambience, SFX adds feedback, and voice keeps spoken scenes clear." style "pref_label_text"
+                        text "Your mix carries across menus and story scenes." style "pref_label_text"
+
+            vbox:
+                spacing 18
+
+                use pref_hub_panel("OUTPUT STATE", xsize=498, ysize=176, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 10
+                        text output_status style "pref_section_title" color tab_colors["accent"]
+                        text "Mute All controls the full mixer from the main section on the left." style "pref_label_text"
+                        text "The sliders stay saved even while output is muted." style "pref_label_text"
+
+                use pref_hub_panel("CHANNEL GUIDE", xsize=498, ysize=228, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 10
+
+                        if config.has_music:
+                            text "Music Volume" style "pref_setting_label" color tab_colors["accent"]
+                            text "Background tracks and ambient layers." style "pref_label_text"
+
+                        if config.has_sound:
+                            text "SFX Volume" style "pref_setting_label" color tab_colors["accent"]
+                            text "Interface cues and world interactions." style "pref_label_text"
+
+                        if config.has_voice:
+                            text "Voice Volume" style "pref_setting_label" color tab_colors["accent"]
+                            text "Spoken dialogue playback." style "pref_label_text"
+
+                use pref_hub_panel("SAVED LEVELS", xsize=498, ysize=104, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 6
                         hbox:
-                            spacing 28
-                            fixed:
-                                xsize left_w
-                                ysize row_h
-                                text L("pref_label_sfx_volume") style "pref_setting_label" yalign 0.5
-                            fixed:
-                                xsize right_w
-                                ysize row_h
-                                use ui_slider(Preference("sound volume"), variant="fill", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_sfx_volume"))
-
-                    if config.has_voice:
+                            xfill True
+                            text "Music" style "pref_label_text"
+                            text "[pref_audio_percent('music_volume')]" style "pref_label_text" xalign 1.0
                         hbox:
-                            spacing 28
-                            fixed:
-                                xsize left_w
-                                ysize row_h
-                                text L("pref_label_voice_volume") style "pref_setting_label" yalign 0.5
-                            fixed:
-                                xsize right_w
-                                ysize row_h
-                                use ui_slider(Preference("voice volume"), variant="fill", xpos=(right_w - 700), xsize=700, ysize=36, tooltip=L("pref_tip_voice_volume"))
-
-            use ui_vscrollbar_for("pref_audio_vp")
+                            xfill True
+                            text "SFX" style "pref_label_text"
+                            text "[pref_audio_percent('sound_volume')]" style "pref_label_text" xalign 1.0
+                        hbox:
+                            xfill True
+                            text "Voice" style "pref_label_text"
+                            text "[pref_audio_percent('voice_volume')]" style "pref_label_text" xalign 1.0

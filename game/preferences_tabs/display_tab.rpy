@@ -1,158 +1,94 @@
 # preferences_tabs/display_tab.rpy
 
 screen preferences_tab_display():
-    default pref_display_yadj = ui.adjustment()
+    $ tab_colors = pref_tab_colors("display")
+    $ preview_line = "The next line arrives at your chosen pace."
 
     fixed:
-        xsize 1480
-        ysize 640
+        xsize 1450
+        ysize 740
 
-        $ left_w = 360
-        $ right_w = 1060
-        $ row_h = 86
-        $ lang_row_h = 142
-        $ slider_row_h = 96
-        $ slider_h = 36
-        $ row_gap = 20
+        hbox:
+            spacing 22
 
-        side "c r":
-            xpos 10
-            ypos 10
-            xysize (1460, 620)
+            vbox:
+                spacing 18
 
-            controller_viewport:
-                id "pref_display_vp"
-                xysize (1460, 620)
-                mousewheel True
-                draggable True
-                arrowkeys "not sticks"
-                focus_scroll True
-                shortcuts True
-                yadjustment pref_display_yadj
+                use pref_hub_panel("DISPLAY MODE", "Choose how the game window is shown.", 694, 190, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    hbox:
+                        spacing 14
+                        use pref_small_button("pref_button_window", Preference("display", "window"), selected=(not preferences.fullscreen), xsize=300, ysize=52, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                        use pref_small_button("pref_button_fullscreen", Preference("display", "fullscreen"), selected=preferences.fullscreen, xsize=300, ysize=52, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                hbox:
-                    spacing 28
-
-
+                use pref_hub_panel("SKIP OPTIONS", "Set how skipping behaves during story scenes.", 694, 216, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     vbox:
-                        xsize left_w
-                        spacing row_gap
+                        spacing 16
 
-                        fixed:
-                            xsize left_w
-                            ysize row_h
-                            text L("pref_label_display") style "pref_setting_label" yalign 0.5
+                        hbox:
+                            spacing 14
+                            fixed:
+                                xsize 210
+                                ysize 52
+                                text pref_L("pref_label_skip_unseen") style "pref_setting_label" yalign 0.5
+                            use pref_small_button("pref_button_on", SetField(preferences, "skip_unseen", True), selected=preferences.skip_unseen, xsize=152, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_button_off", SetField(preferences, "skip_unseen", False), selected=(not preferences.skip_unseen), xsize=152, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                        fixed:
-                            xsize left_w
-                            ysize row_h
-                            text L("pref_label_skip_unseen") style "pref_setting_label" yalign 0.5
+                        hbox:
+                            spacing 14
+                            fixed:
+                                xsize 210
+                                ysize 52
+                                text pref_L("pref_label_skip_after_choices") style "pref_setting_label" yalign 0.5
+                            use pref_small_button("pref_button_on", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices, xsize=152, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=(not preferences.skip_after_choices), xsize=152, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                        fixed:
-                            xsize left_w
-                            ysize row_h
-                            text L("pref_label_skip_after_choices") style "pref_setting_label" yalign 0.5
-
-                        fixed:
-                            xsize left_w
-                            ysize lang_row_h
-                            text L("pref_label_language") style "pref_setting_label" yalign 0.5
-
-                        fixed:
-                            xsize left_w
-                            ysize slider_row_h
-                            text L("pref_label_text_speed") style "pref_setting_label" yalign 0.5
-
-                        fixed:
-                            xsize left_w
-                            ysize slider_row_h
-                            text L("pref_label_auto_forward") style "pref_setting_label" yalign 0.5
-
+                use pref_hub_panel("TEXT PACE", "Tune dialogue speed and auto-forward timing.", 694, 236, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     vbox:
-                        xsize right_w
-                        spacing row_gap
+                        spacing 12
+                        use pref_hub_slider_row("pref_label_text_speed", Preference("text speed"), label_width=220, slider_width=300)
+                        use pref_hub_slider_row("pref_label_auto_forward", Preference("auto-forward time"), label_width=220, slider_width=300)
 
-                        fixed:
-                            xsize right_w
-                            ysize row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 12
-                                use pref_small_button("pref_button_window", Preference("display", "window"), selected=not preferences.fullscreen, tooltip_key="pref_tip_window")
-                                use pref_small_button("pref_button_fullscreen", Preference("display", "fullscreen"), selected=preferences.fullscreen, tooltip_key="pref_tip_fullscreen")
+            vbox:
+                spacing 18
 
-                        fixed:
-                            xsize right_w
-                            ysize row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 12
-                                use pref_small_button("pref_button_on", SetField(preferences, "skip_unseen", True), selected=preferences.skip_unseen, tooltip_key="pref_tip_skip_unseen_on")
-                                use pref_small_button("pref_button_off", SetField(preferences, "skip_unseen", False), selected=not preferences.skip_unseen, tooltip_key="pref_tip_skip_unseen_off")
+                use pref_hub_panel("LANGUAGE", "Switch the interface language.", 734, 212, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 12
 
-                        fixed:
-                            xsize right_w
-                            ysize row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 12
-                                use pref_small_button("pref_button_on", SetField(preferences, "skip_after_choices", True), selected=preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_on")
-                                use pref_small_button("pref_button_off", SetField(preferences, "skip_after_choices", False), selected=not preferences.skip_after_choices, tooltip_key="pref_tip_skip_after_choices_off")
+                        hbox:
+                            spacing 12
+                            use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=(get_ui_lang() == "en_us"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=(get_ui_lang() == "es_es"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_lang_fr_fr", Function(set_ui_lang, "fr_fr"), selected=(get_ui_lang() == "fr_fr"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                        fixed:
-                            xsize right_w
-                            ysize lang_row_h
-                            vbox:
-                                xalign 1.0
-                                spacing 8
-                                hbox:
-                                    xalign 1.0
-                                    spacing 12
-                                    use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=get_ui_lang() == "en_us", tooltip_key="pref_tip_lang_en_us")
-                                    use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=get_ui_lang() == "es_es", tooltip_key="pref_tip_lang_es_es")
-                                    use pref_small_button("pref_lang_fr_fr", Function(set_ui_lang, "fr_fr"), selected=get_ui_lang() == "fr_fr", tooltip_key="pref_tip_lang_fr_fr")
-                                hbox:
-                                    xalign 1.0
-                                    spacing 12
-                                    use pref_small_button("pref_lang_de_de", Function(set_ui_lang, "de_de"), selected=get_ui_lang() == "de_de", tooltip_key="pref_tip_lang_de_de")
-                                    use pref_small_button("pref_lang_pt_br", Function(set_ui_lang, "pt_br"), selected=get_ui_lang() == "pt_br", tooltip_key="pref_tip_lang_pt_br")
+                        hbox:
+                            spacing 12
+                            use pref_small_button("pref_lang_de_de", Function(set_ui_lang, "de_de"), selected=(get_ui_lang() == "de_de"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_lang_pt_br", Function(set_ui_lang, "pt_br"), selected=(get_ui_lang() == "pt_br"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                        fixed:
-                            xsize right_w
-                            ysize slider_row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 8
-                                fixed:
-                                    xsize 60
-                                    ysize slider_row_h
-                                    text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
-                                fixed:
-                                    xsize 700
-                                    ysize slider_row_h
-                                    use ui_slider(Preference("text speed"), xpos=0, ypos=((slider_row_h - slider_h) // 2), xsize=700, ysize=slider_h, tooltip=L("pref_tip_text_speed"))
-                                fixed:
-                                    xsize 60
-                                    ysize slider_row_h
-                                    text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
+                use pref_hub_panel("LIVE PREVIEW", xsize=734, ysize=246, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    $ mode_name = "Fullscreen" if preferences.fullscreen else "Window"
+                    $ skip_text = "Unread text can be skipped." if preferences.skip_unseen else "Unread text stops skip."
+                    $ choice_text = "Skipping continues after choices." if preferences.skip_after_choices else "Choices stop at choices."
 
-                        fixed:
-                            xsize right_w
-                            ysize slider_row_h
-                            hbox:
-                                xalign 1.0
-                                spacing 8
-                                fixed:
-                                    xsize 60
-                                    ysize slider_row_h
-                                    text L("pref_label_min") style "pref_setting_label" xalign 1.0 yalign 0.5
-                                fixed:
-                                    xsize 700
-                                    ysize slider_row_h
-                                    use ui_slider(Preference("auto-forward time"), xpos=0, ypos=((slider_row_h - slider_h) // 2), xsize=700, ysize=slider_h, tooltip=L("pref_tip_auto_forward"))
-                                fixed:
-                                    xsize 60
-                                    ysize slider_row_h
-                                    text L("pref_label_max") style "pref_setting_label" xalign 0.0 yalign 0.5
+                    frame:
+                        background pref_surface_color(tab_colors["well_bg"], "well")
+                        xsize 690
+                        ysize 118
+                        xpadding 18
+                        ypadding 12
 
-            use ui_vscrollbar_for("pref_display_vp")
+                        vbox:
+                            spacing 6
+                            text mode_name style "pref_section_title" color tab_colors["accent"]
+                            add pref_preview_displayable(preview_line, style="pref_body_text", size=20)
+
+                    text skip_text style "pref_muted_text"
+                    text choice_text style "pref_muted_text"
+
+                use pref_hub_panel("SECTION NOTES", "What changes here affect.", 734, 180, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                    vbox:
+                        spacing 10
+                        text "Display Mode changes the window style used by the game." style "pref_muted_text"
+                        text "Skip Options control unread text and choice behavior." style "pref_muted_text"
+                        text "Text Pace sets dialogue speed and auto-forward timing." style "pref_muted_text"

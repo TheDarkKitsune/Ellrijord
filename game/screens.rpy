@@ -84,12 +84,14 @@ screen say(who, what):
 
     window:
         id "window"
+        background pref_dialogue_window_background()
 
         if who is not None:
 
             window:
                 id "namebox"
                 style "namebox"
+                background pref_dialogue_namebox_background()
                 text who id "who"
 
         text what id "what"
@@ -699,6 +701,9 @@ style confirm_button_text:
     text_align 0.5
 
 screen confirm(message, yes_action, no_action=None):
+    if not pref_visual_bool("pref_confirm_prompts", True):
+        timer 0.01 action yes_action
+
     modal True
     zorder 200
     style_prefix "confirm"
