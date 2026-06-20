@@ -1,9 +1,9 @@
-# lang/en_us.rpy
-# English (US) UI strings.
+# lang/en_gb.rpy
+# English (UK) UI strings.
 
 init -1 python:
-    register_ui_lang("en_us", {
-        "lang_name": "English (US)",
+    register_ui_lang("en_gb", {
+        "lang_name": "English (UK)",
 
         # Tabs.
         "pref_tab_display": "DISPLAY",
@@ -45,12 +45,12 @@ init -1 python:
         "pref_label_max": "MAX",
         "pref_label_auto_forward": "AUTO-FORWARD DELAY",
         "pref_label_language": "LANGUAGE",
-        "pref_lang_en_us": "ENGLISH (US)",
+        "pref_lang_en_gb": "ENGLISH (UK)",
         "pref_lang_es_es": "ESPANOL (ES)",
         "pref_lang_fr_fr": "FRANCAIS (FR)",
         "pref_lang_de_de": "DEUTSCH (DE)",
         "pref_lang_pt_br": "PORTUGUES (BR)",
-        "pref_tip_lang_en_us": "Switch language to English (US).",
+        "pref_tip_lang_en_gb": "Switch language to English (UK).",
         "pref_tip_lang_es_es": "Cambiar idioma a espanol (ES).",
         "pref_tip_lang_fr_fr": "Switch language to francais (FR).",
         "pref_tip_lang_de_de": "Switch language to deutsch (DE).",

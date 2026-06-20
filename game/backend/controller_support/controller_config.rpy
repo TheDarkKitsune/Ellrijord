@@ -295,6 +295,8 @@ default persistent.ALWAYS_SHOWN_FOCUS_DISPLAYABLE = None
 ## The point past which the stick is considered to start moving.
 default persistent.left_stick_dead_zone = dict()
 default persistent.right_stick_dead_zone = dict()
+default persistent.left_stick_dead_zone_fallback = 4096
+default persistent.right_stick_dead_zone_fallback = 4096
 ## Maximum amount the stick can move
 default persistent.left_stick_max = dict()
 default persistent.right_stick_max = dict()

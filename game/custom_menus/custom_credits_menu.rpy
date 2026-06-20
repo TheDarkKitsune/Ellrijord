@@ -34,7 +34,7 @@ init -2 python:
     def _credits_avatar_pool():
         pool = [p for p in CREDITS_AVATAR_SEEDS if renpy.loadable(p)]
         if not pool:
-            pool = ["gui/window_icon.png"]
+            pool = [pref_window_icon_path() if "pref_window_icon_path" in globals() else "gui/window_icon.png"]
         return pool
 
 

@@ -76,7 +76,7 @@ init -2 python:
 
         if renpy.loadable(preferred):
             return preferred
-        return "gui/window_icon.png"
+        return pref_window_icon_path() if "pref_window_icon_path" in globals() else "gui/window_icon.png"
 
     def get_main_menu_toggle_label():
         mode = get_main_menu_mode()

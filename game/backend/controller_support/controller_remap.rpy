@@ -67,21 +67,21 @@ init python in pad_remap:
 
     ## These next two are used for custom page left/right actions.
     add_custom_event("page_left", _("Page Left{#pad_remap}"),
-        ["pad_leftshoulder_press"], "menu", required=True, remappable=True,
+        ["pad_leftshoulder_press"], "menu", required=True, remappable=False,
         priority=61)
     add_custom_event("page_right", _("Page Right{#pad_remap}"),
-        ["pad_rightshoulder_press"], "menu", required=True, remappable=True,
+        ["pad_rightshoulder_press"], "menu", required=True, remappable=False,
         priority=62)
 
     ## This is a custom event for opening the history screen. See the quick
     ## menu in dialogue_screens.rpy for the shortcut.
     add_custom_event("history", _("Open History{#pad_remap}"),
-        ["pad_lefttrigger_pos"], "in-game", required=False, remappable=True,
+        ["pad_lefttrigger_pos"], "in-game", required=False, remappable=False,
         priority=51)
     ## This is a custom event for extra menu actions, like syncing save data
     ## or resetting preferences to the defaults.
     add_custom_event("extra_menu", _("Sync Save Data/Reset to Default"),
-        ["pad_y_press"], "menu", required=True, remappable=True,
+        ["pad_y_press"], "menu", required=True, remappable=False,
         priority=115)
     ## This is a custom event for viewport scrolling shortcuts. It is not
     ## remappable. It is used in 01_controller_vp.rpy to jump the viewport
@@ -286,10 +286,7 @@ init -100 python in pad_remap:
         # ("Navigate Down", "focus_down", 100),
 
         (_("Delete Saves{#pad_remap}"), "save_delete", 110),
-        (_("Accessibility{#pad_remap}"), "accessibility", 120),
-        (_("Self-Voicing{#pad_remap}"), "self_voicing", 130),
         (_("Fast Skip{#pad_remap}"), "fast_skip", 140),
-        (_("Quit{#pad_remap}"), "quit", 150),
 
     ]
 

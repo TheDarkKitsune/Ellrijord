@@ -1,7 +1,7 @@
 # preferences_tabs/display_tab.rpy
 
 screen preferences_tab_display():
-    $ tab_colors = pref_tab_colors("display")
+    $ tab_colors = pref_ui_tab_colors("display")
     $ preview_line = "The next line arrives at your chosen pace."
 
     fixed:
@@ -20,7 +20,7 @@ screen preferences_tab_display():
                         use pref_small_button("pref_button_window", Preference("display", "window"), selected=(not preferences.fullscreen), xsize=300, ysize=52, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
                         use pref_small_button("pref_button_fullscreen", Preference("display", "fullscreen"), selected=preferences.fullscreen, xsize=300, ysize=52, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                use pref_hub_panel("SKIP OPTIONS", "Set how skipping behaves during story scenes.", 694, 216, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                use pref_hub_panel("SKIP OPTIONS", "Set how skipping behaves during story scenes.", 694, 228, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     vbox:
                         spacing 16
 
@@ -51,13 +51,13 @@ screen preferences_tab_display():
             vbox:
                 spacing 18
 
-                use pref_hub_panel("LANGUAGE", "Switch the interface language.", 734, 212, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                use pref_hub_panel("LANGUAGE", "Switch the interface language.", 734, 220, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     vbox:
                         spacing 12
 
                         hbox:
                             spacing 12
-                            use pref_small_button("pref_lang_en_us", Function(set_ui_lang, "en_us"), selected=(get_ui_lang() == "en_us"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
+                            use pref_small_button("pref_lang_en_gb", Function(set_ui_lang, "en_gb"), selected=(get_ui_lang() == "en_gb"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
                             use pref_small_button("pref_lang_es_es", Function(set_ui_lang, "es_es"), selected=(get_ui_lang() == "es_es"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
                             use pref_small_button("pref_lang_fr_fr", Function(set_ui_lang, "fr_fr"), selected=(get_ui_lang() == "fr_fr"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
@@ -66,7 +66,7 @@ screen preferences_tab_display():
                             use pref_small_button("pref_lang_de_de", Function(set_ui_lang, "de_de"), selected=(get_ui_lang() == "de_de"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
                             use pref_small_button("pref_lang_pt_br", Function(set_ui_lang, "pt_br"), selected=(get_ui_lang() == "pt_br"), xsize=210, ysize=50, accent=tab_colors["accent"], selected_bg=tab_colors["selected_bg"], selected_text=tab_colors["selected_text"])
 
-                use pref_hub_panel("LIVE PREVIEW", xsize=734, ysize=246, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                use pref_hub_panel("LIVE PREVIEW", xsize=734, ysize=258, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     $ mode_name = "Fullscreen" if preferences.fullscreen else "Window"
                     $ skip_text = "Unread text can be skipped." if preferences.skip_unseen else "Unread text stops skip."
                     $ choice_text = "Skipping continues after choices." if preferences.skip_after_choices else "Choices stop at choices."
@@ -86,9 +86,9 @@ screen preferences_tab_display():
                     text skip_text style "pref_muted_text"
                     text choice_text style "pref_muted_text"
 
-                use pref_hub_panel("SECTION NOTES", "What changes here affect.", 734, 180, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                use pref_hub_panel("SECTION NOTES", "What changes here affect.", 734, 196, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                     vbox:
                         spacing 10
                         text "Display Mode changes the window style used by the game." style "pref_muted_text"
-                        text "Skip Options control unread text and choice behavior." style "pref_muted_text"
+                        text "Skip Options control unread text and choice behaviour." style "pref_muted_text"
                         text "Text Pace sets dialogue speed and auto-forward timing." style "pref_muted_text"

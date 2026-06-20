@@ -45,7 +45,7 @@ init -2 python:
             return items
         ph = get_main_menu_bg_path() if "get_main_menu_bg_path" in globals() else "gui/menu/mainmenu_bg.png"
         if not renpy.loadable(ph):
-            ph = "gui/menu/mainmenu_bg.png" if renpy.loadable("gui/menu/mainmenu_bg.png") else "gui/window_icon.png"
+            ph = "gui/menu/mainmenu_bg.png" if renpy.loadable("gui/menu/mainmenu_bg.png") else (pref_window_icon_path() if "pref_window_icon_path" in globals() else "gui/window_icon.png")
         return [{"name": "{} {}".format(label_prefix, i + 1), "path": ph} for i in range(count)]
 
     def _gallery_items_from_list(paths):

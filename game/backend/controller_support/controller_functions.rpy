@@ -465,16 +465,22 @@ init -550 python in pad_config:
         Get the dead zone for the provided controller, or the default if it
         hasn't been calibrated.
         """
+        fallback_field = "{}_stick_dead_zone_fallback".format(stick)
+        fallback_value = getattr(persistent, fallback_field, DEFAULT_DEADZONE)
+
+        if not renpy_controllers:
+            return fallback_value
+
         if id is None:
             ## Try to get the first id in renpy_controllers
             id = next(iter(renpy_controllers))
         key = renpy_controllers.get(id)
         if key is None:
-            return DEFAULT_DEADZONE
+            return fallback_value
         key = key.get_guid_string()
         if stick == "left":
-            return persistent.left_stick_dead_zone.get(key, DEFAULT_DEADZONE)
-        return persistent.right_stick_dead_zone.get(key, DEFAULT_DEADZONE)
+            return persistent.left_stick_dead_zone.get(key, fallback_value)
+        return persistent.right_stick_dead_zone.get(key, fallback_value)
 
     def get_stick_max(id=None, stick="left"):
         """

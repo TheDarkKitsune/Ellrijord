@@ -10,13 +10,19 @@ init -2 python:
         UI_TEXT[code] = mapping
 
     if not hasattr(persistent, "ui_lang"):
-        persistent.ui_lang = "en_us"
+        persistent.ui_lang = "en_gb"
 
     def get_ui_lang():
-        lang = getattr(persistent, "ui_lang", "en_us")
-        return lang if lang in UI_TEXT else "en_us"
+        lang = getattr(persistent, "ui_lang", "en_gb")
+        if lang == "en_us":
+            lang = "en_gb"
+            persistent.ui_lang = lang
+            renpy.save_persistent()
+        return lang if lang in UI_TEXT else "en_gb"
 
     def set_ui_lang(lang):
+        if lang == "en_us":
+            lang = "en_gb"
         if lang in UI_TEXT:
             persistent.ui_lang = lang
             renpy.save_persistent()
@@ -28,4 +34,4 @@ init -2 python:
 
     def L(key):
         lang = get_ui_lang()
-        return UI_TEXT.get(lang, {}).get(key, UI_TEXT.get("en_us", {}).get(key, key))
+        return UI_TEXT.get(lang, {}).get(key, UI_TEXT.get("en_gb", {}).get(key, key))

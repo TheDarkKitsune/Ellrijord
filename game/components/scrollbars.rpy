@@ -21,5 +21,22 @@ style ui_vscrollbar is vbar:
     top_gutter 13
     bottom_gutter 13
 
+style ui_vscrollbar_komic is vbar:
+    xsize 18
+    bar_invert True
+    top_bar Frame("gui/KOMIC/ScrollBars/vertical_idle_bar.png", 9, 9, 9, 9, tile=False)
+    bottom_bar Frame("gui/KOMIC/ScrollBars/vertical_idle_bar.png", 9, 9, 9, 9, tile=False)
+    hover_top_bar Frame("gui/KOMIC/ScrollBars/vertical_hover_bar.png", 9, 9, 9, 9, tile=False)
+    hover_bottom_bar Frame("gui/KOMIC/ScrollBars/vertical_hover_bar.png", 9, 9, 9, 9, tile=False)
+    thumb Frame("gui/KOMIC/ScrollBars/vertical_idle_thumb.png", 9, 9, 9, 9, tile=False)
+    hover_thumb Frame("gui/KOMIC/ScrollBars/vertical_hover_thumb.png", 9, 9, 9, 9, tile=False)
+    base_bar Frame("gui/KOMIC/ScrollBars/vertical_idle_bar.png", 9, 9, 9, 9, tile=False)
+    hover_base_bar Frame("gui/KOMIC/ScrollBars/vertical_hover_bar.png", 9, 9, 9, 9, tile=False)
+    thumb_offset 9
+    thumb_align 0.5
+    top_gutter 9
+    bottom_gutter 9
+
 screen ui_vscrollbar_for(viewport_id, style_name="ui_vscrollbar"):
-    vbar value YScrollValue(viewport_id) style style_name keyboard_focus False unscrollable gui.unscrollable
+    $ _style_name = "ui_vscrollbar_komic" if (style_name == "ui_vscrollbar" and pref_uses_komic_ui()) else style_name
+    vbar value YScrollValue(viewport_id) style _style_name keyboard_focus False unscrollable gui.unscrollable

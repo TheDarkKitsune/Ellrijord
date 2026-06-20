@@ -376,7 +376,7 @@
         for candidate in candidates:
             if renpy.loadable(candidate):
                 return candidate
-        return "gui/window_icon.png"
+        return pref_window_icon_path() if "pref_window_icon_path" in globals() else "gui/window_icon.png"
 
     def ell_inventory_character_items():
         typed_name = getattr(renpy.store, "mc_first_name", "")
@@ -840,7 +840,7 @@ screen inventory_character_detail(character=None):
                                     add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain", yoffset=6, alpha=0.14, matrixcolor=TintMatrix(detail_accent))
                                     add Transform(character["portrait"], xalign=0.5, ypos=54, xsize=520, ysize=640, fit="contain")
                                 else:
-                                    add Transform("gui/window_icon.png", xalign=0.5, ypos=210, xsize=240, ysize=240)
+                                    add Transform(pref_window_icon_path(), xalign=0.5, ypos=210, xsize=240, ysize=240)
 
                                 frame:
                                     background "#120d1ff0"
@@ -1055,7 +1055,7 @@ screen inventory_character_detail(character=None):
                                                                     if renpy.loadable(rel.get("portrait", "")):
                                                                         add Transform(rel["portrait"], xalign=0.5, yalign=1.0, xsize=122, ysize=102, fit="contain")
                                                                     else:
-                                                                        add Transform("gui/window_icon.png", xalign=0.5, yalign=0.5, xsize=64, ysize=64)
+                                                                        add Transform(pref_window_icon_path(), xalign=0.5, yalign=0.5, xsize=64, ysize=64)
 
                                                                 fixed:
                                                                     xsize 664

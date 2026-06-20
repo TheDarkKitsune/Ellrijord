@@ -76,33 +76,54 @@ init python:
         """
         def __init__(self, stick="left"):
             self.stick = stick
+            self._adjustment = None
             super(StickDeadzoneAdjustment, self).__init__()
             self.alt = _("Deadzone for the %s stick") % self.stick
         def get_adjustment(self):
-            return ui.adjustment(
-                value=self.adjust_deadzone(0, True)-pad_config.MINIMUM_DEADZONE,
-                range=pad_config.MAXIMUM_DEADZONE-pad_config.MINIMUM_DEADZONE,
-                step=1024, adjustable=True, changed=self.adjust_deadzone)
+            current = self.adjust_deadzone(0, True) - pad_config.MINIMUM_DEADZONE
+            if self._adjustment is None:
+                self._adjustment = ui.adjustment(
+                    value=current,
+                    range=pad_config.MAXIMUM_DEADZONE - pad_config.MINIMUM_DEADZONE,
+                    step=1024,
+                    adjustable=True,
+                    changed=self.adjust_deadzone,
+                )
+            elif abs(self._adjustment.value - current) > 0.0001:
+                self._adjustment.value = current
+            return self._adjustment
         def get_tooltip(self):
             return _("Adjust the deadzone for the %s stick. The deadzone is the area where the stick is considered to be at rest.") % self.stick
         def adjust_deadzone(self, value, return_value=False):
-            if not renpy_controllers:
-                return (pad_config.DEFAULT_DEADZONE if return_value else None)
             stick = self.stick
+            fallback_field = "{}_stick_dead_zone_fallback".format(stick)
+            fallback_value = getattr(persistent, fallback_field, pad_config.DEFAULT_DEADZONE)
+
+            if not renpy_controllers:
+                if return_value:
+                    return fallback_value
+                setattr(persistent, fallback_field, value + pad_config.MINIMUM_DEADZONE)
+                return None
+
             ## Grab the first key and get the guid
             id = next(iter(renpy_controllers))
             key = renpy_controllers.get(id)
             if key is None:
-                return (pad_config.DEFAULT_DEADZONE if return_value else None)
+                if return_value:
+                    return fallback_value
+                setattr(persistent, fallback_field, value + pad_config.MINIMUM_DEADZONE)
+                return None
             key = key.get_guid_string()
             if stick == "left":
                 if return_value:
-                    return persistent.left_stick_dead_zone.get(key, pad_config.DEFAULT_DEADZONE)
+                    return persistent.left_stick_dead_zone.get(key, fallback_value)
                 persistent.left_stick_dead_zone[key] = value + pad_config.MINIMUM_DEADZONE
             else:
                 if return_value:
-                    return persistent.right_stick_dead_zone.get(key, pad_config.DEFAULT_DEADZONE)
+                    return persistent.right_stick_dead_zone.get(key, fallback_value)
                 persistent.right_stick_dead_zone[key] = value + pad_config.MINIMUM_DEADZONE
+
+            setattr(persistent, fallback_field, value + pad_config.MINIMUM_DEADZONE)
 
 
     class StickSensitivityAdjustment(BarValue):
@@ -111,13 +132,22 @@ init python:
         """
         def __init__(self, stick="left"):
             self.stick = stick
+            self._adjustment = None
             super(StickSensitivityAdjustment, self).__init__()
             self.alt = _("Sensitivity for the %s stick") % self.stick
         def get_adjustment(self):
-            return ui.adjustment(
-                value=self.get_sensitivity_number(getattr(persistent,
-                self.stick + "_stick_sensitivity")), range=10, step=1,
-                adjustable=True, changed=self.adjust_sensitivity)
+            current = self.get_sensitivity_number(getattr(persistent, self.stick + "_stick_sensitivity"))
+            if self._adjustment is None:
+                self._adjustment = ui.adjustment(
+                    value=current,
+                    range=10,
+                    step=1,
+                    adjustable=True,
+                    changed=self.adjust_sensitivity,
+                )
+            elif abs(self._adjustment.value - current) > 0.0001:
+                self._adjustment.value = current
+            return self._adjustment
         def get_tooltip(self):
             return _("Adjust the sensitivity of the %s stick. High sensitivity moves faster.") % self.stick
         def adjust_sensitivity(self, value):

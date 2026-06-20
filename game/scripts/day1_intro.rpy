@@ -228,6 +228,7 @@ screen bedroom_day1_screen():
     modal True
     on "show" action Function(renpy.stop_skipping)
 
+    $ _is_komic = pref_uses_komic_ui()
     $ _bedroom_map = (
         "gui/maps/collectibles_gone.png"
         if (bedroom_clothes_taken and "cat_plush_1" in set(getattr(persistent, "plushies_found", set())) and renpy.loadable("gui/maps/collectibles_gone.png"))
@@ -235,6 +236,14 @@ screen bedroom_day1_screen():
     )
     $ _has_bedroom_map = renpy.loadable(_bedroom_map)
     $ _cat_plush_found = "cat_plush_1" in set(getattr(persistent, "plushies_found", set()))
+    $ _room_button_width = 600 if _is_komic else 760
+    $ _room_button_height = 64 if _is_komic else 48
+    $ _room_button_text_size = 24 if _is_komic else 33
+    $ _room_button_idle = Transform(pref_choice_button_asset(), size=(_room_button_width, _room_button_height)) if _is_komic else Solid("#141414c8")
+    $ _room_button_hover = Transform(pref_choice_button_asset(True), size=(_room_button_width, _room_button_height)) if _is_komic else Solid("#2a2a2ae0")
+    $ _room_button_text_color = pref_dialogue_text_color() if _is_komic else "#f0f0f0"
+    $ _room_button_text_hover = pref_dialogue_text_color() if _is_komic else "#ffffff"
+    $ _room_panel_bg = Solid("#00000044") if _is_komic else Solid("#00000088")
 
     if _has_bedroom_map:
         add _bedroom_map
@@ -255,47 +264,51 @@ screen bedroom_day1_screen():
         vbox:
             xalign 0.5
             yalign 0.6
-            xsize 760
+            xsize _room_button_width
             spacing 6
 
             textbutton "Dresser":
                 action [Function(renpy.stop_skipping), Jump("day1_dresser")]
                 xfill True
-                ysize 48
-                background Solid("#141414c8")
-                hover_background Solid("#2a2a2ae0")
-                text_size 33
-                text_color "#f0f0f0"
+                ysize _room_button_height
+                background _room_button_idle
+                hover_background _room_button_hover
+                text_size _room_button_text_size
+                text_color _room_button_text_color
+                text_hover_color _room_button_text_hover
                 text_xalign 0.5
 
             textbutton "Door":
                 action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
                 xfill True
-                ysize 48
-                background Solid("#141414c8")
-                hover_background Solid("#2a2a2ae0")
-                text_size 33
-                text_color "#f0f0f0"
+                ysize _room_button_height
+                background _room_button_idle
+                hover_background _room_button_hover
+                text_size _room_button_text_size
+                text_color _room_button_text_color
+                text_hover_color _room_button_text_hover
                 text_xalign 0.5
 
             textbutton "Bed":
                 action [Function(renpy.stop_skipping), Jump("day1_bed")]
                 xfill True
-                ysize 48
-                background Solid("#141414c8")
-                hover_background Solid("#2a2a2ae0")
-                text_size 33
-                text_color "#f0f0f0"
+                ysize _room_button_height
+                background _room_button_idle
+                hover_background _room_button_hover
+                text_size _room_button_text_size
+                text_color _room_button_text_color
+                text_hover_color _room_button_text_hover
                 text_xalign 0.5
 
             textbutton "Desk":
                 action [Function(renpy.stop_skipping), Jump("day1_desk")]
                 xfill True
-                ysize 48
-                background Solid("#141414c8")
-                hover_background Solid("#2a2a2ae0")
-                text_size 33
-                text_color "#f0f0f0"
+                ysize _room_button_height
+                background _room_button_idle
+                hover_background _room_button_hover
+                text_size _room_button_text_size
+                text_color _room_button_text_color
+                text_hover_color _room_button_text_hover
                 text_xalign 0.5
 
     elif renpy.has_image("bedroom_morning"):
@@ -324,15 +337,51 @@ screen bedroom_day1_screen():
             yalign 0.5
             xpadding 30
             ypadding 30
-            background Solid("#00000088")
+            background _room_panel_bg
 
             vbox:
                 spacing 12
                 text "Bedroom Actions"
-                textbutton "Dresser" action [Function(renpy.stop_skipping), Jump("day1_dresser")]
-                textbutton "Door" action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
-                textbutton "Bed" action [Function(renpy.stop_skipping), Jump("day1_bed")]
-                textbutton "Desk" action [Function(renpy.stop_skipping), Jump("day1_desk")]
+                textbutton "Dresser":
+                    action [Function(renpy.stop_skipping), Jump("day1_dresser")]
+                    xsize _room_button_width
+                    ysize _room_button_height
+                    background _room_button_idle
+                    hover_background _room_button_hover
+                    text_size _room_button_text_size
+                    text_color _room_button_text_color
+                    text_hover_color _room_button_text_hover
+                    text_xalign 0.5
+                textbutton "Door":
+                    action [Function(renpy.stop_skipping), Jump("day1_bedroom_door")]
+                    xsize _room_button_width
+                    ysize _room_button_height
+                    background _room_button_idle
+                    hover_background _room_button_hover
+                    text_size _room_button_text_size
+                    text_color _room_button_text_color
+                    text_hover_color _room_button_text_hover
+                    text_xalign 0.5
+                textbutton "Bed":
+                    action [Function(renpy.stop_skipping), Jump("day1_bed")]
+                    xsize _room_button_width
+                    ysize _room_button_height
+                    background _room_button_idle
+                    hover_background _room_button_hover
+                    text_size _room_button_text_size
+                    text_color _room_button_text_color
+                    text_hover_color _room_button_text_hover
+                    text_xalign 0.5
+                textbutton "Desk":
+                    action [Function(renpy.stop_skipping), Jump("day1_desk")]
+                    xsize _room_button_width
+                    ysize _room_button_height
+                    background _room_button_idle
+                    hover_background _room_button_hover
+                    text_size _room_button_text_size
+                    text_color _room_button_text_color
+                    text_hover_color _room_button_text_hover
+                    text_xalign 0.5
 
 
 screen day1_secret_discovered_popup(image_path, message="You've discovered a secret."):
