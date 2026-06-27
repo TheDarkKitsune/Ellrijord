@@ -904,6 +904,16 @@ screen pref_controls_status_row(icon_name, label, value_text, tab_colors):
             text value_text style "pref_label_text" color pref_ui_text_color("percent", tab_colors["accent"]) yalign 0.5
 
 
+screen pref_controls_restore_overview_row(label, value_text, tab_colors, chip_width=150):
+    hbox:
+        spacing 14
+        fixed:
+            xsize 190
+            ysize 38
+            text label style "pref_setting_label" yalign 0.5
+        use pref_controls_text_chip((value_text or "--").upper(), tab_colors, xsize=chip_width, ysize=34, selected=False)
+
+
 screen pref_controls_status_chip_row(label, value_text, tab_colors, label_width=250, chip_width=170):
     hbox:
         spacing 14
@@ -1440,62 +1450,39 @@ screen pref_controls_restore_panel(pref_remapper, tab_colors):
                     text "Reset All Controls combines bindings, layout, and tuning into one controls-only restore." style "pref_label_text"
                     text "Use the footer Default button below if you want every settings tab reset too." style "pref_label_text"
 
-        use pref_hub_panel("RESTORE OVERVIEW", "Current controls snapshot before resetting.", 1450, 332, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+        use pref_hub_panel("RESTORE OVERVIEW", None, 1450, 332, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
             hbox:
-                spacing 28
+                spacing 26
 
                 vbox:
                     spacing 10
+                    xsize 430
                     text "CURRENT STATUS" style "pref_controls_section_label" color tab_colors["accent"]
-                    hbox:
-                        spacing 12
-                        fixed:
-                            xsize 180
-                            ysize 42
-                            text "Hold To Skip" style "pref_setting_label" yalign 0.5
-                        use pref_controls_text_chip(pref_bool_text(getattr(persistent, "hold_to_skip", False)), tab_colors, xsize=130, ysize=42, selected=True)
-                    hbox:
-                        spacing 12
-                        fixed:
-                            xsize 180
-                            ysize 42
-                            text "Layout" style "pref_setting_label" yalign 0.5
-                        use pref_controls_text_chip(pref_controls_layout_label().upper(), tab_colors, xsize=170, ysize=42, selected=True)
-                    hbox:
-                        spacing 12
-                        fixed:
-                            xsize 180
-                            ysize 42
-                            text "Left Y Invert" style "pref_setting_label" yalign 0.5
-                        use pref_controls_text_chip(pref_bool_text(getattr(persistent, "left_stick_invert_y", False)), tab_colors, xsize=130, ysize=42, selected=True)
-                    hbox:
-                        spacing 12
-                        fixed:
-                            xsize 180
-                            ysize 42
-                            text "Right Y Invert" style "pref_setting_label" yalign 0.5
-                        use pref_controls_text_chip(pref_bool_text(getattr(persistent, "right_stick_invert_y", False)), tab_colors, xsize=130, ysize=42, selected=True)
-                    hbox:
-                        spacing 12
-                        fixed:
-                            xsize 180
-                            ysize 42
-                            text "Sensitivity" style "pref_setting_label" yalign 0.5
-                        use pref_controls_text_chip(pref_controls_sensitivity_summary().upper(), tab_colors, xsize=150, ysize=42, selected=True)
+                    use pref_controls_restore_overview_row("Hold To Skip", pref_bool_text(getattr(persistent, "hold_to_skip", False)), tab_colors, chip_width=120)
+                    use pref_controls_restore_overview_row("Layout", pref_controls_layout_label(), tab_colors, chip_width=170)
+                    use pref_controls_restore_overview_row("Left Y Invert", pref_bool_text(getattr(persistent, "left_stick_invert_y", False)), tab_colors, chip_width=120)
+                    use pref_controls_restore_overview_row("Right Y Invert", pref_bool_text(getattr(persistent, "right_stick_invert_y", False)), tab_colors, chip_width=120)
+                    use pref_controls_restore_overview_row("Sensitivity", pref_controls_sensitivity_summary(), tab_colors, chip_width=150)
+
+                add Solid(tab_colors["accent"] + "33") xsize 1 ysize 214 yalign 0.5
 
                 vbox:
                     spacing 10
+                    xsize 430
                     text "WHAT RESETS" style "pref_controls_section_label" color tab_colors["accent"]
                     text "Reset Bindings: Controller remaps only." style "pref_label_text"
                     text "Reset Layout: Prompt icon set and controller prompt mapping." style "pref_label_text"
-                    text "Reset Tuning: Hold-to-skip, inversion, dead zone, and sensitivity." style "pref_label_text"
-                    text "Reset All Controls: Combines the three controls-specific resets above." style "pref_label_text"
+                    text "Reset Tuning: Hold-to-skip, inversion, dead zones, and stick sensitivity." style "pref_label_text"
+                    text "Reset All Controls: Combines the above for a full controls reset." style "pref_label_text"
+
+                add Solid(tab_colors["accent"] + "33") xsize 1 ysize 214 yalign 0.5
 
                 vbox:
                     spacing 10
+                    xsize 470
                     text "NOTES" style "pref_controls_section_label" color tab_colors["accent"]
                     text "The Bindings and Gamepad tabs share the same live tuning values." style "pref_label_text"
-                    text "Keyboard and mouse references read from the current engine keymap." style "pref_label_text"
+                    text "Keyboard and mouse references come from the active engine keymap." style "pref_label_text"
                     text "Global Display, Audio, Access, and Interface settings are unchanged here." style "pref_label_text"
 
 
@@ -1570,7 +1557,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj, active=True):
                             use pref_hub_panel("MOUSE SHORTCUTS", "Mouse bindings currently exposed by the game keymap.", 740, 250, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                                 side "c r":
                                     xsize 704
-                                    ysize 170
+                                    ysize 146
 
                                     viewport:
                                         id "pref_controls_mouse_viewport"
