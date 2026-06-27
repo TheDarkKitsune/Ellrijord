@@ -771,6 +771,7 @@ init -2 python:
         pref_panel_surface(740, 682, theme["panel_bg"], accent)
         pref_panel_surface(740, 280, theme["panel_bg"], accent)
         pref_panel_surface(740, 250, theme["panel_bg"], accent)
+        pref_panel_surface(740, 146, theme["panel_bg"], accent)
         pref_panel_surface(740, 218, theme["panel_bg"], accent)
         pref_panel_surface(740, 178, theme["panel_bg"], accent)
         pref_panel_surface(740, 332, theme["panel_bg"], accent)
@@ -782,20 +783,30 @@ init -2 python:
 
         for width, height in (
             (236, 46),
+            (198, 46),
             (190, 46),
             (250, 46),
             (230, 46),
             (224, 44),
             (220, 46),
             (211, 46),
+            (210, 46),
+            (210, 42),
+            (266, 46),
+            (266, 42),
+            (266, 40),
             (180, 44),
             (170, 44),
             (152, 42),
             (150, 44),
+            (138, 42),
+            (138, 40),
             (130, 42),
             (112, 112),
             (66, 66),
+            (470, 44),
             (315, 40),
+            (500, 40),
             (300, 42),
             (145, 44),
             (158, 54),

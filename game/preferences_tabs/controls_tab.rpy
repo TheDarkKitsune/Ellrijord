@@ -33,28 +33,29 @@ init -1 python:
     ]
 
     PREF_CONTROLS_KEYBOARD_ACTIONS = [
-        ("Advance Dialogue", "dismiss"),
-        ("Open Menu", "game_menu"),
-        ("Skip", "skip"),
-        ("Auto-Forward", "toggle_afm"),
-        ("Rollback", "rollback"),
-        ("Hide UI", "hide_windows"),
-        ("Quick Save", "quick_save"),
-        ("Quick Load", "quick_load"),
+        ("Advance Dialogue", "dismiss", ("Enter", "Space")),
+        ("Open Menu", "game_menu", ("Esc", "M")),
+        ("Skip", "skip", ("Left Ctrl", "Right Ctrl")),
+        ("Rollback", "rollback", ("Page Up", "-")),
+        ("Hide UI", "hide_windows", ("H", "-")),
+        ("Quick Save", "quick_save", ("F5", "-")),
+        ("Quick Load", "quick_load", ("F9", "-")),
     ]
 
     PREF_CONTROLS_MOUSE_ACTIONS = [
-        ("Advance / Confirm", "dismiss"),
-        ("Open Menu", "game_menu"),
-        ("Rollback", "rollback"),
-        ("Hide UI", "hide_windows"),
+        ("Advance", "dismiss", ("Left Click", "-")),
+        ("Open Menu", "game_menu", ("Right Click", "-")),
+        ("Scroll Back", "rollback", ("Mouse Wheel Up", "-")),
+        ("Wheel Down", "toggle_afm", ("Mouse Wheel Down", "-")),
     ]
 
     PREF_CONTROLS_NAVIGATION_ACTIONS = [
-        ("Move Left", "focus_left"),
-        ("Move Right", "focus_right"),
-        ("Move Up", "focus_up"),
-        ("Move Down", "focus_down"),
+        ("Move Left", "focus_left", ("Left Arrow", "A")),
+        ("Move Right", "focus_right", ("Right Arrow", "D")),
+        ("Move Up", "focus_up", ("Up Arrow", "W")),
+        ("Move Down", "focus_down", ("Down Arrow", "S")),
+        ("Confirm / Select", "dismiss", ("Enter", "Space")),
+        ("Back / Cancel", "game_menu", ("Esc", "Backspace")),
     ]
 
     PREF_CONTROLS_BINDING_FILTERS = [
@@ -102,6 +103,23 @@ init -1 python:
             pad_config.refresh_redrawables(0, 1, None, force=True)
         except Exception:
             pass
+
+    def pref_controls_ensure_toggle_defaults():
+        changed = False
+
+        if not hasattr(persistent, "controller_vibration_enabled"):
+            persistent.controller_vibration_enabled = True
+            changed = True
+
+        if not hasattr(persistent, "controller_trigger_effects_enabled"):
+            persistent.controller_trigger_effects_enabled = True
+            changed = True
+
+        if changed:
+            try:
+                renpy.save_persistent()
+            except Exception:
+                pass
 
     def _pref_controls_save_and_refresh():
         try:
@@ -229,7 +247,21 @@ init -1 python:
         return DynamicDisplayable(pref_controls_live_metric_dd, value, metric, stick, style, color)
 
     def pref_controls_normalize_key_label(label):
-        normalized = str(label or "").replace("_", " ").replace("-", " ").strip().lower()
+        if isinstance(label, bytes):
+            try:
+                label = label.decode("utf-8")
+            except Exception:
+                label = str(label)
+        else:
+            label = str(label or "")
+
+        stripped = label.strip()
+        if (len(stripped) >= 3) and (stripped[0:2].lower() == "b'") and stripped.endswith("'"):
+            stripped = stripped[2:-1]
+        elif (len(stripped) >= 4) and (stripped[0:2].lower() == 'b"') and stripped.endswith('"'):
+            stripped = stripped[2:-1]
+
+        normalized = stripped.replace("_", " ").replace("-", " ").strip().lower()
         mapping = {
             "return": "Enter",
             "kp enter": "Num Enter",
@@ -250,6 +282,12 @@ init -1 python:
             "left super": "Super",
             "right super": "Super",
             "menu": "Menu",
+            "left": "Left Arrow",
+            "right": "Right Arrow",
+            "up": "Up Arrow",
+            "down": "Down Arrow",
+            "wheelup": "Mouse Wheel Up",
+            "wheeldown": "Mouse Wheel Down",
         }
         return mapping.get(normalized, normalized.title())
 
@@ -297,8 +335,27 @@ init -1 python:
         }
         return mapping.get(str(button), "MOUSE " + str(button))
 
+    def pref_controls_token_text(token):
+        if token is None:
+            return ""
+        if isinstance(token, bytes):
+            try:
+                return token.decode("utf-8")
+            except Exception:
+                try:
+                    return token.decode("latin-1")
+                except Exception:
+                    return ""
+        token = str(token)
+        stripped = token.strip()
+        if (len(stripped) >= 3) and (stripped[0:2].lower() == "b'") and stripped.endswith("'"):
+            return stripped[2:-1]
+        if (len(stripped) >= 4) and (stripped[0:2].lower() == 'b"') and stripped.endswith('"'):
+            return stripped[2:-1]
+        return token
+
     def pref_controls_token_label(token):
-        token = str(token or "")
+        token = pref_controls_token_text(token)
         if (not token) or token.startswith("pad_") or token.startswith("repeat_pad_"):
             return None
 
@@ -360,7 +417,7 @@ init -1 python:
             bindings = []
 
         for binding in bindings:
-            token = str(binding or "")
+            token = pref_controls_token_text(binding)
             is_mouse = token.startswith("mouseup_") or token.startswith("mousedown_")
 
             if device == "keyboard" and is_mouse:
@@ -378,25 +435,20 @@ init -1 python:
 
         return labels
 
-    def _pref_controls_dual_rows(specs, device="keyboard"):
+    def _pref_controls_rows(specs, device="keyboard"):
         rows = []
-        for title, action in specs:
-            labels = pref_controls_labels_for(action, device=device, limit=2)
-            if not labels:
-                continue
-            first = labels[0]
-            second = labels[1] if len(labels) > 1 else "--"
-            rows.append((title, first, second))
+        for title, action, fallback in specs:
+            rows.append((title, fallback[0], fallback[1]))
         return rows
 
     def pref_controls_keyboard_rows():
-        return _pref_controls_dual_rows(PREF_CONTROLS_KEYBOARD_ACTIONS, device="keyboard")
+        return _pref_controls_rows(PREF_CONTROLS_KEYBOARD_ACTIONS, device="keyboard")
 
     def pref_controls_mouse_rows():
-        return _pref_controls_dual_rows(PREF_CONTROLS_MOUSE_ACTIONS, device="mouse")
+        return _pref_controls_rows(PREF_CONTROLS_MOUSE_ACTIONS, device="mouse")
 
     def pref_controls_navigation_rows():
-        return _pref_controls_dual_rows(PREF_CONTROLS_NAVIGATION_ACTIONS, device="keyboard")
+        return _pref_controls_rows(PREF_CONTROLS_NAVIGATION_ACTIONS, device="keyboard")
 
     def pref_controls_icon_for_button(button_name):
         return {
@@ -436,8 +488,12 @@ init -1 python:
         _pref_controls_save_and_refresh()
 
     def _pref_controls_reset_tuning_state():
+        pref_controls_ensure_toggle_defaults()
+
         for field, value in (
             ("hold_to_skip", False),
+            ("controller_vibration_enabled", True),
+            ("controller_trigger_effects_enabled", True),
             ("left_stick_invert_x", False),
             ("left_stick_invert_y", False),
             ("right_stick_invert_x", False),
@@ -814,6 +870,52 @@ screen pref_controls_toggle_row(label, on_action, off_action, on_selected, tab_c
         use pref_controls_button("OFF", off_action, tab_colors, selected=(not on_selected), xsize=button_width, ysize=44)
 
 
+screen pref_controls_dual_toggle_row(label, selected_value, left_label, right_label, left_action, right_action, tab_colors, label_width=250, button_width=112, row_height=42):
+    hbox:
+        spacing 12
+
+        fixed:
+            xsize label_width
+            ysize row_height
+            text label style "pref_setting_label" yalign 0.5
+
+        use pref_controls_button(left_label, left_action, tab_colors, selected=(selected_value == "left"), xsize=button_width, ysize=38)
+        use pref_controls_button(right_label, right_action, tab_colors, selected=(selected_value == "right"), xsize=button_width, ysize=38)
+
+
+screen pref_controls_status_row(icon_name, label, value_text, tab_colors):
+    hbox:
+        spacing 12
+
+        fixed:
+            xsize 28
+            ysize 28
+            if icon_name:
+                add Transform(icon_name, fit="contain", xsize=22, ysize=22, xalign=0.5, yalign=0.5)
+
+        fixed:
+            xsize 258
+            ysize 30
+            text (label + ":") style "pref_setting_label" yalign 0.5
+
+        fixed:
+            xsize 210
+            ysize 30
+            text value_text style "pref_label_text" color pref_ui_text_color("percent", tab_colors["accent"]) yalign 0.5
+
+
+screen pref_controls_status_chip_row(label, value_text, tab_colors, label_width=250, chip_width=170):
+    hbox:
+        spacing 14
+
+        fixed:
+            xsize label_width
+            ysize 42
+            text label style "pref_setting_label" yalign 0.5
+
+        use pref_controls_text_chip((value_text or "--").upper(), tab_colors, xsize=chip_width, ysize=40, selected=True)
+
+
 screen pref_controls_axis_row(label, stick, axis, normal_selected, tab_colors, normal_id=None, label_width=250, button_width=150):
     hbox:
         spacing 12
@@ -859,9 +961,9 @@ screen pref_controls_slider_row(label, stick, metric, value, tab_colors, button_
             add pref_controls_live_metric_displayable(value, metric, stick=stick, style="pref_label_text", color=metric_color) xalign 1.0 yalign 0.5
 
 
-screen pref_controls_reference_rows(rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT", show_headers=True):
+screen pref_controls_reference_rows(rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT", action_header=None, show_headers=True, row_height=48, chip_height=44, row_spacing=10):
     vbox:
-        spacing 10
+        spacing row_spacing
 
         if show_headers and rows:
             hbox:
@@ -869,7 +971,10 @@ screen pref_controls_reference_rows(rows, tab_colors, label_width=250, primary_w
                 fixed:
                     xsize label_width
                     ysize 24
-                    null
+                    if action_header:
+                        text action_header style "pref_controls_slot_header" xalign 0.0 yalign 0.5
+                    else:
+                        null
                 fixed:
                     xsize primary_width
                     ysize 24
@@ -885,10 +990,10 @@ screen pref_controls_reference_rows(rows, tab_colors, label_width=250, primary_w
                     spacing 12
                     fixed:
                         xsize label_width
-                        ysize 48
+                        ysize row_height
                         text title style "pref_setting_label" yalign 0.5
-                    use pref_controls_text_chip(primary, tab_colors, xsize=primary_width, ysize=44)
-                    use pref_controls_text_chip(secondary, tab_colors, xsize=secondary_width, ysize=44)
+                    use pref_controls_text_chip(primary, tab_colors, xsize=primary_width, ysize=chip_height)
+                    use pref_controls_text_chip(secondary, tab_colors, xsize=secondary_width, ysize=chip_height)
         else:
             text "No bindings were found for this section." style "pref_label_text"
 
@@ -1244,24 +1349,27 @@ screen pref_controls_input_test_panel(probe, tab_colors, width=740, height=280, 
 
 
 screen pref_controls_gamepad_setup_panel(tab_colors):
-    use pref_hub_panel("GAMEPAD SETUP", "Choose an icon set, calibrate buttons, and review controller status.", 690, 682, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+    $ current_layout = str(getattr(persistent, "controller_layout", "generic") or "generic").lower()
+    $ controller_detected_label = "Yes" if pref_controls_has_gamepad() else "No"
+    $ active_layout_label = pref_controls_layout_label()
+    $ sensitivity_label = pref_controls_sensitivity_summary()
+    use pref_hub_panel("GAMEPAD SETUP", "Choose the button layout and icon prompts used by the game.", 690, 682, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
         vbox:
             spacing 16
 
-            text "LAYOUT" style "pref_controls_section_label" color tab_colors["accent"]
+            text "CONTROLLER LAYOUT" style "pref_controls_section_label" color tab_colors["accent"]
             add Solid(tab_colors["accent"] + "44") xsize 654 ysize 1
 
             hbox:
-                spacing 10
+                spacing 12
                 for layout_name, layout_label in PREF_CONTROLS_LAYOUT_ORDER[:3]:
-                    use pref_controls_button(layout_label, Function(pref_controls_set_layout, layout_name), tab_colors, selected=(persistent.controller_layout == layout_name), xsize=211, ysize=46)
+                    use pref_controls_button(layout_label, Function(pref_controls_set_layout, layout_name), tab_colors, selected=(current_layout == layout_name), xsize=198, ysize=46)
 
             hbox:
-                spacing 10
+                spacing 12
+                xpos 92
                 for layout_name, layout_label in PREF_CONTROLS_LAYOUT_ORDER[3:]:
-                    use pref_controls_button(layout_label, Function(pref_controls_set_layout, layout_name), tab_colors, selected=(persistent.controller_layout == layout_name), xsize=211, ysize=46)
-
-            use pref_controls_toggle_row("HOLD TO SKIP", SetField(persistent, "hold_to_skip", True), SetField(persistent, "hold_to_skip", False), persistent.hold_to_skip, tab_colors, on_id="pref_controls_gamepad_hold_on_btn", label_width=250, button_width=150)
+                    use pref_controls_button(layout_label, Function(pref_controls_set_layout, layout_name), tab_colors, selected=(current_layout == layout_name), xsize=198, ysize=46)
 
             text "CALIBRATION" style "pref_controls_section_label" color tab_colors["accent"]
             add Solid(tab_colors["accent"] + "44") xsize 654 ysize 1
@@ -1274,35 +1382,17 @@ screen pref_controls_gamepad_setup_panel(tab_colors):
             text "PROFILE STATUS" style "pref_controls_section_label" color tab_colors["accent"]
             add Solid(tab_colors["accent"] + "44") xsize 654 ysize 1
 
-            hbox:
-                spacing 12
-                fixed:
-                    xsize 240
-                    ysize 44
-                    text "CONNECTED CONTROLLERS" style "pref_setting_label" yalign 0.5
-                use pref_controls_text_chip(str(pref_controls_controller_count()), tab_colors, xsize=120, ysize=44, selected=True)
-
-            hbox:
-                spacing 12
-                fixed:
-                    xsize 240
-                    ysize 44
-                    text "CURRENT PROMPTS" style "pref_setting_label" yalign 0.5
-                use pref_controls_text_chip(pref_controls_layout_label().upper(), tab_colors, xsize=180, ysize=44, selected=True)
-
-            hbox:
-                spacing 12
-                fixed:
-                    xsize 240
-                    ysize 44
-                    text "SENSITIVITY PROFILE" style "pref_setting_label" yalign 0.5
-                use pref_controls_text_chip(pref_controls_sensitivity_summary().upper(), tab_colors, xsize=180, ysize=44, selected=True)
+            vbox:
+                spacing 8
+                use pref_controls_status_row("pad_start", "Controller Detected", controller_detected_label, tab_colors)
+                use pref_controls_status_row("pad_home", "Active Layout", active_layout_label, tab_colors)
+                use pref_controls_status_row("pad_select", "Sensitivity Profile", sensitivity_label, tab_colors)
 
             text "Layout buttons change the active prompt set immediately. Tuning stays on the right for direct testing." style "pref_label_text"
 
 
 screen pref_controls_keyboard_panel(keyboard_rows, keyboard_yadj, tab_colors):
-    use pref_hub_panel("KEY BINDINGS", "Review the current keyboard shortcuts used by this build.", 690, 682, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+    use pref_hub_panel("KEYBOARD SHORTCUTS", "Review the current keyboard shortcuts used by this build.", 690, 682, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
         side "c r":
             xsize 654
             ysize 560
@@ -1314,7 +1404,7 @@ screen pref_controls_keyboard_panel(keyboard_rows, keyboard_yadj, tab_colors):
                 draggable True
                 has vbox
                 spacing 10
-                use pref_controls_reference_rows(keyboard_rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT")
+                use pref_controls_reference_rows(keyboard_rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT", action_header="ACTION")
 
             use ui_vscrollbar_for("pref_controls_keyboard_viewport")
 
@@ -1418,6 +1508,7 @@ screen preferences_tab_controls(pref_remapper, pref_yadj, active=True):
     default pref_right_sensitivity_value = StickSensitivityAdjustment("right")
     default pref_controls_probe = PrefControlsInputProbe()
 
+    $ pref_controls_ensure_toggle_defaults()
     $ tab_colors = pref_ui_tab_colors("controls")
     $ pref_controls_section = pref_controls_section_tab if pref_controls_section_tab in ("bindings", "gamepad", "keyboard", "restore") else "bindings"
     $ remap_rows = pref_get_controls_remap_rows(pref_remapper)
@@ -1479,34 +1570,34 @@ screen preferences_tab_controls(pref_remapper, pref_yadj, active=True):
                             use pref_hub_panel("MOUSE SHORTCUTS", "Mouse bindings currently exposed by the game keymap.", 740, 250, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                                 side "c r":
                                     xsize 704
-                                    ysize 136
+                                    ysize 170
 
                                     viewport:
                                         id "pref_controls_mouse_viewport"
                                         mousewheel True
                                         draggable True
                                         has vbox
-                                        spacing 10
-                                        use pref_controls_reference_rows(mouse_rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT")
+                                        spacing 8
+                                        use pref_controls_reference_rows(mouse_rows, tab_colors, label_width=180, primary_width=150, secondary_width=150, primary_header="PRIMARY", secondary_header="ALT", action_header="ACTION", row_height=34, chip_height=30, row_spacing=6)
 
                                     use ui_vscrollbar_for("pref_controls_mouse_viewport")
 
-                            use pref_hub_panel("MENU NAVIGATION", "Keyboard navigation actions used by menu focus movement.", 740, 178, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
+                            use pref_hub_panel("MENU NAVIGATION", "Keyboard navigation actions used by menu focus movement.", 740, 250, accent=tab_colors["accent"], background=tab_colors["panel_bg"]):
                                 side "c r":
                                     xsize 704
-                                    ysize 80
+                                    ysize 154
 
                                     viewport:
                                         id "pref_controls_navigation_viewport"
                                         mousewheel True
                                         draggable True
                                         has vbox
-                                        spacing 10
-                                        use pref_controls_reference_rows(navigation_rows, tab_colors, label_width=250, primary_width=170, secondary_width=170, primary_header="PRIMARY", secondary_header="ALT")
+                                        spacing 8
+                                        use pref_controls_reference_rows(navigation_rows, tab_colors, label_width=180, primary_width=150, secondary_width=150, primary_header="PRIMARY", secondary_header="ALT", action_header="ACTION", row_height=30, chip_height=26, row_spacing=4)
 
                                     use ui_vscrollbar_for("pref_controls_navigation_viewport")
 
-                            use pref_controls_input_test_panel(pref_controls_probe, tab_colors, width=740, height=218, keyboard_only=True)
+                            use pref_controls_input_test_panel(pref_controls_probe, tab_colors, width=740, height=146, keyboard_only=True)
 
                 else:
                     use pref_controls_restore_panel(pref_remapper, tab_colors)
