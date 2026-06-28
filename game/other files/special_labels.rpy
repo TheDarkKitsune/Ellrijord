@@ -35,10 +35,38 @@ transform gentle_flash:
     pause 1.0
     repeat
 
+init -1 python:
+    def play_unmuted_launch_video(filename):
+        prefs = renpy.game.preferences
+        previous_mutes = {}
+
+        for mixer in ("main", "music"):
+            try:
+                previous_mutes[mixer] = prefs.get_mute(mixer)
+            except Exception:
+                previous_mutes[mixer] = None
+
+        try:
+            for mixer in ("main", "music"):
+                try:
+                    prefs.set_mute(mixer, False)
+                except Exception:
+                    pass
+
+            renpy.movie_cutscene(filename)
+        finally:
+            for mixer, muted in previous_mutes.items():
+                if muted is None:
+                    continue
+                try:
+                    prefs.set_mute(mixer, muted)
+                except Exception:
+                    pass
+
 label splashscreen():
     $ launch_video = "movies/Launch.webm" if renpy.loadable("movies/Launch.webm") else ("Launch.webm" if renpy.loadable("Launch.webm") else None)
     if launch_video:
-        $ renpy.movie_cutscene(launch_video)
+        $ play_unmuted_launch_video(launch_video)
     return
 
 ## After Load ##################################################################
