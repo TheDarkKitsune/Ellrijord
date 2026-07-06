@@ -1,0 +1,117 @@
+init python:
+
+    ### See: https://www.renpy.org/doc/html/rooms.html#image-gallery
+    ### for further instructions.
+
+    # Step 1. Create the gallery object.
+    gallery = Gallery()
+    # gallery.locked_button = "gui/gallery_locked_image.png"
+    gallery.locked_button = Composite(
+        (384,216), # Displayable Size
+        (0,0), "gui/gallery_locked_image.png", 
+        (0.05,0.84), Text(_("Locked!"), size=17))
+
+    # Step 2. Add buttons and images to the gallery.
+    # Make buttons with associated images!
+
+    # A button with an image that is always unlocked (useful for the main menu background)
+    gallery.button("main_menu")
+    gallery.image("gui/main_menu.png")
+
+    # Buttons that unlock when the player sees the associated images for the first time
+    gallery.button("background")
+    gallery.unlock_image("background")
+
+    gallery.button("choupi_stars")
+    gallery.unlock_image("choupi stars")
+    
+    # Placeholders/Remove
+    gallery.button("gallerytest")
+    gallery.condition("False")
+
+    # The transition used when switching images.
+    gallery.transition = dissolve
+
+screen _gallery(locked, displayables, index, count, gallery, **properties):
+
+    if locked:
+        add "#000"
+        text _("Image [index] of [count] locked.") align (0.5, 0.5)
+    else:
+        add "gui/game_menu.png"
+        fixed:
+            at transform:
+                yzoom 1.1 yalign .5
+                0.2
+                ease 0.4 yzoom 1.0
+            add Solid('#000') xysize(1.0,70) yalign 0
+            add Solid('#000') xysize(1.0,70) yalign 1.0
+        for d in displayables:
+            add d
+
+    if gallery.slideshow:
+        timer gallery.slideshow_delay action Return("next") repeat True
+
+    key "game_menu" action gallery.Return()
+
+    if gallery.navigation:
+        use gallery_navigation(gallery=gallery)
+
+screen navigation_gallery_music_return():
+    add "gui/navigation_ui_gallery.png" at Transform(xzoom=-1), gui_theme_colorize
+    imagebutton auto "gui/buttons_navigation/return_%s.png".format(persistent.color_theme):
+        at custom_navigation_return_button, gui_theme_colorize
+        pos(.06,.92)
+        action Return()
+
+screen gallery():
+
+    # Ensure this replaces the main menu.
+    tag menu
+
+    # The background.
+    add "gui/game_menu.png"
+    add "gui/gallery_ui.png" at Transform(blend='add', alpha=0.5), gui_theme_colorize
+    add "gui/game_menu_label.png" at Transform(xzoom=-1), gui_theme_colorize
+    label _("Gallery") style_prefix "game_menu"
+
+    # Return button
+    use navigation_gallery_music_return
+
+    # The gallery
+    frame:
+        xysize(1355,885) align(0.55,0.7) padding(50,50)
+
+        vbox spacing 7:
+            xalign 0.5
+            
+            viewport id "vp_gallery":
+                mousewheel True draggable True
+                ysize 760 yfill False xfill False
+                hbox box_wrap True:
+                    spacing 40 box_wrap_spacing 40 box_align 0.5
+
+                    # Call make_button to show the images
+                    add gallery.make_button("main_menu", "gui/main_menu.png") at gallery_image_button
+                    add gallery.make_button("background", "images/background.png") at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("gallerytest", Transform(Solid('#888'), xysize=(1920,1080))) at gallery_image_button
+                    add gallery.make_button("choupi_stars", "images/choupi_stars.png") at gallery_image_button
+
+            # Info
+            text _("Unlocked:")+" {}".format(gallery.get_fraction(None)) xalign 0.5
+
+    vbar value YScrollValue("vp_gallery"):
+        base_bar Frame(At("gui/scrollbar/gallery_vertical_[prefix_]bar.png", gui_theme_colorize), gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+        xcenter 1664 yalign 0.6
+        xsize 25 ysize 0.7
+
+transform gallery_image_button:
+    align (.5,.5)
+    ysize 216
+    fit "contain"

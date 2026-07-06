@@ -86,10 +86,15 @@ init -2 python:
         "classic": {
             "window_icon": "gui/window_icon.png",
             "game_menu_background": "gui/menu/game_menu.png",
-            "textbox": "gui/hud/msgbox_720p.png",
-            "namebox": "gui/hud/msgbox_name_header_720p.png",
-            "choice_idle": "gui/button/choice_label_720p.png",
-            "choice_hover": "gui/button/choice_label_hover_720p.png",
+            "textbox": "gui/clean_ui/gui/textbox.png",
+            "namebox": "gui/clean_ui/gui/namebox.png",
+            "namebox_left": "gui/clean_ui/gui/namebox_left.png",
+            "namebox_right": "gui/clean_ui/gui/namebox_right.png",
+            "side_image_base": "gui/clean_ui/gui/side_image_base.png",
+            "side_image_frame": "gui/clean_ui/gui/side_image_frame.png",
+            "ctc": "gui/clean_ui/gui/ctc.png",
+            "choice_idle": "gui/clean_ui/gui/button/choice_idle_background.png",
+            "choice_hover": "gui/clean_ui/gui/button/choice_hover_background.png",
             "slot_idle": "gui/button/slot_idle_background.png",
             "slot_hover": "gui/button/slot_hover_background.png",
         },
@@ -123,6 +128,23 @@ init -2 python:
             "cursor_1": "gui/KOMIC/Cursors/cursor_1.png",
             "cursor_2": "gui/KOMIC/Cursors/cursor_2.png",
         },
+    }
+
+    DIALOGUE_SPEAKER_PORTRAITS = {
+        "akari": {"path": "gui/characters/Akari.png"},
+        "aria": {"path": "gui/hud/portraits/Aria.png"},
+        "emi": {"path": "gui/hud/portraits/Emi.png"},
+        "ender": {"path": "gui/hud/portraits/Lady_Ender.png"},
+        "hana": {"path": "Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png"},
+        "kaito": {"path": "gui/characters/Kaito.png"},
+        "lady_ender": {"path": "gui/hud/portraits/Lady_Ender.png"},
+        "lilith": {"path": "gui/hud/portraits/Lilith.png"},
+        "mimi": {"path": "gui/hud/portraits/Mimi.png"},
+        "poko": {"path": "gui/hud/portraits/Poko.png"},
+        "reina": {"path": "gui/hud/portraits/Reina.png"},
+        "rika": {"path": "gui/hud/portraits/Rika.png"},
+        "tilly": {"path": "gui/hud/portraits/Tilly.png"},
+        "tsuki": {"path": "gui/hud/portraits/tsuki.png"},
     }
 
     def water_lemon_font_transform(f):
@@ -433,15 +455,18 @@ init -2 python:
     def pref_komic_quick_button_asset(name, hovered=False):
         return pref_ui_asset("quick_{}_{}".format(name, "hover" if hovered else "idle"), "komic")
 
+    def pref_dialogue_window_width(style_name=None):
+        return 1920 if pref_uses_komic_ui(style_name) else 1905
+
     def pref_dialogue_window_height(style_name=None):
-        return 302 if pref_uses_komic_ui(style_name) else 251
+        return 302 if pref_uses_komic_ui(style_name) else 309
 
     def pref_dialogue_text_color(style_name=None):
         if pref_custom_high_contrast_enabled():
             return "#fffaf2"
         if pref_uses_komic_ui(style_name):
             return "#f8fcff"
-        return "#5f515a"
+        return "#f6f1ee"
 
     def pref_komic_ctc_displayable():
         frames = [
@@ -465,6 +490,83 @@ init -2 python:
             frames[2], 0.10,
             frames[1], 0.10,
         )
+
+    def pref_dialogue_speaker_portrait(who=None):
+        if not who:
+            return None
+
+        try:
+            key = renpy.filter_text_tags(str(who), allow=[]).strip().lower()
+        except Exception:
+            key = str(who).strip().lower()
+
+        if not key:
+            return None
+
+        key = "_".join(key.split())
+        typed_name = str(getattr(renpy.store, "mc_first_name", "") or "").strip().lower()
+
+        if typed_name and key == "_".join(typed_name.split()):
+            key = "akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"
+
+        aliases = {
+            "mc": ("akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"),
+            "protagonist": ("akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"),
+            "lady": "lady_ender",
+        }
+        key = aliases.get(key, key)
+        data = DIALOGUE_SPEAKER_PORTRAITS.get(key)
+
+        if data is None and "_" in key:
+            data = DIALOGUE_SPEAKER_PORTRAITS.get(key.split("_")[0])
+
+        if data:
+            candidate = data.get("path")
+            if candidate and renpy.loadable(candidate):
+                return candidate
+
+        # Prefer dedicated HUD portraits when a matching file exists.
+        portrait_candidates = [
+            "gui/hud/portraits/{}.png".format(part.capitalize()) for part in key.split("_")
+        ]
+        portrait_candidates.append("gui/hud/portraits/{}.png".format("_".join(part.capitalize() for part in key.split("_"))))
+        portrait_candidates.append("gui/hud/portraits/{}.png".format(key))
+
+        for candidate in portrait_candidates:
+            if renpy.loadable(candidate):
+                return candidate
+
+        return None
+
+    def pref_dialogue_speaker_portrait_displayable(who=None, size=194):
+        path = pref_dialogue_speaker_portrait(who)
+
+        if not path:
+            return None
+
+        try:
+            iw, ih = renpy.image_size(path)
+        except Exception:
+            iw, ih = size, size
+
+        side = max(1, min(int(iw or size), int(ih or size)))
+        xcrop = max(0, int(((iw or size) - side) / 2))
+        ycrop = 0
+
+        if (ih or size) > side:
+            ycrop = min(int((ih - side) * 0.14), int(ih - side))
+
+        portrait = Transform(
+            path,
+            crop=(xcrop, ycrop, side, side),
+            fit="cover",
+            xsize=size,
+            ysize=size,
+        )
+        return portrait
+
+    def pref_dialogue_speaker_portrait_yalign(who=None):
+        return 0.5
 
     def pref_visual_window_style_label():
         return {
@@ -852,8 +954,10 @@ init -2 python:
     def pref_prime_controls_remap_cache(remapper):
         pref_get_controls_remap_rows(remapper)
 
-    def pref_dialogue_window_background(style_name=None, alpha=None, width=1526, height=251):
+    def pref_dialogue_window_background(style_name=None, alpha=None, width=None, height=None):
         style_name = pref_dialogue_window_style_key(style_name)
+        width = pref_dialogue_window_width(style_name) if width is None else width
+        height = pref_dialogue_window_height(style_name) if height is None else height
         alpha = _pref_clamp(pref_visual_value("pref_textbox_opacity", 0.80) if alpha is None else alpha)
         base_asset = pref_ui_asset("textbox", style_name, fallback="gui/hud/msgbox_720p.png")
         base = Transform(base_asset, size=(width, height), xalign=0.5, yalign=0.0, alpha=alpha)
@@ -868,6 +972,13 @@ init -2 python:
                 ysize=height,
             )
 
+        if style_name == "classic":
+            return Fixed(
+                Transform(base_asset, size=(width, height), xalign=0.5, yalign=0.0, alpha=max(0.96, alpha)),
+                Transform(Solid("#ffffff08"), xsize=width, ysize=height),
+                xsize=width,
+                ysize=height,
+            )
         if style_name == "komic":
             return Transform(base_asset, size=(width, height), xalign=0.5, yalign=0.0, alpha=max(0.58, alpha))
         if style_name == "soft":
@@ -904,8 +1015,10 @@ init -2 python:
             )
         return base
 
-    def pref_dialogue_namebox_background(style_name=None, alpha=None, width=380, height=78):
+    def pref_dialogue_namebox_background(style_name=None, alpha=None, width=None, height=None):
         style_name = pref_dialogue_window_style_key(style_name)
+        width = (380 if pref_uses_komic_ui(style_name) else 404) if width is None else width
+        height = (78 if pref_uses_komic_ui(style_name) else 45) if height is None else height
         alpha = _pref_clamp(pref_visual_value("pref_textbox_opacity", 0.80) if alpha is None else alpha)
         base_asset = pref_ui_asset("namebox", style_name, fallback="gui/hud/msgbox_name_header_720p.png")
         base = Transform(base_asset, size=(width, height), alpha=alpha)
@@ -920,6 +1033,13 @@ init -2 python:
                 ysize=height,
             )
 
+        if style_name == "classic":
+            return Fixed(
+                Transform(base_asset, size=(width, height), alpha=max(0.98, alpha)),
+                Transform(Solid("#ffffff0a"), xsize=width, ysize=height),
+                xsize=width,
+                ysize=height,
+            )
         if style_name == "komic":
             return Fixed(
                 Transform(base_asset, size=(width, height), alpha=max(0.42, alpha * 0.90)),
@@ -1890,7 +2010,7 @@ screen preferences():
     default pref_access_yadj = ui.adjustment()
 
     on "show" action [Function(pref_disable_engine_high_contrast), Function(pref_refresh_accessibility_styles), Function(pref_prime_controls_ui_cache), Function(pref_prime_controls_remap_cache, pref_remapper)]
-    on "hide" action Function(renpy.restart_interaction)
+    on "hide" action [SetVariable("pref_controls_section_tab", "bindings"), Function(renpy.restart_interaction)]
 
     key pad_config.get_event("page_left") action [SetScreenVariable("pref_tab", next_pref_tab(pref_tab, -1)), Function(remember_pref_tab, next_pref_tab(pref_tab, -1))]
     key pad_config.get_event("page_right") action [SetScreenVariable("pref_tab", next_pref_tab(pref_tab, 1)), Function(remember_pref_tab, next_pref_tab(pref_tab, 1))]

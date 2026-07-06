@@ -4,6 +4,20 @@
 
 init offset = -1
 
+init python:
+    def pref_dialogue_should_center(text):
+        if not text:
+            return False
+
+        plain_text = renpy.filter_text_tags(str(text), allow=[])
+        plain_text = plain_text.replace("\n", " ").strip()
+
+        if not plain_text:
+            return False
+
+        word_count = len(plain_text.split())
+
+        return word_count <= 2
 
 ################################################################################
 ## Styles
@@ -83,13 +97,27 @@ style frame:
 
 screen say(who, what):
     default can_dismiss_line = False
+    default clean_quick_tab = None
     timer 0.24 action SetScreenVariable("can_dismiss_line", True)
     key "dismiss" action If(can_dismiss_line, Return(), NullAction())
     $ _is_komic = pref_uses_komic_ui()
     $ _hc = pref_custom_high_contrast_enabled()
+    $ _window_width = pref_dialogue_window_width()
     $ _window_height = pref_dialogue_window_height()
     $ _dialogue_font = "DejaVuSans.ttf" if _is_komic else gui.text_font
     $ _name_font = "DejaVuSans.ttf" if _is_komic else gui.name_text_font
+    $ _clean_name_left = pref_ui_asset("namebox_left", fallback="gui/clean_ui/gui/namebox_left.png")
+    $ _clean_name_right = pref_ui_asset("namebox_right", fallback="gui/clean_ui/gui/namebox_right.png")
+    $ _clean_side_base = pref_ui_asset("side_image_base", fallback="gui/clean_ui/gui/side_image_base.png")
+    $ _clean_side_frame = pref_ui_asset("side_image_frame", fallback="gui/clean_ui/gui/side_image_frame.png")
+    $ _clean_ctc = pref_ui_asset("ctc", fallback="gui/clean_ui/gui/ctc.png")
+    $ _clean_quickmenu_bg = "gui/clean_ui/gui/quickmenu_ui.png"
+    $ _clean_name_color = "#fffaf2" if _hc else "#ff82d7"
+    $ _clean_name_outline = "#000000f6" if _hc else "#24101fb8"
+    $ _clean_text_outline = "#000000f2" if _hc else "#000000b0"
+    $ _center_single_word = pref_dialogue_should_center(what)
+    $ _speaker_portrait = (None if _is_komic else pref_dialogue_speaker_portrait_displayable(who, size=194))
+    $ _has_speaker_portrait = (_speaker_portrait is not None)
     $ _komic_canvas_width = 1920
     $ _komic_center_x = 960
     $ _komic_content_y = 40 if who is not None else 92
@@ -106,12 +134,14 @@ screen say(who, what):
     $ _komic_icons_bottom = (_window_height - 18)
     $ _komic_ctc_y = (_window_height - 42)
 
-    window:
-        id "window"
-        ysize _window_height
-        background pref_dialogue_window_background(width=_komic_canvas_width if _is_komic else 1526, height=_window_height)
+    if _is_komic:
+        window:
+            id "window"
+            xalign 0.5
+            yalign 1.0
+            ysize _window_height
+            background pref_dialogue_window_background(width=_window_width, height=_window_height)
 
-        if _is_komic:
             fixed:
                 xsize _komic_canvas_width
                 ysize _window_height
@@ -157,30 +187,115 @@ screen say(who, what):
                     use komic_quick_icon_button("options", ShowMenu("showmenu"))
 
                 add Transform(pref_komic_ctc_displayable(), xalign=0.5, yanchor=1.0, ypos=_komic_ctc_y, xsize=18, ysize=36)
-        else:
-            if who is not None:
-                window:
-                    id "namebox"
-                    style "namebox"
-                    background pref_dialogue_namebox_background()
-                    text who id "who"
+    else:
+        frame:
+            id "window"
+            xalign 0.5
+            style "window"
 
-            text what id "what":
-                color pref_dialogue_text_color()
-                ypos gui.dialogue_ypos
-                xsize gui.dialogue_width
-                size gui.text_size
-                adjust_spacing False
-                xpos gui.dialogue_xpos
-                outlines ([ (2, "#000000d8", 0, 0) ] if _hc else [ ])
+            if _has_speaker_portrait:
+                fixed:
+                    fit_first True
+                    xanchor 0.0
+                    xpos 0.33
 
-    $ _msgbox_btn_idle = "gui/hud/msgbox_btn.png"
-    $ _msgbox_btn_hover = "gui/hud/msgbox_btn_hover.png" if renpy.loadable("gui/hud/msgbox_btn_hover.png") else ("gui/msgbox_btn hover.png" if renpy.loadable("gui/msgbox_btn hover.png") else _msgbox_btn_idle)
-    $ _back_btn_idle = "gui/hud/back_btn.png"
-    $ _back_btn_hover = "gui/hud/back_btn_hover.png" if renpy.loadable("gui/hud/back_btn_hover.png") else _back_btn_idle
+                    vbox:
+                        spacing 10
+
+                        null height 10
+
+                        if who is not None:
+                            hbox:
+                                spacing 10
+                                xanchor 0.0
+                                xpos 0.0
+
+                                add Transform(_clean_name_left) yalign 0.5
+
+                                text who id "who":
+                                    font _name_font
+                                    size gui.name_text_size
+                                    bold True
+                                    color _clean_name_color
+                                    outlines [ (2, _clean_name_outline, 0, 0) ]
+
+                                add Transform(_clean_name_right) yalign 0.5
+
+                        text what id "what":
+                            xpos 0
+                            xsize 1000
+                            text_align 0.0
+                            yanchor 0.0
+                            ypos 0
+                            font _dialogue_font
+                            size gui.text_size
+                            color pref_dialogue_text_color()
+                            adjust_spacing False
+                            outlines [ (2, _clean_text_outline, 0, 0) ]
+
+                    if not renpy.variant("small"):
+                        fixed:
+                            fit_first True
+                            xanchor 1.0
+                            xpos -30
+                            ypos 20
+
+                            add Transform(_clean_side_base, xsize=210, ysize=210)
+                            add Transform(_speaker_portrait, xsize=194, ysize=194)
+                            add Transform(_clean_side_frame, xsize=214, ysize=214)
+
+            else:
+                vbox:
+                    spacing 20
+                    xalign 0.5
+
+                    if who is not None:
+                        frame:
+                            style "namebox"
+
+                            hbox:
+                                spacing 15
+                                xanchor 0.0
+                                xpos 0.0
+
+                                add Transform(_clean_name_right, xzoom=-1) yalign 0.5
+
+                                text who id "who":
+                                    font _name_font
+                                    size gui.name_text_size
+                                    bold True
+                                    color _clean_name_color
+                                    outlines [ (2, _clean_name_outline, 0, 0) ]
+
+                                add _clean_name_right yalign 0.5
+                    else:
+                        null height 10
+
+                    text what id "what":
+                        font _dialogue_font
+                        size gui.text_size
+                        color pref_dialogue_text_color()
+                        adjust_spacing False
+                        xalign (0.5 if _center_single_word else 0.0)
+                        text_align (0.5 if _center_single_word else 0.0)
+                        outlines [ (2, _clean_text_outline, 0, 0) ]
+
+        text "▼":
+            at clean_ctc_appear
+            xalign 0.5
+            yalign 0.955
+            font "DejaVuSans.ttf"
+            color "#ffffff"
+            size 24
+            outlines [ (1, "#00000088", 0, 0) ]
+
     $ _bag_btn_idle = "gui/hud/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn.png"
     $ _bag_btn_hover = ("gui/hud/Player_male_btn_hover.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn_hover.png")
     $ _bag_btn_hover = _bag_btn_hover if renpy.loadable(_bag_btn_hover) else _bag_btn_idle
+    $ _bag_btn_size = 138 if getattr(store, "mc_gender", "male") != "male" else 101
+    $ _bag_btn_xpos = 1615 if getattr(store, "mc_gender", "male") != "male" else 1652
+    $ _bag_idle_display = Transform(_bag_btn_idle, xsize=_bag_btn_size, ysize=_bag_btn_size, fit="contain")
+    $ _bag_hover_display = Transform(_bag_btn_hover, xsize=_bag_btn_size, ysize=_bag_btn_size, fit="contain")
     $ _setting_btn_idle = "gui/hud/Settings_btn.png"
     $ _setting_btn_hover = "gui/hud/Settings_btn_hover.png" if renpy.loadable("gui/hud/Settings_btn_hover.png") else _setting_btn_idle
 
@@ -189,10 +304,14 @@ screen say(who, what):
         yfill True
 
         imagebutton:
-            xpos 1652
-            ypos 24
-            idle Transform(_bag_btn_idle, size=(101, 101))
-            hover Transform(_bag_btn_hover, size=(101, 101))
+            xpos _bag_btn_xpos
+            ypos 6
+            xsize _bag_btn_size
+            ysize _bag_btn_size
+            xpadding 0
+            ypadding 0
+            idle _bag_idle_display
+            hover _bag_hover_display
             action ShowMenu("inventory_menu")
 
         imagebutton:
@@ -201,76 +320,6 @@ screen say(who, what):
             idle Transform(_setting_btn_idle, size=(101, 101))
             hover Transform(_setting_btn_hover, size=(101, 101))
             action ShowMenu("showmenu")
-
-        if not _is_komic:
-            imagebutton:
-                xpos 1020
-                ypos 1020
-                idle Transform(_back_btn_idle, size=(27, 27))
-                hover Transform(_back_btn_hover, size=(27, 27))
-                insensitive Transform(_back_btn_idle, size=(27, 27))
-                action If(renpy.can_rollback(), Rollback(), NullAction())
-
-            button:
-                style "msgbox_btn_button"
-                xpos 1060
-                ypos 1020
-                xsize 98
-                ysize 28
-                background Transform(_msgbox_btn_idle, size=(98, 28))
-                hover_background Transform(_msgbox_btn_hover, size=(98, 28))
-                action Preference("auto-forward", "toggle")
-                selected preferences.afm_enable
-                text _("Auto") style "msgbox_btn_button_text"
-
-            button:
-                style "msgbox_btn_button"
-                xpos 1170
-                ypos 1020
-                xsize 98
-                ysize 28
-                background Transform(_msgbox_btn_idle, size=(98, 28))
-                hover_background Transform(_msgbox_btn_hover, size=(98, 28))
-                action Skip() alternate Skip(fast=True, confirm=True)
-                selected renpy.is_skipping()
-                text _("Skip") style "msgbox_btn_button_text"
-
-            button:
-                style "msgbox_btn_button"
-                xpos 1280
-                ypos 1020
-                xsize 98
-                ysize 28
-                background Transform(_msgbox_btn_idle, size=(98, 28))
-                hover_background Transform(_msgbox_btn_hover, size=(98, 28))
-                action ShowMenu('save')
-                text _("Save") style "msgbox_btn_button_text"
-
-            button:
-                style "msgbox_btn_button"
-                xpos 1390
-                ypos 1020
-                xsize 98
-                ysize 28
-                background Transform(_msgbox_btn_idle, size=(98, 28))
-                hover_background Transform(_msgbox_btn_hover, size=(98, 28))
-                action ShowMenu('load')
-                text _("Load") style "msgbox_btn_button_text"
-
-            button:
-                style "msgbox_btn_button"
-                xpos 1500
-                ypos 1020
-                xsize 98
-                ysize 28
-                background Transform(_msgbox_btn_idle, size=(98, 28))
-                hover_background Transform(_msgbox_btn_hover, size=(98, 28))
-                action HideInterface()
-                text _("Hide") style "msgbox_btn_button_text"
-
-    if not renpy.variant("small"):
-        add SideImage() xalign 0.0 yalign 1.0
-
 
 init python:
     config.character_id_prefixes.append('namebox')
@@ -286,18 +335,22 @@ style namebox_label is say_label
 style window:
     xalign 0.5
     xfill True
+    yfill False
     yalign gui.textbox_yalign
-    ysize gui.textbox_height
-    background Transform("gui/hud/msgbox_720p.png", size=(1526, 251), xalign=0.5, yalign=0.0)
+    xsize 1.0
+    yminimum 309
+    top_padding 25
+    bottom_padding 70
+    background Frame("gui/clean_ui/gui/textbox.png", left=0, right=0, top=100, bottom=60)
 
 style namebox:
-    xpos gui.name_xpos
-    xanchor gui.name_xalign
-    xsize gui.namebox_width
-    ypos gui.name_ypos
-    ysize gui.namebox_height
-    background Transform("gui/hud/msgbox_name_header_720p.png", size=(380, 78))
+    xpos 0.5
+    xanchor 0.5
+    xsize None
+    ypos 0
+    ysize None
     padding gui.namebox_borders.padding
+    background None
 
 style say_label:
     properties gui.text_properties("name", accent=True)
@@ -316,7 +369,7 @@ style say_dialogue:
     xsize gui.dialogue_width
     ypos gui.dialogue_ypos
     adjust_spacing False
-    color "#5f515a"
+    color "#f6f1ee"
 
 style komic_say_label is default
 style komic_say_dialogue is default
@@ -338,6 +391,7 @@ screen input(prompt):
     $ _is_komic = pref_uses_komic_ui()
     $ _dialogue_font = "DejaVuSans.ttf" if _is_komic else gui.text_font
     $ _hc = pref_custom_high_contrast_enabled()
+    $ _window_width = pref_dialogue_window_width()
     $ _komic_canvas_width = 1920
     $ _komic_center_x = 960
     $ _komic_text_y = 92
@@ -347,7 +401,7 @@ screen input(prompt):
 
     window:
         ysize pref_dialogue_window_height()
-        background pref_dialogue_window_background(width=_komic_canvas_width if _is_komic else 1526, height=pref_dialogue_window_height())
+        background pref_dialogue_window_background(width=_window_width, height=pref_dialogue_window_height())
         if _is_komic:
             fixed:
                 xsize _komic_canvas_width
@@ -374,14 +428,31 @@ screen input(prompt):
                         xalign 0.5
                         xmaximum _komic_text_width
         else:
-            vbox:
-                xanchor gui.dialogue_text_xalign
-                xpos gui.dialogue_xpos
-                xsize gui.dialogue_width
-                ypos gui.dialogue_ypos
+            fixed:
+                xsize _window_width
+                xalign 0.5
+                ysize pref_dialogue_window_height()
 
-                text prompt style "input_prompt" color pref_dialogue_text_color()
-                input id "input" color pref_dialogue_text_color()
+                vbox:
+                    xalign 0.5
+                    ypos 48
+                    spacing 18
+
+                    text prompt:
+                        style "input_prompt"
+                        xalign 0.5
+                        text_align 0.5
+                        color pref_dialogue_text_color()
+                        font _dialogue_font
+                        size gui.text_size
+                        outlines [ (2, "#000000b0", 0, 0) ]
+
+                    input id "input":
+                        xalign 0.5
+                        xmaximum 1200
+                        color pref_dialogue_text_color()
+                        font _dialogue_font
+                        size gui.text_size
 
 style input_prompt is default
 
@@ -404,10 +475,30 @@ screen choice(items):
     $ _choice_text_size = 29 if _is_komic else gui.choice_button_text_size
     $ _choice_accent = pref_ui_tab_colors("access")["accent"]
     $ _choice_selected_bg = pref_ui_tab_colors("access")["selected_bg"]
-    $ _choice_idle_bg = pref_button_surface(_choice_width, _choice_height, _choice_accent, _choice_selected_bg, base_color="#0c121cf2", hover_color="#131b28f4") if _hc else Transform(pref_choice_button_asset(), size=(_choice_width, _choice_height))
-    $ _choice_hover_bg = pref_button_surface(_choice_width, _choice_height, _choice_accent, _choice_selected_bg, hovered=True, base_color="#0c121cf2", hover_color="#131b28f4") if _hc else Transform(pref_choice_button_asset(True), size=(_choice_width, _choice_height))
-    $ _choice_text_color = pref_ui_text_color("button") if _hc else "#5f515a"
-    $ _choice_text_hover = pref_ui_text_color("button_hover", _choice_accent) if _hc else "#5f515a"
+    $ _choice_idle_bg = (
+        pref_button_surface(_choice_width, _choice_height, _choice_accent, _choice_selected_bg, base_color="#0c121cf2", hover_color="#131b28f4")
+        if (_is_komic and _hc) else
+        (Transform(pref_choice_button_asset(), size=(_choice_width, _choice_height))
+            if _is_komic else
+            Transform(Frame(pref_choice_button_asset(), 35, 35), xsize=_choice_width, ysize=_choice_height))
+    )
+    $ _choice_hover_bg = (
+        pref_button_surface(_choice_width, _choice_height, _choice_accent, _choice_selected_bg, hovered=True, base_color="#0c121cf2", hover_color="#131b28f4")
+        if (_is_komic and _hc) else
+        (Transform(pref_choice_button_asset(True), size=(_choice_width, _choice_height))
+            if _is_komic else
+            Transform(Frame(pref_choice_button_asset(True), 35, 35), xsize=_choice_width, ysize=_choice_height))
+    )
+    $ _choice_text_color = (
+        pref_ui_text_color("button")
+        if (_is_komic and _hc) else
+        ("#5f515a" if _is_komic else "#f0f0f0")
+    )
+    $ _choice_text_hover = (
+        pref_ui_text_color("button_hover", _choice_accent)
+        if (_is_komic and _hc) else
+        ("#5f515a" if _is_komic else "#ffffff")
+    )
 
     vbox:
         for i in items:
@@ -444,23 +535,88 @@ style choice_button is default:
     xalign 0.5
     xminimum 1185
     yminimum 80
-    background Transform("gui/button/choice_label_720p.png", size=(1185, 80))
-    hover_background Transform("gui/button/choice_label_hover_720p.png", size=(1185, 80))
-    insensitive_background Transform("gui/button/choice_label_720p.png", size=(1185, 80))
+    background Transform(Frame("gui/clean_ui/gui/button/choice_idle_background.png", 35, 35), xsize=1185, ysize=80)
+    hover_background Transform(Frame("gui/clean_ui/gui/button/choice_hover_background.png", 35, 35), xsize=1185, ysize=80)
+    insensitive_background Transform(Frame("gui/clean_ui/gui/button/choice_idle_background.png", 35, 35), xsize=1185, ysize=80)
 
 style choice_button_text is default:
     properties gui.text_properties("choice_button")
     xalign 0.5
     yalign 0.5
-    idle_color "#5f515a"
-    hover_color "#5f515a"
-    selected_idle_color "#5f515a"
-    selected_hover_color "#5f515a"
+    idle_color "#f0f0f0"
+    hover_color "#ffffff"
+    selected_idle_color "#f0f0f0"
+    selected_hover_color "#ffffff"
     outlines [ ]
 
 
 screen quick_menu():
-    pass
+
+    zorder 200
+    default clean_quick_tab = None
+
+    if quick_menu and not renpy.variant("touch"):
+        if renpy.is_skipping():
+            use skip_indicator
+        add Transform("gui/clean_ui/gui/quickmenu_ui.png", xalign=0.5, yalign=1.0)
+
+        vbox:
+            anchor (1.0, 1.0)
+            pos (0.99, 0.99)
+
+            if clean_quick_tab:
+                text clean_quick_tab:
+                    style "dialogue_quick_hint"
+                    xalign 1.0
+
+            hbox:
+                spacing 0
+                xalign 1.0
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/return_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Back"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action If(renpy.can_rollback(), Rollback(), NullAction())
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/skip_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Skip"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action Skip()
+                    alternate Skip(fast=True, confirm=True)
+                    selected renpy.is_skipping()
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/auto_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Auto Forward"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action Preference("auto-forward", "toggle")
+                    selected preferences.afm_enable
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/save_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Save"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action ShowMenu("save")
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/qsave_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Quick Save"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action QuickSave()
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/load_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Quick Load"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action QuickLoad()
+
+                imagebutton auto "gui/clean_ui/gui/buttons_navigation/settings_%s.png":
+                    at clean_quick_menu_atl
+                    hovered SetScreenVariable("clean_quick_tab", _("Settings"))
+                    unhovered SetScreenVariable("clean_quick_tab", None)
+                    action ShowMenu("preferences")
 
 init python:
     config.overlay_screens.append("quick_menu")
@@ -510,6 +666,28 @@ style msgbox_btn_button_text:
     outlines [ ]
     text_align 0.5
 
+transform clean_quick_menu_atl:
+    zoom 0.2
+
+transform clean_ctc_appear:
+    parallel:
+        alpha 0.0
+        linear 0.3 alpha 1.0
+    parallel:
+        yoffset 0
+        ease 0.5 yoffset 10
+        pause 0.1
+        ease 0.1 yoffset 0
+        repeat
+
+style dialogue_quick_hint is default
+
+style dialogue_quick_hint:
+    font gui.interface_text_font
+    size 22
+    color "#efe7e1"
+    outlines [ (1, "#000000aa", 0, 0) ]
+
 ## Auto indicator screen #######################################################
 ##
 ## This indicates that auto-forward mode is currently enabled.
@@ -529,15 +707,37 @@ init python:
 
 screen auto_indicator():
 
-    zorder 100
+    zorder 205
     style_prefix "auto"
 
     frame:
-        has hbox
+        hbox:
+            spacing 5
 
-        text _("Auto-Forward")
+            text _("Auto-Forward") style "auto_text"
+            null width 15
 
-        text u"\u25B8" at auto_blink(1.0) style "skip_triangle"
+            text "▸" at delayed_blink(0.0, 1.0) style "auto_triangle"
+            text "▸" at delayed_blink(0.2, 1.0) style "auto_triangle"
+            text "▸" at delayed_blink(0.4, 1.0) style "auto_triangle"
+
+screen skip_indicator():
+
+    zorder 210
+    style_prefix "skip"
+
+    frame:
+        hbox:
+            xanchor 1.0
+            xpos 0.9
+            spacing 5
+
+            text _("Skipping") style "skip_text"
+            null width 15
+
+            text "▸" at delayed_blink(0.0, 1.0) style "skip_triangle"
+            text "▸" at delayed_blink(0.2, 1.0) style "skip_triangle"
+            text "▸" at delayed_blink(0.4, 1.0) style "skip_triangle"
 
 ## This transform blinks the indicator arrow.
 transform auto_blink(cycle):
@@ -548,22 +748,94 @@ transform auto_blink(cycle):
     pause (cycle - .4)
     repeat
 
+transform delayed_blink(delay, cycle):
+    alpha 0.5
+    pause delay
+
+    block:
+        linear 0.2 alpha 1.0
+        pause 0.2
+        linear 0.2 alpha 0.5
+        pause (cycle - 0.4)
+        repeat
+
 style auto_hbox:
     spacing 9
 
 style auto_frame:
     is empty
-    ypos 15
-    background Frame("#0008", 24, 8, 75, 8, tile=False)
-    padding (24, 8, 75, 8)
+    xalign 1.0
+    yanchor 1.0
+    ypos 0.945
+    background Frame("gui/clean_ui/gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+    padding gui.skip_frame_borders.padding
 
 style auto_text:
-    size 24
+    size gui.notify_text_size
+    color "#ffffff"
+    outlines [ (1, "#00000088", 0, 0) ]
 
 style auto_triangle:
     is auto_text
-    # This font includes the black right-pointing small triangle glyph.
     font "DejaVuSans.ttf"
+
+style skip_frame is empty
+style skip_text is gui_text
+style skip_triangle is skip_text
+
+style skip_frame:
+    xalign 1.0
+    yanchor 1.0
+    ypos 0.945
+    background Frame("gui/clean_ui/gui/skip.png", gui.skip_frame_borders, tile=gui.frame_tile)
+    padding gui.skip_frame_borders.padding
+
+style skip_text:
+    size gui.notify_text_size
+    color "#ffffff"
+    outlines [ (1, "#00000088", 0, 0) ]
+
+style skip_triangle:
+    font "DejaVuSans.ttf"
+
+
+screen notify(message, timer=3.25):
+
+    zorder 205
+    style_prefix "notify"
+
+    frame at notify_appear:
+        text "[message!tq]":
+            style "notify_text"
+
+    timer timer action Hide("notify")
+
+transform notify_appear:
+    on show:
+        alpha 0.0
+        linear 0.25 alpha 1.0
+    on hide:
+        linear 0.5 alpha 0.0
+
+style notify_frame is empty
+style notify_text is gui_text
+
+style notify_frame:
+    xalign 0.5
+    yalign 0.0
+    ypos 0
+    xminimum 600
+    yminimum 75
+    background Frame("gui/clean_ui/gui/notify.png", gui.notify_frame_borders, tile=gui.frame_tile)
+    padding gui.notify_frame_borders.padding
+
+style notify_text:
+    properties gui.text_properties("notify")
+    text_align 0.5
+    xalign 0.5
+    yalign 0.5
+    color "#ffffff"
+    outlines [ (1, "#00000088", 0, 0) ]
 
 
 
@@ -764,7 +1036,6 @@ screen about():
 
 
 label history_screen:
-    call screen history
     return
 
 
@@ -773,39 +1044,18 @@ screen history():
     tag menu
     predict False
 
-    use game_menu(_("History"), scroll=("vpgrid" if gui.history_height else "viewport"), yinitial=1.0):
+    use game_menu(_("History")):
+        vbox:
+            xalign 0.5
+            yalign 0.5
+            spacing 20
 
-        style_prefix "history"
+            label _("History is disabled."):
+                xalign 0.5
 
-        for h in _history_list:
-
-            window:
-
-                if gui.history_height:
-                    ysize gui.history_height
-
-                has fixed
-
-                if h.who:
-
-                    label h.who:
-                        style "history_name"
-                        substitute False
-
-                        if "color" in h.who_args:
-                            text_color h.who_args["color"]
-
-                text h.what:
-                    style "history_text"
-                    substitute False
-
-                if h.rollback_identifier:
-                    textbutton _("Rollback to Here"):
-                        style "history_rollback"
-                        action RollbackToIdentifier(h.rollback_identifier)
-
-        if not _history_list:
-            label _("The dialogue history is empty.")
+            textbutton _("Return"):
+                xalign 0.5
+                action Return()
 
 
 

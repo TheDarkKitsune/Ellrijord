@@ -12,7 +12,7 @@ init python:
             renpy.sound.play(sound_path)
 
         renpy.hide_screen("custom_notification")
-        renpy.show_screen("custom_notification", message=message, sound_type=sound_type)
+        renpy.notify(message)
 
 
 screen custom_notification(message, sound_type="default"):

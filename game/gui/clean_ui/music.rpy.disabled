@@ -1,0 +1,114 @@
+init python:
+
+    ### See: https://www.renpy.org/doc/html/rooms.html#music-room
+    ### for further instructions.
+
+    # Step 1. Create a MusicRoom instance.
+    musicroom = MusicRoom(fadeout=0.5)
+
+    # Step 2. Add music files.
+    musicroom.add("audio/winter_reflection.mp3")
+    musicroom.add("<silence 10>audio/winter_reflection.mp3")
+
+screen music():
+
+    # Ensure this replaces the main menu.
+    tag menu
+
+    # The background.
+    add "gui/game_menu.png"
+    add "gui/music_ui_bottom.png"
+    add "gui/music_ui_player.png"
+    add "gui/gallery_ui.png" at Transform(blend='add', alpha=0.5), gui_theme_colorize
+    add "gui/game_menu_label.png" at Transform(xzoom=-1), gui_theme_colorize
+    label _("Music") style_prefix "game_menu"
+
+    # Return button
+    use navigation_gallery_music_return
+
+    # The track list
+    vbox spacing 50:
+        ysize 700 align(0.5,0.75)
+
+        viewport id "vp_musicroom":
+            mousewheel True
+            draggable True
+            ysize 640 xfill False
+            xalign 0.5 yalign 0.0
+            vbox:
+                style_prefix "musicroom"
+                xalign 0.5
+                spacing 12
+
+                # The buttons that play each track.
+                textbutton "Winter Reflection" action musicroom.Play("audio/winter_reflection.mp3")
+                textbutton "Silent Night" action musicroom.Play("<silence 10>audio/winter_reflection.mp3")
+                textbutton "Neon Drift" sensitive False
+                textbutton "Hollow Frequencies" sensitive False
+                textbutton "Loopz" sensitive False
+                textbutton "Phantom Signal" sensitive False
+                textbutton "G{s}LI{/s}TC{s}H{/s} D{s}RE{/s}AM{s}S{/s}" sensitive False
+                textbutton "Distant Pulses" sensitive False
+                textbutton "Synthetic Lullaby" sensitive False
+                textbutton "Night Circuit" sensitive False
+                textbutton "Golden Hour" sensitive False
+                textbutton "Afterglow" sensitive False
+
+        # Buttons that let us advance tracks.
+        vbox spacing 15:
+            xalign 0.5
+
+            hbox spacing 25:
+
+                # SHUFFLE Button
+                imagebutton auto "gui/buttons_music/shuffle_%s.png":
+                    at gui_theme_colorize
+                    action musicroom.ToggleShuffle()
+                    yalign .5
+
+                # PREVIOUS Button
+                imagebutton auto "gui/buttons_music/arrow_%s.png":
+                    at Transform(xzoom=-1), gui_theme_colorize
+                    action musicroom.Previous()
+                    yalign .5
+
+                # PLAY/PAUSE Buttons
+                imagebutton auto "gui/buttons_music/{}_%s.png".format(If(renpy.music.get_pause('music'), "play", "pause")):
+                    at gui_theme_colorize
+                    action musicroom.TogglePause()
+                    yalign .5
+                    
+                # NEXT Button
+                imagebutton auto "gui/buttons_music/arrow_%s.png":
+                    at gui_theme_colorize
+                    action musicroom.Next()
+                    yalign .5
+
+                # LOOP TRACK Button
+                imagebutton auto "gui/buttons_music/loop_%s.png":
+                    at gui_theme_colorize
+                    action musicroom.ToggleSingleTrack()
+                    yalign .5
+
+            # VOLUME Bar
+            if config.has_music:
+                vbox spacing 5 xalign 0.5:
+                    bar value Preference("music volume") xsize 400 ysize 25
+                    text ("Volume: ")+"{}%".format(int(preferences.get_mixer('music')*100)) size 23 xalign 0.5
+
+    vbar value YScrollValue("vp_musicroom"):
+        xpos 1310 ysize 0.55 yalign 0.4
+        xsize 25
+
+    # Start the music playing on entry to the music room.
+    on "replace" action musicroom.Play(None)
+
+    # Restore the main menu music upon leaving.
+    on "replaced" action Play("music", config.main_menu_music)
+
+
+style musicroom_button:
+    take choice_button
+    xsize 650 ysize 60
+style musicroom_button_text:
+    take choice_button_text

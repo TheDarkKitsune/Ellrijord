@@ -239,8 +239,16 @@ screen bedroom_day1_screen():
     $ _room_button_width = 600 if _is_komic else 760
     $ _room_button_height = 64 if _is_komic else 48
     $ _room_button_text_size = 24 if _is_komic else 33
-    $ _room_button_idle = Transform(pref_choice_button_asset(), size=(_room_button_width, _room_button_height)) if _is_komic else Solid("#141414c8")
-    $ _room_button_hover = Transform(pref_choice_button_asset(True), size=(_room_button_width, _room_button_height)) if _is_komic else Solid("#2a2a2ae0")
+    $ _room_button_idle = (
+        Transform(pref_choice_button_asset(), size=(_room_button_width, _room_button_height))
+        if _is_komic else
+        Transform(Frame("gui/clean_ui/gui/button/choice_idle_background.png", 35, 35), xsize=_room_button_width, ysize=_room_button_height)
+    )
+    $ _room_button_hover = (
+        Transform(pref_choice_button_asset(True), size=(_room_button_width, _room_button_height))
+        if _is_komic else
+        Transform(Frame("gui/clean_ui/gui/button/choice_hover_background.png", 35, 35), xsize=_room_button_width, ysize=_room_button_height)
+    )
     $ _room_button_text_color = pref_dialogue_text_color() if _is_komic else "#f0f0f0"
     $ _room_button_text_hover = pref_dialogue_text_color() if _is_komic else "#ffffff"
     $ _room_panel_bg = Solid("#00000044") if _is_komic else Solid("#00000088")
