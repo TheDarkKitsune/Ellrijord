@@ -135,7 +135,7 @@ init -2 python:
         "aria": {"path": "gui/hud/portraits/Aria.png"},
         "emi": {"path": "gui/hud/portraits/Emi.png"},
         "ender": {"path": "gui/hud/portraits/Lady_Ender.png"},
-        "hana": {"path": "Ellrijord Characters/Family/MC Family/Hana Kuzunoha.png"},
+        "hana": {"path": "gui/hud/portraits/Hana.png"},
         "kaito": {"path": "gui/characters/Kaito.png"},
         "lady_ender": {"path": "gui/hud/portraits/Lady_Ender.png"},
         "lilith": {"path": "gui/hud/portraits/Lilith.png"},
@@ -146,6 +146,8 @@ init -2 python:
         "tilly": {"path": "gui/hud/portraits/Tilly.png"},
         "tsuki": {"path": "gui/hud/portraits/tsuki.png"},
     }
+
+    DIALOGUE_PORTRAIT_CROP_OVERRIDES = { }
 
     def water_lemon_font_transform(f):
         p_otf = "fonts/water_lemon/Water Lemon.otf"
@@ -507,23 +509,17 @@ init -2 python:
         typed_name = str(getattr(renpy.store, "mc_first_name", "") or "").strip().lower()
 
         if typed_name and key == "_".join(typed_name.split()):
-            key = "akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"
+            return None
 
         aliases = {
-            "mc": ("akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"),
-            "protagonist": ("akari" if getattr(renpy.store, "mc_gender", "male") == "female" else "kaito"),
+            "mc": None,
+            "protagonist": None,
             "lady": "lady_ender",
         }
         key = aliases.get(key, key)
-        data = DIALOGUE_SPEAKER_PORTRAITS.get(key)
 
-        if data is None and "_" in key:
-            data = DIALOGUE_SPEAKER_PORTRAITS.get(key.split("_")[0])
-
-        if data:
-            candidate = data.get("path")
-            if candidate and renpy.loadable(candidate):
-                return candidate
+        if key is None:
+            return None
 
         # Prefer dedicated HUD portraits when a matching file exists.
         portrait_candidates = [
@@ -536,6 +532,16 @@ init -2 python:
             if renpy.loadable(candidate):
                 return candidate
 
+        data = DIALOGUE_SPEAKER_PORTRAITS.get(key)
+
+        if data is None and "_" in key:
+            data = DIALOGUE_SPEAKER_PORTRAITS.get(key.split("_")[0])
+
+        if data:
+            candidate = data.get("path")
+            if candidate and renpy.loadable(candidate):
+                return candidate
+
         return None
 
     def pref_dialogue_speaker_portrait_displayable(who=None, size=194):
@@ -544,26 +550,61 @@ init -2 python:
         if not path:
             return None
 
+        if isinstance(size, (tuple, list)):
+            target_width = int(size[0])
+            target_height = int(size[1])
+        else:
+            target_width = int(size)
+            target_height = int(size)
+
+        if path.startswith("gui/hud/portraits/"):
+            return Transform(
+                path,
+                xalign=0.5,
+                yalign=0.5,
+                xsize=target_width,
+                ysize=target_height,
+            )
+
+        crop_override = DIALOGUE_PORTRAIT_CROP_OVERRIDES.get(path)
+
+        if crop_override is not None:
+            return Transform(
+                path,
+                crop=crop_override,
+                xalign=0.5,
+                yalign=0.5,
+                xsize=target_width,
+                ysize=target_height,
+            )
+
         try:
             iw, ih = renpy.image_size(path)
         except Exception:
-            iw, ih = size, size
+            iw, ih = target_width, target_height
 
-        side = max(1, min(int(iw or size), int(ih or size)))
-        xcrop = max(0, int(((iw or size) - side) / 2))
-        ycrop = 0
+        iw = max(1, int(iw or target_width))
+        ih = max(1, int(ih or target_height))
 
-        if (ih or size) > side:
-            ycrop = min(int((ih - side) * 0.14), int(ih - side))
+        # Portrait assets include extra bust/empty space; crop tighter around the
+        # upper face area so the circular side frame reads like the source art.
+        side = max(1, int(min(iw, ih) * 0.82))
+        xcrop = max(0, int((iw - side) / 2))
+        ycrop = max(0, int((ih - side) * 0.10))
 
-        portrait = Transform(
+        if xcrop + side > iw:
+            xcrop = max(0, iw - side)
+        if ycrop + side > ih:
+            ycrop = max(0, ih - side)
+
+        return Transform(
             path,
             crop=(xcrop, ycrop, side, side),
-            fit="cover",
-            xsize=size,
-            ysize=size,
+            xalign=0.5,
+            yalign=0.5,
+            xsize=target_width,
+            ysize=target_height,
         )
-        return portrait
 
     def pref_dialogue_speaker_portrait_yalign(who=None):
         return 0.5

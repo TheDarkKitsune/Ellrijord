@@ -23,6 +23,8 @@ init -10 python:
         if not hasattr(s, "mc"):
             s.mc = C("[mc_first_name]")
 
+        if not hasattr(s, "tsuki_unknown"):
+            s.tsuki_unknown = C("???", color="#d8c4ff")
         if not hasattr(s, "tsuki"):
             s.tsuki = C("Tsuki", color="#d8c4ff")
         if not hasattr(s, "hana"):
@@ -32,8 +34,8 @@ init -10 python:
             s.aria = C("Aria", color="#d8c4ff")
         if not hasattr(s, "poko"):
             s.poko = C("Poko", color="#ff9a76")
-        if not hasattr(s, "reina"):
-            s.reina = C("Reina", color="#ffd6f1")
+        if not hasattr(s, "mimi"):
+            s.mimi = C("Mimi", color="#ffd6f1")
 
         if not hasattr(s, "kuroe"):
             s.kuroe = C("Kuroe", color="#6c6cff")
@@ -122,9 +124,9 @@ label day1_opening:
     if _day1_music:
         play music _day1_music fadein 2.0
 
-    tsuki "Wake up already!"
-    tsuki "Come on, [mc_first_name]! You're going to be late for school if you don't get up!"
-    tsuki "Mom said if you miss the first day, she's blaming me too, so move!"
+    tsuki_unknown "Wake up already!"
+    tsuki_unknown "Come on, [mc_first_name]! You're going to be late for school if you don't get up!"
+    tsuki_unknown "Mom said if you miss the first day, she's blaming me too, so move!"
 
     narrator "A familiar voice cuts through the warmth of sleep."
 
@@ -133,9 +135,9 @@ label day1_opening:
     else:
         mc "Mmgh... just five more minutes..."
 
-    tsuki "Nope."
-    tsuki "Absolutely not."
-    tsuki "You said that yesterday, and the day before that."
+    tsuki_unknown "Nope."
+    tsuki_unknown "Absolutely not."
+    tsuki_unknown "You said that yesterday, and the day before that."
 
     narrator "The mattress dips slightly."
 
@@ -428,93 +430,72 @@ screen day1_game_ui_popup(title, subtitle="", body=""):
 
     add Solid("#00000088")
 
-    frame:
+    fixed:
         xalign 0.5
         yalign 0.5
-        xsize 980
-        ypadding 28
-        xpadding 36
-        if renpy.loadable("gui/collectibles/collectible_panel_720p.png"):
-            background Frame("gui/collectibles/collectible_panel_720p.png", 40, 40)
+        xsize 900
+        ysize 375
+
+        if renpy.loadable("gui/clean_ui/gui/quests.png"):
+            add Transform("gui/clean_ui/gui/quests.png", xsize=900, ysize=375)
         else:
-            background Solid("#111111ee")
+            add Solid("#111111ee") xsize 900 ysize 375
 
         vbox:
-            spacing 14
             xalign 0.5
-            yalign 0.5
+            ypos 40
+            xsize 640
+            spacing 16
 
             text "[title]":
                 xalign 0.5
                 text_align 0.5
-                size 54
-                color "#f8f8f8"
-                outlines [(2, "#000000cc", 0, 0)]
+                size 26
+                color "#ddd3c4"
+                kerning 2
+                outlines [(1, "#000000aa", 0, 0)]
 
             if subtitle:
                 text "[subtitle]":
                     xalign 0.5
                     text_align 0.5
                     size 40
-                    color "#ffdca8"
-                    outlines [(2, "#000000cc", 0, 0)]
-
-            if body:
-                fixed:
-                    xalign 0.5
-                    xsize 760
-                    ysize 210
-
-                    if renpy.loadable("gui/collectibles/collectible_body_720p.png"):
-                        add Transform("gui/collectibles/collectible_body_720p.png", fit="contain", xsize=760, ysize=210):
-                            xalign 0.5
-                            yalign 0.5
-
-                    text "[body]":
-                        xalign 0.5
-                        yalign 0.5
-                        text_align 0.5
-                        size 26
-                        color "#6f6267"
-                        outlines [(1, "#f6efe4", 0, 0)]
-                        xmaximum 620
-
-            null height 10
-
-            if renpy.loadable("gui/collectibles/collectible_button_720p.png"):
-                fixed:
-                    xalign 0.5
-                    xsize 320
-                    ysize 96
-                    yoffset -12
-
-                    imagebutton:
-                        idle Transform("gui/collectibles/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
-                        if renpy.loadable("gui/collectibles/collectible_button_hover_720p.png"):
-                            hover Transform("gui/collectibles/collectible_button_hover_720p.png", fit="contain", xsize=320, ysize=96)
-                        else:
-                            hover Transform("gui/collectibles/collectible_button_720p.png", fit="contain", xsize=320, ysize=96)
-                        xalign 0.5
-                        yalign 0.5
-                        action Return()
-
-                    text "Continue":
-                        xalign 0.5
-                        yalign 0.5
-                        size 26
-                        color "#ffffff"
-                        outlines [(2, "#7c655c", 0, 0)]
+                    color "#f7f2eb"
+                    outlines [(2, "#000000bb", 0, 0)]
             else:
-                textbutton "Continue":
+                text "[title]":
                     xalign 0.5
-                    ysize 54
-                    xpadding 28
-                    ypadding 10
-                    background Solid("#2a2a2ae0")
-                    hover_background Solid("#454545ee")
-                    text_size 34
-                    text_color "#f8f8f8"
-                    action Return()
+                    text_align 0.5
+                    size 40
+                    color "#f7f2eb"
+                    outlines [(2, "#000000bb", 0, 0)]
+
+        if body:
+            text "[body]":
+                xalign 0.5
+                ypos 156
+                xsize 560
+                text_align 0.5
+                font "DejaVuSans.ttf"
+                size 23
+                line_spacing 8
+                color "#ddd7d0"
+                outlines [(1, "#00000088", 0, 0)]
+
+        textbutton "Continue":
+            xalign 0.5
+            ypos 305
+            xsize 270
+            ysize 54
+            background Transform(Frame("gui/clean_ui/gui/button/choice_idle_background.png", 35, 35), xsize=270, ysize=54)
+            hover_background Transform(Frame("gui/clean_ui/gui/button/choice_hover_background.png", 35, 35), xsize=270, ysize=54)
+            insensitive_background Transform(Frame("gui/clean_ui/gui/button/choice_idle_background.png", 35, 35), xsize=270, ysize=54)
+            text_size 26
+            text_color "#f0f0f0"
+            text_hover_color "#ffffff"
+            text_xalign 0.5
+            text_yalign 0.5
+            action Return()
 
 
 label day1_dresser:
@@ -878,7 +859,7 @@ label day1_living_room:
 
     if renpy.loadable("scenes/hana_to_mc.png"):
         scene expression im.Scale("scenes/hana_to_mc.png", config.screen_width, config.screen_height) with dissolve
-    hana "You'll be seeing Aria, Poko, and Reina again today, won't you?"
+    hana "You'll be seeing Aria, Poko, and Mimi again today, won't you?"
 
     if mc_gender == "male":
         if renpy.loadable("scenes/mc_to_both.png"):
@@ -906,7 +887,7 @@ label day1_living_room:
 
     if renpy.loadable("scenes/tsuki_to_mc.png"):
         scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
-    tsuki "And Reina's the pretty one everyone gets nervous around?"
+    tsuki "And Mimi's the pretty one everyone gets nervous around?"
 
     if renpy.loadable("scenes/hana_to_tsuki.png"):
         scene expression im.Scale("scenes/hana_to_tsuki.png", config.screen_width, config.screen_height) with dissolve
@@ -976,9 +957,9 @@ label day1_living_room:
                 mc "Then the whole building will know."
                 narrator "Loud, fiery, impossible to ignore. That's Poko."
 
-            "Talk about Reina" if "reina" not in day1_breakfast_topics_seen:
-                $ day1_breakfast_topics_seen.add("reina")
-                mc "Reina's the dangerous one."
+            "Talk about Mimi" if "mimi" not in day1_breakfast_topics_seen:
+                $ day1_breakfast_topics_seen.add("mimi")
+                mc "Mimi's the dangerous one."
                 if renpy.loadable("scenes/tsuki_to_mc.png"):
                     scene expression im.Scale("scenes/tsuki_to_mc.png", config.screen_width, config.screen_height) with dissolve
                 tsuki "Dangerous?"
@@ -990,7 +971,7 @@ label day1_living_room:
                 hana "Be nice."
                 if renpy.loadable("scenes/mc_to_both.png"):
                     scene expression im.Scale("scenes/mc_to_both.png", config.screen_width, config.screen_height) with dissolve
-                narrator "Reina never needs to raise her voice to take control of a conversation."
+                narrator "Mimi never needs to raise her voice to take control of a conversation."
 
     if persistent.first_plush_found and not persistent.tsuki_first_plush_reaction_seen:
         tsuki "Wait."
@@ -1281,17 +1262,17 @@ label day1_intro_year3:
         show aria neutral at left
     if renpy.has_image("poko grin"):
         show poko grin at center
-    if renpy.has_image("reina smile"):
-        show reina smile at right
+    if renpy.has_image("mimi smile"):
+        show mimi smile at right
 
-    narrator "Aria. Poko. Reina."
+    narrator "Aria. Poko. Mimi."
     narrator "The Year 3 trio has presence in a way that makes the air around them feel just a little more charged."
     narrator "Even among the crowd gathering before class, they stand out effortlessly."
 
     poko "Well, well."
     poko "Look who survived morning."
 
-    reina "You say that as though it was ever in doubt."
+    mimi "You say that as though it was ever in doubt."
 
     aria "First day nerves suit you less than you'd think."
 

@@ -108,15 +108,15 @@ screen say(who, what):
     $ _name_font = "DejaVuSans.ttf" if _is_komic else gui.name_text_font
     $ _clean_name_left = pref_ui_asset("namebox_left", fallback="gui/clean_ui/gui/namebox_left.png")
     $ _clean_name_right = pref_ui_asset("namebox_right", fallback="gui/clean_ui/gui/namebox_right.png")
-    $ _clean_side_base = pref_ui_asset("side_image_base", fallback="gui/clean_ui/gui/side_image_base.png")
-    $ _clean_side_frame = pref_ui_asset("side_image_frame", fallback="gui/clean_ui/gui/side_image_frame.png")
+    $ _clean_side_width = 213
+    $ _clean_side_height = 216
     $ _clean_ctc = pref_ui_asset("ctc", fallback="gui/clean_ui/gui/ctc.png")
     $ _clean_quickmenu_bg = "gui/clean_ui/gui/quickmenu_ui.png"
     $ _clean_name_color = "#fffaf2" if _hc else "#ff82d7"
     $ _clean_name_outline = "#000000f6" if _hc else "#24101fb8"
     $ _clean_text_outline = "#000000f2" if _hc else "#000000b0"
     $ _center_single_word = pref_dialogue_should_center(what)
-    $ _speaker_portrait = (None if _is_komic else pref_dialogue_speaker_portrait_displayable(who, size=194))
+    $ _speaker_portrait = (None if _is_komic else pref_dialogue_speaker_portrait_displayable(who, size=(_clean_side_width, _clean_side_height)))
     $ _has_speaker_portrait = (_speaker_portrait is not None)
     $ _komic_canvas_width = 1920
     $ _komic_center_x = 960
@@ -240,14 +240,13 @@ screen say(who, what):
                             xpos -30
                             ypos 20
 
-                            add Transform(_clean_side_base, xsize=210, ysize=210)
-                            add Transform(_speaker_portrait, xsize=194, ysize=194)
-                            add Transform(_clean_side_frame, xsize=214, ysize=214)
+                            add _speaker_portrait
 
             else:
                 vbox:
                     spacing 20
                     xalign 0.5
+                    ypos 18
 
                     if who is not None:
                         frame:
@@ -276,6 +275,7 @@ screen say(who, what):
                         size gui.text_size
                         color pref_dialogue_text_color()
                         adjust_spacing False
+                        ypos -8
                         xalign (0.5 if _center_single_word else 0.0)
                         text_align (0.5 if _center_single_word else 0.0)
                         outlines [ (2, _clean_text_outline, 0, 0) ]
@@ -292,34 +292,25 @@ screen say(who, what):
     $ _bag_btn_idle = "gui/hud/Player_male_btn.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn.png"
     $ _bag_btn_hover = ("gui/hud/Player_male_btn_hover.png" if getattr(store, "mc_gender", "male") == "male" else "gui/hud/Player_female_btn_hover.png")
     $ _bag_btn_hover = _bag_btn_hover if renpy.loadable(_bag_btn_hover) else _bag_btn_idle
-    $ _bag_btn_size = 138 if getattr(store, "mc_gender", "male") != "male" else 101
-    $ _bag_btn_xpos = 1615 if getattr(store, "mc_gender", "male") != "male" else 1652
+    $ _bag_btn_size = 138
+    $ _bag_btn_xpos = 1768
     $ _bag_idle_display = Transform(_bag_btn_idle, xsize=_bag_btn_size, ysize=_bag_btn_size, fit="contain")
     $ _bag_hover_display = Transform(_bag_btn_hover, xsize=_bag_btn_size, ysize=_bag_btn_size, fit="contain")
-    $ _setting_btn_idle = "gui/hud/Settings_btn.png"
-    $ _setting_btn_hover = "gui/hud/Settings_btn_hover.png" if renpy.loadable("gui/hud/Settings_btn_hover.png") else _setting_btn_idle
-
     fixed:
         xfill True
         yfill True
 
-        imagebutton:
-            xpos _bag_btn_xpos
-            ypos 6
-            xsize _bag_btn_size
-            ysize _bag_btn_size
-            xpadding 0
-            ypadding 0
-            idle _bag_idle_display
-            hover _bag_hover_display
-            action ShowMenu("inventory_menu")
-
-        imagebutton:
-            xpos 1768
-            ypos 24
-            idle Transform(_setting_btn_idle, size=(101, 101))
-            hover Transform(_setting_btn_hover, size=(101, 101))
-            action ShowMenu("showmenu")
+        if getattr(store, "ell_day", 1) >= 2:
+            imagebutton:
+                xpos _bag_btn_xpos
+                ypos 24
+                xsize _bag_btn_size
+                ysize _bag_btn_size
+                xpadding 0
+                ypadding 0
+                idle _bag_idle_display
+                hover _bag_hover_display
+                action ShowMenu("inventory_menu")
 
 init python:
     config.character_id_prefixes.append('namebox')
