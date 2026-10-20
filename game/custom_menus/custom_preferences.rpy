@@ -686,7 +686,62 @@ init -2 python:
     _pref_button_surface_cache = {}
     _pref_panel_surface_cache = {}
     _pref_square_surface_cache = {}
+    _pref_border_frame_cache = {}
     _pref_controls_remap_rows_cache = {}
+
+    def pref_border_frame(width, height, alpha=0.92):
+        width = max(1, int(width or 1))
+        height = max(1, int(height or 1))
+        alpha = max(0.0, min(1.0, float(alpha)))
+        cache_key = (width, height, round(alpha, 3))
+        cached = _pref_border_frame_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+        source = "gui/border.png"
+        mask = "gui/border_mask.png"
+        if (not renpy.loadable(source)) or (not renpy.loadable(mask)):
+            surface = Solid("#00000000")
+            _pref_border_frame_cache[cache_key] = surface
+            return surface
+
+        corner_w = max(22, min(48, int(width * 0.10)))
+        corner_h = max(20, min(44, int(height * 0.10)))
+        line = 2 if width >= 360 and height >= 160 else 1
+        inset = max(8, min(18, int(min(width, height) * 0.06)))
+        outer = "#d7a64ab0"
+        shadow = "#120b188c"
+
+        def piece(crop, xpos, ypos, xsize, ysize):
+            xsize = max(1, int(xsize))
+            ysize = max(1, int(ysize))
+            return Transform(
+                AlphaMask(
+                    Transform(source, crop=crop, xsize=xsize, ysize=ysize, alpha=alpha),
+                    Transform(mask, crop=crop, xsize=xsize, ysize=ysize),
+                ),
+                xpos=int(xpos),
+                ypos=int(ypos),
+            )
+
+        pieces = [
+            Transform(Solid(shadow), xpos=inset + 1, ypos=1, xsize=max(1, width - (inset * 2)), ysize=line),
+            Transform(Solid(shadow), xpos=inset + 1, ypos=height - line, xsize=max(1, width - (inset * 2)), ysize=line),
+            Transform(Solid(shadow), xpos=1, ypos=inset + 1, xsize=line, ysize=max(1, height - (inset * 2))),
+            Transform(Solid(shadow), xpos=width - line, ypos=inset + 1, xsize=line, ysize=max(1, height - (inset * 2))),
+            Transform(Solid(outer), xpos=inset, ypos=0, xsize=max(1, width - (inset * 2)), ysize=line),
+            Transform(Solid(outer), xpos=inset, ypos=height - line, xsize=max(1, width - (inset * 2)), ysize=line),
+            Transform(Solid(outer), xpos=0, ypos=inset, xsize=line, ysize=max(1, height - (inset * 2))),
+            Transform(Solid(outer), xpos=width - line, ypos=inset, xsize=line, ysize=max(1, height - (inset * 2))),
+            piece((54, 74, 140, 128), 0, 0, corner_w, corner_h),
+            piece((1256, 74, 140, 128), width - corner_w, 0, corner_w, corner_h),
+            piece((54, 884, 140, 128), 0, height - corner_h, corner_w, corner_h),
+            piece((1256, 884, 140, 128), width - corner_w, height - corner_h, corner_w, corner_h),
+        ]
+
+        surface = Fixed(*pieces, xsize=width, ysize=height)
+        _pref_border_frame_cache[cache_key] = surface
+        return surface
 
     def pref_button_surface(width, height, accent, selected_bg, selected=False, hovered=False, base_color="#00000048", hover_color="#00000062"):
         width = max(1, int(width or 1))
@@ -808,6 +863,9 @@ init -2 python:
                 Transform(Solid("#ffffff06"), xpos=4, ypos=4, xsize=max(1, width - 8), ysize=max(1, height - 8)),
             ]
 
+            if width >= 160 and height >= 120:
+                layers.append(Transform(pref_border_frame(width, height, alpha=0.58), xsize=width, ysize=height))
+
             surface = Fixed(*layers, xsize=width, ysize=height)
             _pref_panel_surface_cache[cache_key] = surface
             return surface
@@ -862,6 +920,9 @@ init -2 python:
                 Transform(Solid(accent_top), xpos=12, ypos=12, xsize=max(1, width - 24), ysize=1),
                 Transform(Solid(accent_bottom), xpos=12, ypos=(height - 13), xsize=max(1, width - 24), ysize=1),
             ])
+
+        if width >= 160 and height >= 120:
+            layers.append(Transform(pref_border_frame(width, height, alpha=0.58), xsize=width, ysize=height))
 
         surface = Fixed(*layers, xsize=width, ysize=height)
         _pref_panel_surface_cache[cache_key] = surface
@@ -2068,9 +2129,16 @@ screen preferences():
     $ pref_sidebar_bg = tab_colors["sidebar_bg"]
     $ pref_main_bg = tab_colors["main_bg"]
     $ pref_header_bg = tab_colors["header_bg"]
+    $ pref_shell_x = 74
+    $ pref_shell_y = 64
+    $ pref_shell_w = 1772
+    $ pref_shell_h = 952
     $ pref_sidebar_w = 280
     $ pref_sidebar_h = 760
     $ pref_sidebar_spacing = 10
+    $ pref_main_w = 1450
+    $ pref_main_h = 896
+    $ pref_sidebar_panel_bg = Fixed(Transform(Solid(pref_sidebar_bg), xsize=pref_sidebar_w, ysize=pref_sidebar_h), Transform(pref_border_frame(pref_sidebar_w, pref_sidebar_h, alpha=0.62), xsize=pref_sidebar_w, ysize=pref_sidebar_h), xsize=pref_sidebar_w, ysize=pref_sidebar_h)
 
     add Transform("gui/inventory_system/gui/inventory_bg.png", xsize=config.screen_width, ysize=config.screen_height)
     add Solid(pref_color_alpha("#020617", 0.34 if _high_contrast else pref_background_dim_alpha()))
@@ -2082,17 +2150,17 @@ screen preferences():
     frame:
         style "pref_shell_frame"
         background pref_shell_bg
-        xpos 74
-        ypos 64
-        xsize 1772
-        ysize 952
+        xpos pref_shell_x
+        ypos pref_shell_y
+        xsize pref_shell_w
+        ysize pref_shell_h
 
         hbox:
             spacing 22
 
             frame:
                 style "pref_sidebar_frame"
-                background pref_sidebar_bg
+                background pref_sidebar_panel_bg
                 xsize pref_sidebar_w
                 ysize pref_sidebar_h
 
@@ -2159,8 +2227,8 @@ screen preferences():
             frame:
                 style "pref_main_frame"
                 background pref_main_bg
-                xsize 1450
-                ysize 896
+                xsize pref_main_w
+                ysize pref_main_h
 
                 vbox:
                     spacing 18

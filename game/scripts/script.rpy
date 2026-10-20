@@ -87,8 +87,8 @@ screen mc_profile_setup():
     $ _female_display_name = _typed_name if (mc_gender == "female" and _typed_name) else "Akari"
     $ _male_display_name = _typed_name if (mc_gender == "male" and _typed_name) else "Kaito"
 
-    if renpy.loadable("gui/menu/mainmenu_bg.png"):
-        add im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
+    if renpy.loadable("gui/menu/protaganist.png"):
+        add im.Scale("gui/menu/protaganist.png", config.screen_width, config.screen_height)
     else:
         add Solid("#1f1f26")
     add Solid("#01061166")

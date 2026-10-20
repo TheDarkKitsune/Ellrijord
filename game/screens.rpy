@@ -546,7 +546,7 @@ screen quick_menu():
     zorder 200
     default clean_quick_tab = None
 
-    if quick_menu and not renpy.variant("touch"):
+    if quick_menu and not renpy.variant("touch") and not renpy.get_screen("intro_press_any_to_continue") and not renpy.get_screen("mc_profile_setup"):
         if renpy.is_skipping():
             use skip_indicator
         add Transform("gui/clean_ui/gui/quickmenu_ui.png", xalign=0.5, yalign=1.0)

@@ -940,6 +940,7 @@ screen extra_character_gallery():
                             unhovered SetScreenVariable("cg_hover_name", "")
                             fixed:
                                 xysize (98, 124)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (98, 124)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (94, 120)
                                 if any_unlocked and thumb:
@@ -956,6 +957,7 @@ screen extra_character_gallery():
                             unhovered SetScreenVariable("cg_hover_name", "")
                             fixed:
                                 xysize (98, 124)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (98, 124)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (94, 120)
                                 add Solid("#0d162b") xpos 4 ypos 4 xysize (90, 116)
@@ -993,13 +995,14 @@ screen extra_character_gallery():
                             spacing 8
                             fixed:
                                 xysize (400, 272)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (400, 272)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (396, 268)
                                 if item["unlocked"]:
-                                    add item["path"] fit "contain" xpos 6 ypos 6 xysize (388, 240)
+                                    add item["path"] fit "cover" xpos 6 ypos 6 xysize (388, 260)
                                 else:
-                                    add locked_tile fit "contain" xpos 6 ypos 6 xysize (388, 240)
-                                    add Solid("#111826b8") xpos 6 ypos 6 xysize (388, 240)
+                                    add locked_tile fit "cover" xpos 6 ypos 6 xysize (388, 260)
+                                    add Solid("#111826b8") xpos 6 ypos 6 xysize (388, 260)
                                     text "LOCKED" style "char_gallery_title" size 34 xalign 0.5 yalign 0.5
                             if item["unlocked"]:
                                 text item["name"] style "char_gallery_name" xalign 0.5
@@ -1010,9 +1013,10 @@ screen extra_character_gallery():
                 for _i in range(items_per_page - len(page_items)):
                     fixed:
                         xysize (410, 330)
+                        clipping True
                         add Solid("#8cb5ff") xpos 5 ypos 5 xsize 400 ysize 272
                         add Solid("#162544") xpos 7 ypos 7 xsize 396 ysize 268
-                        add Solid("#0d162b") xpos 11 ypos 11 xsize 388 ysize 240
+                        add Solid("#0d162b") xpos 11 ypos 11 xsize 388 ysize 260
                         text "EMPTY" style "char_gallery_name" xalign 0.5 ypos 292
 
             hbox:
@@ -1113,6 +1117,7 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                             unhovered SetScreenVariable("ig_hover_name", "")
                             fixed:
                                 xysize (98, 124)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (98, 124)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (94, 120)
                                 if item.get("unlocked", True):
@@ -1126,6 +1131,7 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                             unhovered SetScreenVariable("ig_hover_name", "")
                             fixed:
                                 xysize (98, 124)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (98, 124)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (94, 120)
                                 add Solid("#0d162b") xpos 4 ypos 4 xysize (90, 116)
@@ -1163,12 +1169,13 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                             spacing 8
                             fixed:
                                 xysize (400, 272)
+                                clipping True
                                 add Solid("#8cb5ff") xysize (400, 272)
                                 add Solid("#162544") xpos 2 ypos 2 xysize (396, 268)
                                 if item.get("unlocked", True):
-                                    add item["path"] fit "contain" xpos 6 ypos 6 xysize (388, 240)
+                                    add item["path"] fit "cover" xpos 6 ypos 6 xysize (388, 260)
                                 else:
-                                    add Solid("#0d162b") xpos 6 ypos 6 xysize (388, 240)
+                                    add Solid("#0d162b") xpos 6 ypos 6 xysize (388, 260)
                                     text "LOCKED" style "char_gallery_title" size 34 xalign 0.5 yalign 0.5
                             if item.get("unlocked", True):
                                 text item["name"] style "char_gallery_name" xalign 0.5
@@ -1178,9 +1185,10 @@ screen extra_image_gallery_grid(initial_tab="gameplay"):
                 for _i in range(items_per_page - len(page_items)):
                     fixed:
                         xysize (410, 330)
+                        clipping True
                         add Solid("#8cb5ff") xpos 5 ypos 5 xsize 400 ysize 272
                         add Solid("#162544") xpos 7 ypos 7 xsize 396 ysize 268
-                        add Solid("#0d162b") xpos 11 ypos 11 xsize 388 ysize 240
+                        add Solid("#0d162b") xpos 11 ypos 11 xsize 388 ysize 260
                         text "EMPTY" style "char_gallery_name" xalign 0.5 ypos 292
 
             hbox:
