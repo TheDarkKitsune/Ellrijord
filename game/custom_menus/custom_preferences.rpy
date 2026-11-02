@@ -705,41 +705,31 @@ init -2 python:
             _pref_border_frame_cache[cache_key] = surface
             return surface
 
-        corner_w = max(22, min(48, int(width * 0.10)))
-        corner_h = max(20, min(44, int(height * 0.10)))
-        line = 2 if width >= 360 and height >= 160 else 1
-        inset = max(8, min(18, int(min(width, height) * 0.06)))
-        outer = "#d7a64ab0"
-        shadow = "#120b188c"
-
-        def piece(crop, xpos, ypos, xsize, ysize):
-            xsize = max(1, int(xsize))
-            ysize = max(1, int(ysize))
-            return Transform(
-                AlphaMask(
-                    Transform(source, crop=crop, xsize=xsize, ysize=ysize, alpha=alpha),
-                    Transform(mask, crop=crop, xsize=xsize, ysize=ysize),
-                ),
-                xpos=int(xpos),
-                ypos=int(ypos),
-            )
-
-        pieces = [
-            Transform(Solid(shadow), xpos=inset + 1, ypos=1, xsize=max(1, width - (inset * 2)), ysize=line),
-            Transform(Solid(shadow), xpos=inset + 1, ypos=height - line, xsize=max(1, width - (inset * 2)), ysize=line),
-            Transform(Solid(shadow), xpos=1, ypos=inset + 1, xsize=line, ysize=max(1, height - (inset * 2))),
-            Transform(Solid(shadow), xpos=width - line, ypos=inset + 1, xsize=line, ysize=max(1, height - (inset * 2))),
-            Transform(Solid(outer), xpos=inset, ypos=0, xsize=max(1, width - (inset * 2)), ysize=line),
-            Transform(Solid(outer), xpos=inset, ypos=height - line, xsize=max(1, width - (inset * 2)), ysize=line),
-            Transform(Solid(outer), xpos=0, ypos=inset, xsize=line, ysize=max(1, height - (inset * 2))),
-            Transform(Solid(outer), xpos=width - line, ypos=inset, xsize=line, ysize=max(1, height - (inset * 2))),
-            piece((54, 74, 140, 128), 0, 0, corner_w, corner_h),
-            piece((1256, 74, 140, 128), width - corner_w, 0, corner_w, corner_h),
-            piece((54, 884, 140, 128), 0, height - corner_h, corner_w, corner_h),
-            piece((1256, 884, 140, 128), width - corner_w, height - corner_h, corner_w, corner_h),
-        ]
-
-        surface = Fixed(*pieces, xsize=width, ysize=height)
+        # Mask at the artwork's native size, then scale it uniformly. The
+        # frame stretches only the edge/centre regions defined in the sidecar.
+        borders = ell_image_borders.get_borders(source)
+        if borders is None:
+            borders = (0, 0, 0, 0)
+        artwork_scale = 0.25
+        artwork = Transform(
+            AlphaMask(im.Image(source), im.Image(mask)),
+            zoom=artwork_scale,
+        )
+        # The visible gold outline starts 74px across and 64px down in
+        # the source. Place that outline on the panel edge, not over its text.
+        # Ren'Py interprets float positions as fractions, so these must be
+        # integer pixel offsets rather than values such as -18.5 or -16.0.
+        edge_x = int(round(74 * artwork_scale))
+        edge_y = int(round(64 * artwork_scale))
+        surface = Fixed(
+            Transform(
+                Frame(artwork, *(value * artwork_scale for value in borders)),
+                xpos=-edge_x, ypos=-edge_y,
+                xsize=int(width + 2 * edge_x),
+                ysize=int(height + 2 * edge_y), alpha=alpha,
+            ),
+            xsize=width, ysize=height,
+        )
         _pref_border_frame_cache[cache_key] = surface
         return surface
 
