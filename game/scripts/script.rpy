@@ -34,6 +34,17 @@ init python:
                     return p
         return None
 
+    _mc_profile_portrait_cache = {}
+
+    def mc_profile_portrait(path):
+        if not renpy.loadable(path):
+            return None
+        if path not in _mc_profile_portrait_cache:
+            # Follow the current artwork's alpha bounds when a render changes.
+            bounds = tuple(renpy.load_surface(path).get_bounding_rect())
+            _mc_profile_portrait_cache[path] = Crop(bounds, path) if bounds[2] and bounds[3] else path
+        return _mc_profile_portrait_cache[path]
+
     def set_mc_gender(gender):
         s = renpy.store
         s.mc_gender = "female" if gender == "female" else "male"
@@ -86,6 +97,9 @@ screen mc_profile_setup():
     $ _typed_name = (mc_first_name or "").strip()
     $ _female_display_name = _typed_name if (mc_gender == "female" and _typed_name) else "Akari"
     $ _male_display_name = _typed_name if (mc_gender == "male" and _typed_name) else "Kaito"
+    # Trim transparent margins using each current image, including its tail.
+    $ _female_portrait = mc_profile_portrait("gui/characters/Akari.png")
+    $ _male_portrait = mc_profile_portrait("gui/characters/Kaito.png")
 
     if renpy.loadable("gui/menu/protaganist.png"):
         add im.Scale("gui/menu/protaganist.png", config.screen_width, config.screen_height)
@@ -109,34 +123,37 @@ screen mc_profile_setup():
         color "#d7dfef"
         outlines [(1, "#1f2635cc", 0, 0)]
 
+    # Keep Akari's full artwork inside the screen, including during hover.
     hbox:
         xalign 0.5
-        yalign 0.5
+        ypos 200
         spacing 50
 
         fixed:
-            xsize 430
+            xsize 560
             ysize 760
 
             button:
                 background None
                 hover_background None
+                padding (0, 0)
                 xfill True
-                yfill True
+                ypos -30
+                ysize 900
                 action Function(set_mc_gender, "female")
                 hovered SetScreenVariable("hovered_gender", "female")
                 unhovered SetScreenVariable("hovered_gender", None)
 
                 if renpy.loadable("gui/characters/Akari.png"):
                     if mc_gender == "female":
-                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform(_female_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform(_female_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform(_female_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform(_female_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
 
-                    add Transform("gui/characters/Akari.png", crop=(793, 251, 198, 698), fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.62)
-                        zoom (1.00 if female_hovered else 0.96)
+                    add Transform(_female_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900):
+                        alpha 1.0
+                        zoom (1.015 if female_hovered else 1.0)
 
                     if mc_gender == "female":
                         add Transform(Solid("#f6ceff"), xpos=92, ypos=168, xsize=6, ysize=6) at profile_sparkle_rise_a
@@ -145,14 +162,14 @@ screen mc_profile_setup():
                         add Transform(Solid("#cf8dff"), xpos=308, ypos=152, xsize=6, ysize=6) at profile_sparkle_rise_b
                 elif renpy.loadable("gui/mc_female.png"):
                     if mc_gender == "female":
-                        add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
-                        add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/mc_female.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), xoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/mc_female.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), xoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/mc_female.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), yoffset=-3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
+                        add Transform("gui/mc_female.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900, zoom=(1.015 if female_hovered else 1.0), yoffset=3, matrixcolor=TintMatrix("#ba7dff")) at profile_glow_pulse
 
-                    add Transform("gui/mc_female.png", fit="cover", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "female" or female_hovered) else 0.62)
-                        zoom (1.03 if female_hovered else 1.0)
+                    add Transform("gui/mc_female.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=900):
+                        alpha 1.0
+                        zoom (1.015 if female_hovered else 1.0)
 
                     if mc_gender == "female":
                         add Transform(Solid("#f6ceff"), xpos=92, ypos=168, xsize=6, ysize=6) at profile_sparkle_rise_a
@@ -170,28 +187,29 @@ screen mc_profile_setup():
 
             vbox:
                 xalign 0.5
-                yalign 1.0
-                yoffset 132
+                ypos 770
+                xsize 560
                 spacing 2
 
                 text "[_female_display_name] [mc_last_name]":
                     font "fonts/cinzel/Cinzel-Bold.otf"
-                    size 52
+                    size 36
                     xalign 0.5
+                    text_align 0.5
                     at Transform(alpha=(1.0 if mc_gender == "female" else 0.72))
                     color ("#ffd77f" if (mc_gender == "female" or female_hovered) else "#dbe5f2")
                     outlines [(2, "#11161fbb", 0, 0)]
 
                 text "She / Her":
                     font "fonts/cinzel/Cinzel-Bold.otf"
-                    size 42
+                    size 28
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "female" else 0.66))
                     color ("#ffe59a" if (mc_gender == "female" or female_hovered) else "#cbd5e3")
                     outlines [(1, "#11161fbb", 0, 0)]
 
         vbox:
-            xsize 520
+            xsize 560
             spacing 14
             yalign 0.5
 
@@ -254,38 +272,40 @@ screen mc_profile_setup():
                 text_xalign 0.5
 
         fixed:
-            xsize 430
+            xsize 560
             ysize 760
 
             button:
                 background None
                 hover_background None
+                padding (0, 0)
                 xfill True
-                yfill True
+                ypos -50
+                ysize 1030
                 action Function(set_mc_gender, "male")
                 hovered SetScreenVariable("hovered_gender", "male")
                 unhovered SetScreenVariable("hovered_gender", None)
 
                 if renpy.loadable("gui/characters/Kaito.png"):
                     if mc_gender == "male":
-                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform(_male_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform(_male_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform(_male_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform(_male_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
 
-                    add Transform("gui/characters/Kaito.png", fit="contain", xalign=0.5, yalign=0.5, xsize=418, ysize=748):
-                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.62)
-                        zoom (1.00 if male_hovered else 0.96)
+                    add Transform(_male_portrait, fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030):
+                        alpha 1.0
+                        zoom (1.015 if male_hovered else 1.0)
                 elif renpy.loadable("gui/mc_male.png"):
                     if mc_gender == "male":
-                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730, xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730, xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730, yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
-                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730, yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), xoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), xoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), yoffset=-3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
+                        add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030, zoom=(1.015 if male_hovered else 1.0), yoffset=3, matrixcolor=TintMatrix("#7fb8ff")) at profile_glow_pulse
 
-                    add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=390, ysize=730):
-                        alpha (1.0 if (mc_gender == "male" or male_hovered) else 0.62)
-                        zoom (1.03 if male_hovered else 1.0)
+                    add Transform("gui/mc_male.png", fit="contain", xalign=0.5, yalign=1.0, xsize=560, ysize=1030):
+                        alpha 1.0
+                        zoom (1.015 if male_hovered else 1.0)
                 else:
                     text "MALE" at Transform(alpha=(1.0 if (mc_gender == "male" or male_hovered) else 0.45)):
                         style "ui_btn_text"
@@ -297,21 +317,22 @@ screen mc_profile_setup():
 
             vbox:
                 xalign 0.5
-                yalign 1.0
-                yoffset 132
+                ypos 770
+                xsize 560
                 spacing 2
 
                 text "[_male_display_name] [mc_last_name]":
                     font "fonts/cinzel/Cinzel-Bold.otf"
-                    size 52
+                    size 36
                     xalign 0.5
+                    text_align 0.5
                     at Transform(alpha=(1.0 if mc_gender == "male" else 0.72))
                     color ("#ffd77f" if (mc_gender == "male" or male_hovered) else "#ced8e6")
                     outlines [(2, "#11161fbb", 0, 0)]
 
                 text "He / Him":
                     font "fonts/cinzel/Cinzel-Bold.otf"
-                    size 42
+                    size 28
                     xalign 0.5
                     at Transform(alpha=(1.0 if mc_gender == "male" else 0.66))
                     color ("#ffe59a" if (mc_gender == "male" or male_hovered) else "#cbd5e3")

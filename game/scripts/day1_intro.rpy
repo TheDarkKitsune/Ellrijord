@@ -1,6 +1,14 @@
 # day1_intro.rpy
 # Ellrijord: Tales of Light and Void
-# Day 1 Opening - Bedroom -> Living Room -> First School Arrival
+# Day 1 - Bedroom, Breakfast, School, Evening, Day 2 Handoff
+# Continuity: Hana and older survivors remember Ellrijord firsthand. The
+# protagonist was very young when the family left; Tsuki was born in Midgard.
+# The protagonist starts at 17, approaching 18; Tsuki is 15, turning 16 later.
+# The family reached Midgard about 15.5 years ago, when the protagonist was
+# roughly 2.5. Tsuki was born shortly afterwards. Exact birthdays remain open.
+# Akari's early impressions can resemble childhood memories. Her first dream
+# hints at another viewpoint; the source and limits of this ability stay
+# unrevealed, and Hana does not identify it as a power in these scenes.
 
 default ell_day = 1
 default ell_time_of_day = "morning"
@@ -8,6 +16,11 @@ default bedroom_clothes_taken = False
 default day1_uniform_added_to_inventory = False
 default day1_breakfast_topics_seen = set()
 default day1_plushie_system_introduced = False
+default day1_lunch_companion = None
+default day1_class_focus = None
+default day1_akari_glimpse_seen = False
+default day1_akari_hana_talk_seen = False
+default day1_akari_dream_seen = False
 default persistent.picture_frames_found = set()
 default persistent.plushies_found = set()
 default persistent.first_plush_found = False
@@ -43,6 +56,9 @@ init -10 python:
             s.sakura = C("Sakura", color="#ffb7d5")
         if not hasattr(s, "rika"):
             s.rika = C("Rika", color="#c88cff")
+
+        if not hasattr(s, "ell_teacher"):
+            s.ell_teacher = C("Teacher", color="#c7b7d9")
 
     def day1_unlock_picture_frame(frame_id, gallery_image_path):
         found = getattr(persistent, "picture_frames_found", set())
@@ -112,6 +128,11 @@ label day1_opening:
     $ bedroom_clothes_taken = False
     $ day1_breakfast_topics_seen = set()
     $ day1_plushie_system_introduced = False
+    $ day1_lunch_companion = None
+    $ day1_class_focus = None
+    $ day1_akari_glimpse_seen = False
+    $ day1_akari_hana_talk_seen = False
+    $ day1_akari_dream_seen = False
 
     stop music fadeout 1.0
     scene black with fade
@@ -1206,57 +1227,106 @@ label day1_living_room:
     jump day1_school_gate
 
 
+# -----------------------------------------------------------------------------
+# DAY 1: SCHOOL AND EVENING (STORY-LED INTRODUCTION)
+# -----------------------------------------------------------------------------
+# Day 1 intentionally stays linear. Small dialogue choices provide flavour, but
+# all six school characters are introduced before class. Free exploration and
+# Mini Tsuki's UI tutorial belong to Day 2 and are not implemented here.
+#
+# If you have custom scene renders, name them to match the optional assets
+# below, or ask Codex to replace these candidate paths with your actual renders.
+# Missing optional renders fall back safely to the project's main menu image,
+# rather than causing a missing-image error.
+
+init -10 python:
+    def day1_optional_background(*candidates):
+        for path in candidates:
+            if renpy.loadable(path):
+                return im.Scale(path, config.screen_width, config.screen_height)
+        if renpy.loadable("gui/menu/mainmenu_bg.png"):
+            return im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height)
+        return Solid("#191723")
+
+
 label day1_school_gate:
+    # WALK TO SCHOOL: no map or free-roam screen on Day 1.
+    if renpy.has_image("school_walk_morning"):
+        scene school_walk_morning with dissolve
+    else:
+        scene expression day1_optional_background("scenes/school_walk.png", "scenes/walk_to_school.png", "scenes/morning_street.png") with dissolve
+
+    narrator "The morning air is cool enough to wake me up properly. Almost."
+    narrator "Tsuki walks a few steps ahead, her bag bouncing against her side."
+
+    tsuki "You're walking awfully slowly for someone who was nearly late."
+    mc "I was perfectly on time until you started giving orders."
+    tsuki "Oh? So waking you up was a mistake?"
+    mc "I didn't say that."
+    tsuki "Good. Because I'd happily let you sleep through the bell tomorrow."
+    mc "You'd last about thirty seconds before coming to bother me."
+    tsuki "...That's not the point!"
+
+    narrator "We pass the little shops opening for the day. A few neighbours wave as students hurry along the pavement."
+    narrator "Human voices mingle with the familiar sight of ears and tails beneath school coats."
+    narrator "It's the kind of everyday scene I barely notice anymore."
+
+    tsuki "Hey. Are you even listening?"
+    mc "Something about you being the most generous little sister in Midgard?"
+    tsuki "The {i}most{/i} generous. Don't forget it."
+    mc "I'll have it engraved on a plaque."
+    tsuki "Make it a big one."
+
+    narrator "An old shop sign catches the morning sun. Its painted branches remind me of the stories Mum tells us about Ellrijord."
+    narrator "To her, those places are memories. I was so young when we left that it's hard to tell what I remember myself and what I know from her stories."
+    narrator "Sometimes there's sunlight through enormous branches, or a tune I can't quite finish. Nothing stays long enough to make a whole picture."
+    narrator "Tsuki was born here in Midgard. She's only ever known Ellrijord through the people who remember it."
+
+    tsuki "You're doing that thinking thing again."
+    if mc_gender == "male":
+        mc "Didn't know I was allowed to do that before first period."
+    else:
+        mc "Someone has to do it for both of us."
+    tsuki "Rude!"
+    narrator "She sticks her tongue out before turning back towards the road."
+
     if renpy.has_image("school_gate_morning"):
         scene school_gate_morning with dissolve
-    elif renpy.has_image("bg city_street_day"):
-        scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
-        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
-        scene black with dissolve
+        scene expression day1_optional_background("scenes/school_gate.png", "scenes/school_gate_morning.png", "scenes/school_walk.png") with dissolve
 
-    narrator "The school stands ahead of us, just as familiar and imposing as ever."
-    narrator "Students move in clumps across the grounds, conversations blending into one constant wave of noise."
+    narrator "At last, the school gates come into view."
+    narrator "Students stream through in little groups, trading holiday stories and complaints about the new term."
+
+    tsuki "Right! I have places to be and people to impress."
+    mc "Mostly people to annoy."
+    tsuki "It's called having a social life. Try it sometime."
+    mc "I'll put it on the list."
+    tsuki "See you after school! And don't forget what you promised me!"
+    narrator "She gives me an enthusiastic wave before disappearing into the crowd."
+    narrator "The lost plushies. Right. She really is going to hold me to that."
 
     if mc_gender == "male":
-        narrator "Another year."
-        narrator "Another chance for everything to change."
+        narrator "Another school year. Let's see how long it takes for things to get complicated."
     else:
-        narrator "Same gates. Same uniforms."
-        narrator "But something about today feels different."
-
-    narrator "Somewhere in this crowd are the people who will shape the days to come."
-    narrator "Upperclassmen. Friends. Trouble."
-    narrator "Maybe all three at once."
+        narrator "Same school, same morning rush. Somehow it still feels like a fresh start."
 
     jump day1_school_intro_hub
 
 
 label day1_school_intro_hub:
-    narrator "The morning bell hasn't rung yet."
-    narrator "There's still a little time before classes start."
-
-    menu:
-        "Look for the Year 3s":
-            jump day1_intro_year3
-        "Look for the Year 2s":
-            jump day1_intro_year2
-        "Head toward class":
-            jump day1_class_intro
+    # Deliberately linear: both groups receive a Day 1 introduction.
+    jump day1_intro_year3
 
 
 label day1_intro_year3:
     if renpy.has_image("school_courtyard_morning"):
         scene school_courtyard_morning with dissolve
-    elif renpy.has_image("bg city_street_day"):
-        scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
-        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
-        scene black with dissolve
+        scene expression day1_optional_background("scenes/school_courtyard.png", "scenes/school_gate.png") with dissolve
 
-    narrator "It doesn't take long to spot them."
+    narrator "I haven't even reached the main building when a familiar voice calls out."
+    poko "Well, well! Look who survived the first morning!"
 
     if renpy.has_image("aria neutral"):
         show aria neutral at left
@@ -1266,37 +1336,64 @@ label day1_intro_year3:
         show mimi smile at right
 
     narrator "Aria. Poko. Mimi."
-    narrator "The Year 3 trio has presence in a way that makes the air around them feel just a little more charged."
-    narrator "Even among the crowd gathering before class, they stand out effortlessly."
+    narrator "The Year 3 trio has a presence that makes the crowd around them feel just a little more alive."
+    narrator "Even among the students arriving for class, they're difficult to miss."
 
-    poko "Well, well."
-    poko "Look who survived morning."
+    mc "Good morning to you too, Poko."
+    poko "You're welcome! I was going to send a rescue team if you didn't show up."
+    aria "You were going to finish telling us about your holiday, actually."
+    poko "I can do two things!"
+    mimi "That's quite an ambitious claim this early in the morning."
+    poko "Mimi! You're supposed to be on my side!"
 
-    mimi "You say that as though it was ever in doubt."
+    narrator "Aria smiles as Poko throws her hands up in protest."
+    narrator "Mimi, meanwhile, seems perfectly at ease despite the number of students greeting her on their way past."
 
-    aria "First day nerves suit you less than you'd think."
+    aria "It's good to see you again, [mc_first_name]. How was your morning?"
+    menu:
+        "Tsuki made sure I was awake.":
+            mc "Loud. Tsuki took personal responsibility for getting me out of bed."
+            poko "Ha! I knew I liked that kid."
+            aria "She means well. Usually."
+        "Surprisingly peaceful, all things considered.":
+            mc "Not bad, actually. Breakfast with Mum and Tsuki was nice."
+            mimi "That sounds like a lovely way to start the term."
+            poko "You're making the rest of us look unprepared."
 
-    if mc_gender == "male":
-        mc "Good morning to you too."
-    else:
-        mc "Wow. You really came ready to attack before first period."
+    aria "I found an old photo of Poppy and Gizmo this morning."
+    poko "The birthday cake one?"
+    aria "Gizmo had frosting everywhere. Poppy was trying to help."
+    mc "And getting covered in it herself?"
+    aria "Naturally. I miss that little team."
 
-    narrator "And just like that, the day starts moving."
+    narrator "Poppy and Gizmo passed away years ago, but I still remember birthdays like that."
+    narrator "Aria smiles at the memory. For a moment, we let the morning bustle fill the quiet."
 
-    jump day1_end_of_intro
+    aria "Anyway. New term. Any grand plans?"
+
+    mimi "I'm looking forward to seeing what this term brings."
+    poko "You mean you're looking forward to being top of the class again."
+    mimi "Those aren't mutually exclusive."
+    narrator "Mimi answers so sweetly that Poko doesn't seem to realise she's been teased until a moment later."
+
+    narrator "A warning chime sounds from inside the building."
+    aria "We'd better get moving."
+    poko "Already? It's barely morning!"
+    mimi "That is generally when the first bell rings."
+    mc "You two never change."
+    poko "And you'd miss me terribly if I did!"
+
+    narrator "We head inside together before the corridor splits us in different directions."
+    jump day1_intro_year2
 
 
 label day1_intro_year2:
     if renpy.has_image("school_hallway_morning"):
         scene school_hallway_morning with dissolve
-    elif renpy.has_image("bg city_street_day"):
-        scene bg city_street_day with dissolve
-    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
-        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
-        scene black with dissolve
+        scene expression day1_optional_background("scenes/school_hallway.png", "scenes/school_corridor.png") with dissolve
 
-    narrator "A familiar cluster of voices pulls my attention down the hall."
+    narrator "A burst of familiar laughter reaches me from farther down the hallway."
 
     if renpy.has_image("kuroe neutral"):
         show kuroe neutral at left
@@ -1305,42 +1402,356 @@ label day1_intro_year2:
     if renpy.has_image("rika grin"):
         show rika grin at right
 
-    narrator "Kuroe. Sakura. Rika."
-    narrator "The Year 2 group somehow manages to feel both approachable and dangerous at the same time."
-
     rika "There you are!"
-    rika "I was starting to think you'd gotten lost before the year even started."
+    narrator "My younger cousin Rika appears in front of me before I can pretend I haven't heard her."
+    rika "I was starting to think you'd got lost on the way here!"
+    mc "Good morning to you too, Rika."
+    rika "You're welcome!"
 
-    if mc_gender == "male":
-        mc "You're way too confident for someone who's still younger than me."
-    else:
-        mc "And you're way too pleased with yourself this early."
+    sakura "Morning, [mc_first_name]. It's nice having everyone back."
+    mc "Morning, Sakura."
+    kuroe "We're not even through the first day. Give it time."
+    sakura "Kuroe..."
+    kuroe "I'm joking. Mostly."
 
-    sakura "It's nice to see everyone again."
-    kuroe "More or less."
+    narrator "Kuroe's attention drifts towards a noticeboard near the stairs."
+    narrator "Among the club notices is a faded poster showing an illustration of Yggdrasil."
+    kuroe "They're putting up the old-world history display again."
+    rika "Oh no. That look means she's found another mystery."
+    kuroe "It's not a mystery just because you don't want to read about it."
+    rika "See? Definitely a mystery."
 
-    narrator "So much for easing into the day."
+    sakura "I think it'll be interesting. There are still so many stories about Ellrijord that never made it into the books."
+    kuroe "Exactly. And the versions that did aren't always the same."
+    narrator "For a moment, Kuroe looks far more serious than she did a second ago."
 
-    jump day1_end_of_intro
+    mc "Sounds like you've already got your first project of the term."
+    kuroe "Maybe."
+    rika "Which means we'll all get dragged into it eventually."
+    mc "I was afraid you'd say that."
+    sakura "It might be fun!"
+
+    narrator "The bell rings properly this time."
+    sakura "We should get to class!"
+    rika "Race you!"
+    kuroe "No running in the halls."
+    rika "You sound just like a teacher!"
+    narrator "Rika darts away with Sakura following at a more sensible pace."
+    narrator "Kuroe takes one last look at the poster before turning towards her classroom."
+
+    narrator "Six familiar faces, and the day has barely begun."
+    jump day1_class_intro
 
 
 label day1_class_intro:
     if renpy.has_image("classroom_morning"):
         scene classroom_morning with dissolve
-    elif renpy.has_image("bg bakery_day"):
-        scene bg bakery_day with dissolve
-    elif renpy.loadable("gui/menu/mainmenu_bg.png"):
-        scene expression im.Scale("gui/menu/mainmenu_bg.png", config.screen_width, config.screen_height) with dissolve
     else:
-        scene black with dissolve
+        scene expression day1_optional_background("scenes/classroom.png", "scenes/classroom_morning.png") with dissolve
 
-    narrator "Might as well head in before the real chaos starts."
-    narrator "Once class begins, there'll be no slowing the day down."
+    narrator "I reach my classroom just before the door closes."
+    narrator "Chairs scrape against the floor as everyone settles in, and the last few conversations fade away."
+
+    ell_teacher "Good morning, everyone. Welcome back."
+    ell_teacher "I hope you've all had a good break, because we have plenty to cover this term."
+    narrator "A handful of students groan. The teacher pretends not to hear them."
+    ell_teacher "We'll begin with something familiar: the history shared by Midgard and Ellrijord."
+
+    narrator "An illustration appears at the front of the room: the enormous branching form of Yggdrasil."
+    ell_teacher "Many of your parents and grandparents remember Ellrijord as the home they left behind."
+    ell_teacher "Some of you were very young when your families came to Midgard. Others were born here and know Ellrijord through the stories you've been told."
+    ell_teacher "If you do have memories of Ellrijord, however fragmented, they belong to this history too."
+    ell_teacher "The same history can look very different depending on who tells it. That's worth remembering."
+
+    narrator "I glance at the drawing."
+    narrator "Mum remembers a home. I have a few uncertain impressions, tangled up with stories I've heard all my life."
+    narrator "Seeing it reduced to a drawing on the classroom wall still feels strange."
+
+    if mc_gender == "female":
+        call day1_akari_first_glimpse
+
+    menu:
+        "Pay close attention to the lesson.":
+            $ day1_class_focus = "history"
+            narrator "I open my notebook and copy down the title."
+            mc "(Might as well start the term properly.)"
+            ell_teacher "Good. We'll be revisiting these ideas throughout the year."
+        "Let my thoughts wander for a moment.":
+            $ day1_class_focus = "daydream"
+            narrator "Outside the window, a breeze stirs the branches of a nearby tree."
+            mc "(All this talk about other worlds before lunch...)"
+            ell_teacher "[mc_first_name]? Still with us?"
+            mc "Yes! Sorry."
+            narrator "A couple of classmates try not to laugh."
+
+    narrator "The morning passes in a blur of introductions, timetables and the first pages of new notebooks."
+    narrator "By the time the lunch bell rings, my head is full of names, dates and enough reminders to last the week."
+
+    jump day1_lunch
+
+
+label day1_akari_first_glimpse:
+    narrator "For a heartbeat, the branches in the drawing seem to move."
+    narrator "There's sunlight between them. Someone is humming nearby, too softly for me to catch the tune."
+    narrator "I blink. The drawing is still. The classroom is full of the scratch of pens."
+    mc "(Was that something I remembered?)"
+    narrator "I glance around. No one else seems to have noticed anything."
+    $ day1_akari_glimpse_seen = True
+    return
+
+
+label day1_lunch:
+    $ ell_time_of_day = "midday"
+    if renpy.has_image("school_courtyard_morning"):
+        scene school_courtyard_morning with dissolve
+    else:
+        scene expression day1_optional_background("scenes/school_lunch.png", "scenes/school_courtyard.png", "scenes/school_cafeteria.png") with dissolve
+
+    narrator "Lunch turns the quiet courtyard into a chorus of voices."
+    narrator "There are familiar faces scattered across the tables, and more than one group waves me over."
+    narrator "I have time to sit with one group properly before the bell."
+
+    # This affects only Day 1's extra dialogue. Everyone has already appeared.
+    menu:
+        "Spend lunch with Aria, Poko and Mimi.":
+            $ day1_lunch_companion = "year3"
+            jump day1_lunch_year3
+        "Spend lunch with Kuroe, Sakura and Rika.":
+            $ day1_lunch_companion = "year2"
+            jump day1_lunch_year2
+
+
+label day1_lunch_year3:
+    narrator "I make my way over to Aria, Poko and Mimi."
+    poko "Excellent choice! We were just deciding who's the most prepared for the new term."
+    mc "And let me guess. You voted for yourself?"
+    poko "Obviously."
+    mimi "You forgot your timetable this morning."
+    poko "Details!"
+    aria "I had to lend her a pen as well."
+    poko "Betrayal. From both sides."
+
+    narrator "Mimi laughs and moves her bag aside so I can sit."
+    mimi "It's nice having everyone back together. The holidays were strangely quiet."
+    aria "You say that, but I saw how many messages you sent."
+    mimi "I said {i}strangely{/i} quiet, not completely quiet."
+
+    poko "Anyway, big plans for the term?"
+    mc "Surviving it seems like a reasonable start."
+    aria "Aim a little higher."
+    mc "Surviving with good grades?"
+    aria "Much better."
+
+    narrator "The three of them fall into an easy argument about which club will be the busiest this year."
+    narrator "I find myself smiling more than I expected."
+    jump day1_lunch_finish
+
+
+label day1_lunch_year2:
+    narrator "I head towards Kuroe, Sakura and Rika."
+    rika "Aha! I knew you'd come over!"
+    mc "You were waving both arms at me. It was difficult not to notice."
+    sakura "We saved you a space."
+    kuroe "Rika was about to claim it for her bag."
+    rika "My bag has feelings!"
+
+    narrator "Sakura passes me a napkin before Rika can steal the last seat."
+    sakura "So, how was your first lesson?"
+    mc "Already got a history lecture."
+    kuroe "About Ellrijord?"
+    mc "Of course you'd ask that."
+    kuroe "I saw the display poster earlier. I'd like to know where they got some of those records."
+    rika "See? A whole term of mystery investigations."
+    sakura "That doesn't sound too bad."
+    mc "Remind me not to volunteer for anything before I've had lunch."
+
+    narrator "Rika starts telling us a wildly exaggerated story about her morning."
+    narrator "Kuroe corrects half the details. Sakura tries, unsuccessfully, to keep a straight face."
+    narrator "It's hard not to feel at home with them."
+    jump day1_lunch_finish
+
+
+label day1_lunch_finish:
+    narrator "Soon enough, the bell sounds and lunch comes to an end."
+    narrator "I take one last look around the courtyard before heading back inside."
+    narrator "It's only the first day, but the school already feels lively again."
+    jump day1_afternoon_classes
+
+
+label day1_afternoon_classes:
+    $ ell_time_of_day = "afternoon"
+    if renpy.has_image("classroom_morning"):
+        scene classroom_morning with dissolve
+    else:
+        scene expression day1_optional_background("scenes/classroom_afternoon.png", "scenes/classroom.png") with dissolve
+
+    narrator "The afternoon is less memorable: more introductions, a few classroom rules, and a timetable I already know I'll misplace."
+    ell_teacher "Before you go, remember that the clubs and noticeboards will have their updated schedules posted tomorrow."
+    ell_teacher "And please try to arrive on time from now on."
+    narrator "A few people glance in my direction. I decide not to take that personally."
+
+    narrator "When the final bell finally rings, the classroom comes back to life."
+    narrator "Bags zip shut. Chairs scrape back. Someone cheers a little too loudly."
+    mc "(One day down.)"
+    jump day1_after_school
+
+
+label day1_after_school:
+    if renpy.has_image("school_gate_afternoon"):
+        scene school_gate_afternoon with dissolve
+    elif renpy.has_image("school_gate_morning"):
+        scene school_gate_morning with dissolve
+    else:
+        scene expression day1_optional_background("scenes/school_gate_afternoon.png", "scenes/school_gate.png") with dissolve
+
+    narrator "Outside, the afternoon sun stretches long shadows across the school entrance."
+    narrator "I catch glimpses of the others leaving in different directions."
+
+    poko "See you tomorrow! Don't forget how lucky you are to know me!"
+    aria "Ignore her. Get home safely, okay?"
+    mimi "See you soon, [mc_first_name]."
+    narrator "Farther down the path, Rika waves so enthusiastically that Sakura has to tug her away from the crowd."
+    rika "Bye!"
+    sakura "See you tomorrow!"
+    kuroe "Take care."
+
+    narrator "A little farther along, Tsuki emerges from the remaining students, looking far too pleased with herself."
+    tsuki "There you are!"
+    mc "Did you spend the whole afternoon rehearsing that entrance?"
+    tsuki "Maybe. How was your first day?"
+    menu:
+        "Better than I expected.":
+            mc "Pretty good, actually. It was nice seeing everyone."
+            tsuki "Aww. Look at you being all sentimental."
+        "Exhausting. I deserve a medal.":
+            mc "I survived. There should be some kind of reward."
+            tsuki "I'll consider giving you a sticker."
+    tsuki "Come on, then. Mum'll want to hear all about it."
+
+    if renpy.has_image("school_walk_afternoon"):
+        scene school_walk_afternoon with dissolve
+    else:
+        scene expression day1_optional_background("scenes/walk_home.png", "scenes/school_walk.png", "scenes/morning_street.png") with dissolve
+
+    narrator "We head home together, taking the familiar streets at an easier pace than we managed this morning."
+    tsuki "Don't think I've forgotten about the plushies, by the way."
+    mc "I had a feeling you might mention them."
+    tsuki "Just keeping my very reliable assistant informed."
+    mc "Assistant? Since when was that my official job title?"
+    tsuki "Since breakfast. No take-backs!"
+
+    narrator "The afternoon light catches the windows of the shops as we pass."
+    narrator "For a moment, the branches painted on the old sign look almost like the ones from our history lesson."
+    narrator "Then Tsuki starts complaining about homework, and the thought slips away."
+    jump day1_evening_home
+
+
+label day1_evening_home:
+    $ ell_time_of_day = "evening"
+    if renpy.has_image("living_room_evening"):
+        scene living_room_evening with dissolve
+    else:
+        scene expression day1_optional_background("scenes/living_room_evening.png", "scenes/Kitchen_open.png", "scenes/Hallway.png") with dissolve
+
+    narrator "By the time we get home, the house feels wonderfully quiet."
+    hana "Welcome back, you two! How was school?"
+    tsuki "I was brilliant, obviously."
+    hana "Of course you were. And [mc_first_name]?"
+    mc "I made it through the first day."
+    hana "That's a good start."
+
+    narrator "We talk for a while about teachers, new timetables and the familiar faces we ran into."
+    narrator "Tsuki adds unnecessary dramatic details to practically every story. Mum pretends not to notice."
+
+    hana "Now that the term's started, you'll have a little more freedom in the afternoons. Just be sensible about where you go, and let me know if you'll be late."
+    tsuki "See? Even Mum thinks you need looking after."
+    mc "That applies to you too, Tsuki."
+    tsuki "I choose not to hear that."
+
+    narrator "The rest of the evening passes easily. Dinner, a few things to put away, and the familiar comfort of being home."
+    if mc_gender == "female" and day1_akari_glimpse_seen:
+        call day1_akari_hana_memories
+    narrator "Eventually, I excuse myself and head back to my room."
+    jump day1_night
+
+
+label day1_akari_hana_memories:
+    narrator "Tsuki heads upstairs to unpack her bag. I linger at the table while Mum gathers the last plates."
+    mc "Mum? How old was I when we left Ellrijord?"
+    hana "About two and a half. We reached Midgard a little over fifteen years ago."
+    hana "Tsuki was born not long after we settled here. Why do you ask?"
+    mc "We were looking at a picture of Yggdrasil in class. For a second, I could almost see sunlight through the branches."
+    mc "And someone humming. Then it was gone."
+    narrator "Mum sets the plates down and takes the chair beside me."
+    hana "I used to hum to you when you were little. I still did after we came here."
+    mc "So it could be a real memory?"
+    hana "It could be. I can't tell from that alone."
+    mc "I wish I remembered more than little pieces."
+    hana "I can tell you what I remember. But you don't have to force your own memories to match mine."
+    mc "What if it was just something I dreamed?"
+    hana "Then you can tell me about that too."
+    narrator "She rests her hand over mine. I hadn't realised how tightly I'd been holding the edge of the table."
+    mc "Thanks, Mum."
+    hana "Any time."
+    $ day1_akari_hana_talk_seen = True
+    return
+
+
+label day1_night:
+    $ ell_time_of_day = "night"
+    if renpy.has_image("bedroom_night"):
+        scene bedroom_night with dissolve
+    else:
+        scene expression day1_optional_background("scenes/bedroom_night.png", "gui/maps/bedroom_night.png", "gui/maps/bedroom2.png") with dissolve
+
+    narrator "My room is quiet again."
+    narrator "This morning, I could barely get out of bed. Now the entire first day feels like a collection of moments passing through my head."
+    narrator "Tsuki's threats. Mum's smile. Aria, Poko and Mimi laughing in the courtyard. Rika calling to me down the hallway."
+    narrator "And that old picture of Yggdrasil on the classroom wall."
+
+    narrator "I set my bag aside and glance towards the window."
+    narrator "Beyond the rooftops, the sky has darkened to a deep blue."
+    narrator "For the briefest moment, a pale shimmer seems to flicker between the clouds."
+    narrator "I blink, and it's gone."
+
+    mc "(Probably just tired.)"
+    narrator "Still, I can't quite forget it."
+
+    tsuki "[mc_first_name]? Are you still awake?"
+    mc "Barely."
+    tsuki "Good. I just wanted to say... don't forget my plushies tomorrow, okay?"
+    mc "You came all the way here to remind me?"
+    tsuki "Maybe. Goodnight!"
+    narrator "Her footsteps retreat down the hallway before I can answer."
+    mc "Goodnight, Tsuki."
+
+    narrator "Somewhere between the familiar warmth of home and the questions left unanswered by the day, sleep finally catches up with me."
+    scene black with fade
+    if mc_gender == "female":
+        call day1_akari_first_dream
+    narrator "And just like that, Day 1 comes to an end."
 
     jump day1_end_of_intro
 
 
+label day1_akari_first_dream:
+    narrator "At first, there is only the tune from earlier. A few notes, then a gap."
+    narrator "Sunlight moves over bark beneath my hand. The branches stretch far above me."
+    narrator "I look down. The hand resting against the tree is larger than mine, the fingers unfamiliar."
+    narrator "Behind me, a little girl calls for her mum."
+    narrator "I start to turn, but the scene breaks apart before I can see her."
+    mc "(Whose hands were those?)"
+    narrator "For an instant, I'm almost awake. Then the last of the image slips away and sleep draws me under again."
+    $ day1_akari_dream_seen = True
+    return
+
+
 label day1_end_of_intro:
-    scene black with fade
-    narrator "Day 1 opening complete."
+    # The wake-up tutorial and exploration loop live in day2_intro.rpy.
+    $ ell_day = 2
+    $ ell_time_of_day = "morning"
+    if renpy.has_label("day2_opening"):
+        jump expression "day2_opening"
+
+    # Safe fallback if this script is used without the Day 2 files.
     return
