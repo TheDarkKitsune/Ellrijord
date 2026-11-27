@@ -1,5 +1,11 @@
 # Minigames
 
+Forest Lake Fishing is also playable from Day 2 through the exploration map or
+the PC minigame menu. See [the fishing guide](FISHING_MINIGAME.md) for controls,
+assets, progression and tests. The matching-game details below describe Tsuki's
+Memory Challenge; fishing saves completed sessions and runs live play in its
+own temporary context.
+
 From Day 2, finish or skip Mini Tsuki's exploration tutorial, then open the
 bedroom PC and choose **Minigames → Tsuki's Memory Challenge**. The menu also
 allows replay. Leaving a board returns to the minigame menu; Back restores the

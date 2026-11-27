@@ -1,0 +1,3 @@
+
+<unknown>:1: SyntaxWarning: invalid escape sequence '\|'
+INFO:renpy_warp_service:service thread started. periodically scanning ports for warp server

@@ -1,0 +1,658 @@
+ï»¿Ren'Py 8.5.3.26051504 lint report, generated at: Fri Nov 27 00:00:00 2026
+
+game/options.rpy:70 define config.thumbnail_width already defined at game/gui.rpy:236
+
+game/options.rpy:71 define config.thumbnail_height already defined at game/gui.rpy:237
+
+game/scripts/day1_intro.rpy:146 unable to evaluate filename '_day1_music'
+
+game/scripts/day1_intro.rpy:148 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+Perhaps you forgot to define a character?
+
+game/scripts/day1_intro.rpy:149 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:150 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:159 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:160 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:161 Could not evaluate 'tsuki_unknown' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:168 'wakeup' is not an image.
+
+game/scripts/day1_intro.rpy:170 'bedroom_morning' is not an image.
+
+game/scripts/day1_intro.rpy:172 'bg morning_city' is not an image.
+
+game/scripts/day1_intro.rpy:183 'arms_crossed' is not an image.
+
+game/scripts/day1_intro.rpy:190 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:194 'arms_crossed_after' is not an image.
+
+game/scripts/day1_intro.rpy:195 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:196 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:197 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:198 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:205 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:206 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:211 'turnaround' is not an image.
+
+game/scripts/day1_intro.rpy:215 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:219 'moving' is not an image.
+
+game/scripts/day1_intro.rpy:220 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:222 The image tag 'tsuki' is not the prefix of a declared image, nor was it used in a show statement before this hide statement.
+
+game/scripts/day1_intro.rpy:227 'doorway' is not an image.
+
+game/scripts/day1_intro.rpy:234 'tsukigone' is not an image.
+
+game/scripts/day1_intro.rpy:528 'dresser' is not an image.
+
+game/scripts/day1_intro.rpy:549 'pickup' is not an image.
+
+game/scripts/day1_intro.rpy:557 'pickedup' is not an image.
+
+game/scripts/day1_intro.rpy:570 'dresser2' is not an image.
+
+game/scripts/day1_intro.rpy:584 'dresser2' is not an image.
+
+game/scripts/day1_intro.rpy:597 'dressed' is not an image.
+
+game/scripts/day1_intro.rpy:612 'onsiedoor' is not an image.
+
+game/scripts/day1_intro.rpy:622 'uniformdoor' is not an image.
+
+game/scripts/day1_intro.rpy:632 'bed' is not an image.
+
+game/scripts/day1_intro.rpy:649 'desk' is not an image.
+
+game/scripts/day1_intro.rpy:732 'living_room_morning' is not an image.
+
+game/scripts/day1_intro.rpy:734 'bg morning_city' is not an image.
+
+game/scripts/day1_intro.rpy:741 'hana neutral' is not an image.
+
+game/scripts/day1_intro.rpy:743 'tsuki happy' is not an image.
+
+game/scripts/day1_intro.rpy:745 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:746 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:757 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:761 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:810 'tsuki neutral' is not an image.
+
+game/scripts/day1_intro.rpy:814 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:815 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:828 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:829 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:833 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:846 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:883 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:898 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:911 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:915 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:919 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:927 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:942 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:943 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:947 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:962 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:965 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:975 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:986 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:992 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:998 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:999 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1006 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1007 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1008 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1010 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1012 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1016 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1017 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1025 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1028 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1041 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1044 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1048 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1052 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1060 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1068 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1069 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1070 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1071 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1072 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1080 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1081 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1085 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1089 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1097 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1098 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1111 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1124 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1137 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1138 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1146 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1147 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1148 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1158 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1159 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1165 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1168 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1172 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1176 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1177 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1198 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1209 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1222 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1255 'school_walk_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1262 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1264 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1266 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1268 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1274 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1276 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1278 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1285 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1290 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1294 'school_gate_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1301 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1303 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1305 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1324 'school_courtyard_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1329 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1332 'aria neutral' is not an image.
+
+game/scripts/day1_intro.rpy:1334 'poko grin' is not an image.
+
+game/scripts/day1_intro.rpy:1336 'mimi smile' is not an image.
+
+game/scripts/day1_intro.rpy:1343 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1345 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1346 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1347 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1356 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1360 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1361 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1364 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1374 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1375 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1376 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1381 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1382 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1384 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1392 'school_hallway_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1399 'kuroe neutral' is not an image.
+
+game/scripts/day1_intro.rpy:1401 'sakura smile' is not an image.
+
+game/scripts/day1_intro.rpy:1403 'rika grin' is not an image.
+
+game/scripts/day1_intro.rpy:1405 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1407 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1409 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1411 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1413 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1414 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1415 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1419 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1420 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1421 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1422 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1424 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1425 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1429 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1430 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1432 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1435 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1436 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1437 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1438 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1448 'classroom_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1455 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1456 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1458 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1461 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1462 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1463 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1464 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1478 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1483 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1506 'school_courtyard_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1526 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1528 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1529 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1530 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1532 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1535 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1537 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1539 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1552 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1554 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1555 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1556 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1559 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1561 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1563 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1564 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1565 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1584 'classroom_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1589 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1590 Could not evaluate 'ell_teacher' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1601 'school_gate_afternoon' is not an image.
+
+game/scripts/day1_intro.rpy:1603 'school_gate_morning' is not an image.
+
+game/scripts/day1_intro.rpy:1610 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1612 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1614 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1615 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1616 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1619 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1621 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1625 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1628 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1629 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1632 'school_walk_afternoon' is not an image.
+
+game/scripts/day1_intro.rpy:1637 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1639 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1641 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1652 'living_room_evening' is not an image.
+
+game/scripts/day1_intro.rpy:1657 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1658 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1659 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1661 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1666 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1667 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1669 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1681 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1682 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1686 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1688 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1690 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1692 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1695 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1703 'bedroom_night' is not an image.
+
+game/scripts/day1_intro.rpy:1720 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1722 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day1_intro.rpy:1724 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:136 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:140 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:142 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:144 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:147 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:149 Could not evaluate 'hana' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:151 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:153 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:154 Could not evaluate 'tsuki' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:163 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:165 Could not evaluate 'poko' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:167 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:169 Could not evaluate 'mimi' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:171 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:173 Could not evaluate 'kuroe' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:176 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:178 Could not evaluate 'sakura' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:180 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/day2_intro.rpy:182 Could not evaluate 'rika' in the who part of a say statement.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:64 'bg rooftop_twilight' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:67 'audio/Ambience/Wind Soft.wav' is not loadable
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:74 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:84 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:89 'aria neutral' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:95 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:112 'aria sad' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:122 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:137 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:159 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:168 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:182 'aria surprised' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:187 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:191 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:205 'bg city_street_day' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:215 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:223 'bg bakery_day' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:232 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:245 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:268 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:277 'bg city_street_day' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:281 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:285 'bg toyshop_day' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:323 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:338 'bg park_afternoon' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:347 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:377 'aria sad' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:413 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:423 'bg city_street_day' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:431 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:442 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:456 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:474 'bg aria_apartment_evening' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:484 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:521 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:526 'aria sad' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:556 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:579 'aria surprised' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:586 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:599 'bg rooftop_night' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:603 'audio/Ambience/Wind Soft.wav' is not loadable
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:609 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:632 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:644 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:707 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:720 'bg aria_apartment_evening' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:728 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:767 'bg dream_meadow' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:769 'audio/Ambience/Dream_Meadow_Ambience.wav' is not loadable
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:777 'aria surprised' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:782 'poppy child' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:783 'gizmo child' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:796 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:845 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:893 'aria tear' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:914 'bg dream_meadow' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:928 'bg morning_city' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:935 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:944 'aria smile' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:973 'aria soft' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:978 'aria laugh' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:1000 'bg secret_meadow' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:1002 'audio/Ambience/Dream_Meadow_Ambience.wav' is not loadable
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:1007 'poppy child' is not an image.
+
+game/scripts/dlc_scripts/starlit_paws_dlc.rpy:1008 'gizmo child' is not an image.
+
+game/scripts/script.rpy:388 The call is to nonexistent label 'ui_test_demo'.
+
+
+Python Warnings:
+
+game/backend/controller_support/controller_input.rpy:1: SyntaxWarning: invalid escape sequence '\|'
+  ################################################################################
+
+
+Statistics:
+
+The game contains 1,130 dialogue blocks, containing 9,289 words and 52,056
+characters, for an average of 8.2 words and 46 characters per block.
+
+The game contains 26 menus, 52 images, and 152 screens.
+
+
+Lint is not a substitute for thorough testing. Remember to update Ren'Py
+before releasing. New releases fix bugs and improve compatibility.

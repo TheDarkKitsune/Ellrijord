@@ -182,7 +182,8 @@ init 999 python:
             if renpy.get_screen('ell_world_map'):
                 test_capture('map')
                 if not ell_world_tutorial_active and not world_test_map_locks_checked:
-                    test_check('locked forest button disabled', not renpy.get_widget('ell_world_map', 'world_destination_forest').is_sensitive())
+                    test_check('Day 2 forest route available', renpy.get_widget('ell_world_map', 'world_destination_forest').is_sensitive())
+                    test_check('Day 2 lake route available', renpy.get_widget('ell_world_map', 'world_destination_forest_lake').is_sensitive())
                     test_check('closed school button disabled', not renpy.get_widget('ell_world_map', 'world_destination_school_gate').is_sensitive())
                     s.world_test_map_locks_checked = True
                 target = world_test_target

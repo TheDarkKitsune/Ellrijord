@@ -104,6 +104,10 @@ label day2_free_roam:
             call ell_world_collect(_world_target)
         elif _world_cmd == "rest":
             call ell_world_rest
+        elif _world_cmd == "fishing" and ell_day >= 2 and ell_world_location == "forest_lake":
+            call ellrijord_fishing from ell_world_lake_fishing
+        elif _world_cmd == "fishing_journal" and ell_day >= 2:
+            show screen ell_fishing_journal_screen
 
 
 label ell_world_use_pc(_pc_tab="bulletin"):

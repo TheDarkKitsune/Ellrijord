@@ -252,7 +252,7 @@ screen ell_world_map(tutorial=False):
             xsize 240
             ysize 112
             use ui_png_button(caption, Return(target), xsize=240, ysize=65, text_style="ui_btn_text_small", disabled=(tutorial or bool(_reason)), button_id="world_destination_" + target)
-            text ("Locked" if target not in ell_world_unlocked else "Closed" if _reason else "{} min".format(ell_world_travel_cost(target))):
+            text ("Locked" if not ell_world_location_unlocked(target) else "Closed" if _reason else "{} min".format(ell_world_travel_cost(target))):
                 style "ell_world_text"
                 size 21
                 ypos 69
@@ -264,7 +264,7 @@ screen ell_world_map(tutorial=False):
         xsize 1430
         padding (18, 14)
         background "#171323ee"
-        text ("Have a look, then close the map to continue your tutorial." if tutorial else "School: 07:30-18:00. Town and park: 07:00-21:00. Check your PC's school bulletin for new places.") style "ell_world_text"
+        text ("Have a look, then close the map to continue your tutorial." if tutorial else "School: 07:30-18:00. Town and park: 07:00-21:00. Forest Lake: 07:00-23:00, from Day 2.") style "ell_world_text"
     fixed:
         xpos 1585
         ypos 970

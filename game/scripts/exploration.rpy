@@ -27,15 +27,17 @@ init -4 python:
         "library": {"name": "School library", "area": "school", "backgrounds": ("scenes/school_library.png",), "links": ("school_corridor",)},
         "town_centre": {"name": "Town centre", "area": "town", "backgrounds": ("scenes/town_centre.png",), "links": ()},
         "park": {"name": "Riverside park", "area": "park", "backgrounds": ("scenes/park.png",), "links": ()},
-        "forest": {"name": "Forest path", "area": "forest", "backgrounds": ("gui/maps/forest_map.png",), "links": ()},
+        "forest": {"name": "Forest path", "area": "forest", "backgrounds": ("gui/maps/forest_map.png",), "links": ("forest_lake",)},
+        "forest_lake": {"name": "Forest Lake", "area": "forest", "backgrounds": ("images/minigames/fishing/backgrounds/day.png",), "links": ("forest",)},
     }
-    ELL_WORLD_STARTING_LOCATIONS = tuple(k for k in ELL_WORLD_LOCATIONS if k not in ("library", "park", "forest"))
+    ELL_WORLD_STARTING_LOCATIONS = tuple(k for k in ELL_WORLD_LOCATIONS if k not in ("library", "park", "forest", "forest_lake"))
     ELL_WORLD_MAP_DESTINATIONS = (
         ("hallway", "Home", 750, 810),
         ("school_gate", "School", 610, 480),
         ("town_centre", "Town centre", 1370, 560),
         ("park", "Riverside park", 290, 330),
         ("forest", "Forest path", 500, 150),
+        ("forest_lake", "Forest Lake", 790, 150),
     )
     ELL_WORLD_NPCS = {
         "hana": {"name": "Hana", "portrait": "gui/hud/portraits/Hana.png"},
@@ -91,6 +93,8 @@ init -4 python:
     def ell_world_background(location=None):
         location = location or ell_world_location
         paths = ELL_WORLD_LOCATIONS[location]["backgrounds"]
+        if location == "forest_lake":
+            paths = ("images/minigames/fishing/backgrounds/{}.png".format(ell_fishing_period()),)
         if location == "bedroom" and "cat_plush_1" in set(getattr(persistent, "plushies_found", set())):
             paths = ("gui/maps/collectibles_gone.png",) + paths
         if ell_world_minutes >= 1260:
@@ -99,20 +103,26 @@ init -4 python:
 
     def ell_world_open_at(location, minutes):
         area = ELL_WORLD_LOCATIONS[location]["area"]
+        if area == "forest":
+            return ell_day >= 2 and 420 <= minutes <= 1380
         if area == "school":
             return 450 <= minutes < 1080
-        if area in ("town", "park", "forest"):
+        if area in ("town", "park"):
             return 420 <= minutes < 1260
         return area == "home"
 
     def ell_world_travel_cost(location):
         return 0 if ELL_WORLD_LOCATIONS[location]["area"] == ELL_WORLD_LOCATIONS[ell_world_location]["area"] else 15
 
+    def ell_world_location_unlocked(location):
+        return location in ell_world_unlocked or (ell_day >= 2 and location in ("forest", "forest_lake"))
+
     def ell_world_travel_reason(location):
-        if location not in ell_world_unlocked:
+        if not ell_world_location_unlocked(location):
             return "The forest path is closed." if location == "forest" else "Check the school bulletin on your PC to unlock this place."
         if not ell_world_open_at(location, ell_world_minutes + ell_world_travel_cost(location)):
-            return "School is open 07:30-18:00." if ELL_WORLD_LOCATIONS[location]["area"] == "school" else "Open 07:00-21:00."
+            area = ELL_WORLD_LOCATIONS[location]["area"]
+            return "School is open 07:30-18:00." if area == "school" else "Open 07:00-23:00 from Day 2." if area == "forest" else "Open 07:00-21:00."
         return ""
 
     def ell_world_advance(minutes):
@@ -191,6 +201,8 @@ init -4 python:
 
     def ell_world_room_actions():
         actions = []
+        if ell_world_location == "forest_lake" and ell_day >= 2:
+            actions.extend((("Cast a line", "fishing", None), ("Fishing Journal", "fishing_journal", None)))
         if ell_world_location == "bedroom":
             actions.extend((("PC", "pc", None), ("Dresser", "look", "dresser"), ("Bed / Rest", "rest", None)))
         elif ell_world_location == "kitchen" and ell_world_minutes < 540 and ell_world_breakfast_day != ell_day:
